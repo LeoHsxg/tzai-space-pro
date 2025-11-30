@@ -1,0 +1,14 @@
+# 忽略 node_modules
+node_modules/
+
+# 忽略本地環境變數或設定檔
+*.local
+.env
+.env.*.local
+
+# 忽略私密金鑰文件
+service_account.json
+firebase-key.json
+google-services.json
+keys/
+secrets/

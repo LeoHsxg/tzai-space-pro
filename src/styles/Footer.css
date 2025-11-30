@@ -1,0 +1,16 @@
+.shadow {
+  @apply shadow-[0px_0px_10px_0px_rgba(0,0,0,0.03)]
+}
+
+.icon_h {
+  width: 35px;
+  height: 35px;
+  opacity: 0.36;
+}
+
+.icon_s {
+  width: 35px;
+  height: 35px;
+  opacity: 1;
+}
+
