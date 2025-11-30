@@ -1,0 +1,19 @@
+/*四個值，個別指定*/
+margin: 上  右  下   左;
+
+/*三個值，左右採用同一個值，上下則分開指定*/
+margin: 上   [右左]    下;
+
+/*二個值，【上下】採用同一值，【左右】採用同一值*/
+margin: [上下]   [右左];
+
+/*一個值，【上下左右】都使用相同的值*/
+margin: [上右下左];
+
+MUI 的樣式系統會為元件產生兩組 class 名稱：
+
+一個是固定名稱，例如 MuiDateCalendar-root，這個是官方文件中指定用來進行樣式覆寫的基礎名稱。
+另一個是動態產生的，例如 css-1rtg91x-MuiDateCalendar-root，它是由 MUI 的 styling 系統（像 emotion 或 JSS）產生，用來確保樣式的唯一性和作用域，通常不適合直接覆蓋。
+
+const [index, setIndex] = useState(0);
+變數，改變變數的函式，還有變數初始值

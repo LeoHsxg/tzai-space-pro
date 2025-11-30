@@ -1,0 +1,26 @@
+.checkbox-label {
+  width: 1rem; /* 尺寸調整 */
+  height: 1rem;
+  border: 1.5px solid #ccc;
+  /* border: 2px solid transparent;  */
+  /* outline: 2px solid #ccc;  */
+  border-radius: 50%; /* 圓形 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.checkbox-label.checked {
+  background-color: #3b82f6; /* 勾選後背景色 */
+  border-color: #3b82f6; /* 勾選後邊框色 */
+}
+
+.small-circle {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 2px solid #828282; /* 小圓點的邊框 */
+  border-radius: 50%;
+  background-color: #ef4444; /* 小圓點的背景色 */
+}

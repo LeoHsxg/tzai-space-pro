@@ -1,0 +1,63 @@
+{
+  "database": {
+    "rules": "database.rules.json"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": "dist",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      {
+        "source": "/api/add/**",
+        "function": "addEventToCalendar"
+      },
+      {
+        "source": "/api/getAll/**",
+        "function": "getAllEvents"
+      },
+      {
+        "source": "/api/get",
+        "function": "getEventsForMonth"
+      },
+      {
+        "source": "/api/delete/**",
+        "function": "deleteEventFromCalendar"
+      },
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "predeploy": ["npm run build"]
+  },
+  "functions": [
+    {
+      "source": "functions",
+      "runtime": "nodejs22",
+      "codebase": "default",
+      "ignore": ["node_modules", ".git", "firebase-debug.log", "firebase-debug.*.log", "*.local"]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "firestore": {
+      "port": 8080
+    },
+    "database": {
+      "port": 9000
+    },
+    "hosting": {
+      "port": 5000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
+}
+

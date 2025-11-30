@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_圖層_2" data-name="圖層_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 254.99 98.91">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#_未命名漸層_6);
+      }
+
+      .cls-2 {
+        fill: url(#_未命名漸層_31);
+      }
+
+      .cls-3 {
+        fill: #4693c8;
+      }
+
+      .cls-4 {
+        fill: url(#_新增漸層色票_4);
+      }
+
+      .cls-5 {
+        fill: url(#_未命名漸層_30);
+      }
+
+      .cls-6 {
+        fill: url(#_未命名漸層_22);
+      }
+
+      .cls-7 {
+        fill: #e06720;
+      }
+
+      .cls-8 {
+        fill: #eac42a;
+      }
+    </style>
+    <linearGradient id="_未命名漸層_30" data-name="未命名漸層 30" x1="175.05" y1="72.35" x2="261.37" y2="72.35" gradientUnits="userSpaceOnUse">
+      <stop offset=".15" stop-color="#eac42a"/>
+      <stop offset=".22" stop-color="#e7ac27"/>
+      <stop offset=".35" stop-color="#e17021"/>
+      <stop offset=".37" stop-color="#e06720"/>
+    </linearGradient>
+    <linearGradient id="_新增漸層色票_4" data-name="新增漸層色票 4" x1="-78.24" y1="1389.26" x2="-77.24" y2="1389.26" gradientTransform="translate(1909.21 30127.26) scale(21.68 -21.68)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#eac42a"/>
+      <stop offset=".06" stop-color="#e8b528"/>
+      <stop offset=".21" stop-color="#e59925"/>
+      <stop offset=".36" stop-color="#e38223"/>
+      <stop offset=".53" stop-color="#e17321"/>
+      <stop offset=".73" stop-color="#e06920"/>
+      <stop offset="1" stop-color="#e06720"/>
+    </linearGradient>
+    <linearGradient id="_未命名漸層_22" data-name="未命名漸層 22" x1="135.19" y1="67.86" x2="206.83" y2="132.7" gradientUnits="userSpaceOnUse">
+      <stop offset=".05" stop-color="#eac42a"/>
+      <stop offset=".07" stop-color="#e9bc29"/>
+      <stop offset=".18" stop-color="#e59d25"/>
+      <stop offset=".3" stop-color="#e38523"/>
+      <stop offset=".42" stop-color="#e17421"/>
+      <stop offset=".55" stop-color="#e06a20"/>
+      <stop offset=".71" stop-color="#e06720"/>
+    </linearGradient>
+    <linearGradient id="_未命名漸層_31" data-name="未命名漸層 31" x1="58.98" y1="48.45" x2="113.73" y2="41.01" gradientUnits="userSpaceOnUse">
+      <stop offset=".09" stop-color="#eac42a"/>
+      <stop offset=".12" stop-color="#e9bc29"/>
+      <stop offset=".23" stop-color="#e59d25"/>
+      <stop offset=".36" stop-color="#e38523"/>
+      <stop offset=".49" stop-color="#e17421"/>
+      <stop offset=".63" stop-color="#e06a20"/>
+      <stop offset=".8" stop-color="#e06720"/>
+    </linearGradient>
+    <linearGradient id="_未命名漸層_6" data-name="未命名漸層 6" x1="47.72" y1="92.39" x2="18.36" y2="52.23" gradientUnits="userSpaceOnUse">
+      <stop offset=".17" stop-color="#0c68ab"/>
+      <stop offset=".85" stop-color="#4793c8"/>
+    </linearGradient>
+  </defs>
+  <g id="_圖層" data-name="圖層">
+    <g id="LOGO_x5F_9x3">
+      <g id="i">
+        <path class="cls-5" d="M234.53,66.02c.12,6.33,5.34,10.45,11.63,11.41,3.77.58,8.54.96,8.83.96v20.34c-3.52.32-7.44.16-8.83,0-8.53-.98-16.42-3.29-22.28-8.68-5.87,5.39-13.69,8.68-22.29,8.68-18.19,0-32.92-14.74-32.93-32.93h21.29c0,6.43,5.21,11.63,11.64,11.63s11.71-5.2,11.72-11.63l-.07-20.01h21.3v20.23Z"/>
+        <path class="cls-4" d="M223.92,0c-5.99,0-10.84,4.85-10.84,10.84s4.85,10.84,10.84,10.84,10.84-4.86,10.84-10.84-4.85-10.84-10.84-10.84Z"/>
+      </g>
+      <g id="a">
+        <path class="cls-8" d="M157.02,33.04c-18.19,0-32.93,14.74-32.93,32.93s14.74,32.94,32.93,32.94,32.94-14.75,32.94-32.94-14.75-32.93-32.94-32.93ZM157.02,77.61c-6.43,0-11.64-5.21-11.64-11.64s5.21-11.63,11.64-11.63,11.64,5.21,11.64,11.63-5.21,11.64-11.64,11.64Z"/>
+        <path class="cls-6" d="M167.29,97.27c-3.24,1.07-6.68,1.64-10.27,1.64-18.19,0-32.93-14.75-32.93-32.94,0-7.02,2.2-13.54,5.95-18.89l18.95,10.48c-2.22,2.11-3.61,5.1-3.61,8.41,0,4.37,2.4,8.17,5.96,10.17.24,5.07,2.31,16.57,15.95,21.13Z"/>
+      </g>
+      <g id="z">
+        <polygon class="cls-7" points="107.04 98.91 53.17 98.91 83.74 55.76 53.94 55.76 53.94 34.04 118.94 34.04 94.03 77.2 118.03 77.2 107.04 98.91"/>
+        <path class="cls-2" d="M82.26,55.76c-4.69-14.51-11.62-18.34-18.57-21.72h55.25l-12.55,21.74-24.13-.02Z"/>
+      </g>
+      <g id="t">
+        <path class="cls-1" d="M.02,62.61c.33,8.81-2.59,36.05,42.58,36.3l-.09-22.51s-21.23,2.29-21.97-14.42v-6.01h21.83v-21.72h-21.83V13.33H0l.02,49.28Z"/>
+        <path class="cls-3" d="M42.6,98.91c-2.73,0-5.28-.13-7.67-.33-11.09-9.55-9.89-20.82-8.69-25.66,6.52,4.53,16.28,3.48,16.28,3.48l.08,22.51Z"/>
+      </g>
+    </g>
+  </g>
+</svg>

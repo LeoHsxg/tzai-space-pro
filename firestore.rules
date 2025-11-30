@@ -1,0 +1,16 @@
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // /documents/collection/{documentId} 的讀取權限
+    match /regulations/current {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    // catch-all（萬用匹配）, 要放在最下面
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
+

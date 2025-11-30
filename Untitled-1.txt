@@ -1,0 +1,10 @@
+api/events/12
+api/events?type=year
+api/events?month=3&year=2025
+api/event?status=valid
+
+get
+
+put post delete
+
+post api/event/id
