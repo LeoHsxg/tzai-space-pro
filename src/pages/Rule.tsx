@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from "react";
 import { getRegulationsData } from "../firebase/firebase"; // ← 你設定的 firebase 檔案
 import Ruleblock from "../Components/Ruleblock"; // ← 你設定的 Ruleblock 檔案

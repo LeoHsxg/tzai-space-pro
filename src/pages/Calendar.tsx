@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
