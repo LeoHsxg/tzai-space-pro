@@ -1,3 +1,5 @@
+'use client'
+
 // useAuth.ts
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext"; // 路徑根據你實際放的位置來改
