@@ -6,7 +6,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_API_KEY,
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
   authDomain: "tzai-space.firebaseapp.com",
   projectId: "tzai-space",
   storageBucket: "tzai-space.appspot.com",
