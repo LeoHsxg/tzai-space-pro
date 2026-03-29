@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import NavLinks from "./NavLinks";
 import "../styles/Footer.css";

@@ -1,3 +1,5 @@
+'use client'
+
 // src/Components/GlobalUI.tsx
 import React from "react";
 import { Dialog, DialogTitle, DialogContent, CircularProgress } from "@mui/material";

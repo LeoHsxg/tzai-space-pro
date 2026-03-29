@@ -1,3 +1,5 @@
+'use client'
+
 import React from "react";
 import { signInWithGoogle, auth } from "../firebase/firebase";
 import { signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
