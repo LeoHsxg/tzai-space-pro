@@ -1,3 +1,5 @@
+'use client'
+
 import React, { createContext, useContext, useState } from "react";
 
 // src/context/UIContext.tsx
