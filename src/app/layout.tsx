@@ -2,10 +2,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { Noto_Sans_TC, Roboto } from 'next/font/google'
-import { Providers } from '@/Components/providers'
-import NavBar from '@/Components/NavBar'
-import Footer from '@/Components/Footer'
-import { GlobalUI } from '@/Components/GlobalUI'
+import { AppShell } from '@/Components/AppShell'
 import '../App.css'
 
 const notoSans = Noto_Sans_TC({
@@ -33,16 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="zh-Hant">
       <body className={`${notoSans.variable} ${roboto.variable}`}>
-        <Providers>
-          <div className="bg-[#F3F3F3] min-h-screen flex flex-col relative">
-            <GlobalUI />
-            <NavBar />
-            <main className="flex-grow">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </Providers>
+        <AppShell>{children}</AppShell>
         {/* Google Analytics */}
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-J5G385BD56" />
         <Script id="gtag-init">{`
