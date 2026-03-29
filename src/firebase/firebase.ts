@@ -7,12 +7,12 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_API_KEY,
-  authDomain: "tzai-space.firebaseapp.com",
-  projectId: "tzai-space",
-  storageBucket: "tzai-space.appspot.com",
-  messagingSenderId: "154014267141",
-  appId: "1:154014267141:web:90d61c6b08f0d957e6696c",
-  measurementId: "G-5P7DHECJHN",
+  authDomain: "tzai-space-pro.firebaseapp.com",
+  projectId: "tzai-space-pro",
+  storageBucket: "tzai-space-pro.firebasestorage.app",
+  messagingSenderId: "877341775325",
+  appId: "1:877341775325:web:81329488cdc1f6ad3bd234",
+  measurementId: "G-ZK1ZJXMFFD",
 };
 
 const app = initializeApp(firebaseConfig);
