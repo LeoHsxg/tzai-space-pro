@@ -1,3 +1,3 @@
-'use client'
-import Rule from '../../pages/Rule'
+import dynamic from 'next/dynamic'
+const Rule = dynamic(() => import('../../pages/Rule'), { ssr: false })
 export default Rule

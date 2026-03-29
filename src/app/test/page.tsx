@@ -1,3 +1,3 @@
-'use client'
-import Test from '../../pages/Test'
+import dynamic from 'next/dynamic'
+const Test = dynamic(() => import('../../pages/Test'), { ssr: false })
 export default Test
