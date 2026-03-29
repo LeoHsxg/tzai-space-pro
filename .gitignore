@@ -30,3 +30,5 @@ gitlog_tmp.txt
 *.sw?
 functions/src/service_account.json
 service_account.json
+
+.next/

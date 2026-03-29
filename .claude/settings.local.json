@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir -p public/img)",
+      "Bash(cp src/img/*.svg public/img/)"
+    ]
+  }
+}
