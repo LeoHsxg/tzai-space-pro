@@ -1,4 +1,2 @@
-'use client'
-import dynamic from 'next/dynamic'
-const Test = dynamic(() => import('../../views/Test'), { ssr: false })
+import Test from '../../views/Test'
 export default Test

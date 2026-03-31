@@ -57,7 +57,6 @@ const ApplyForm: React.FC = () => {
         email: user.email ?? "test@gmail.com",
         eventDescription: description,
       };
-      console.log("Request Body:", requestBody);
       await validateData(requestBody);
       const response = await fetch(FUNCTION_URL, {
         method: "POST",
