@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(mkdir -p public/img)",
-      "Bash(cp src/img/*.svg public/img/)"
+      "Bash(cp src/img/*.svg public/img/)",
+      "Bash(npm run:*)",
+      "Bash(ls \"c:/Users/leosi/OneDrive/文件/GitHub/tzai-space-pro/\"*.env*)",
+      "Bash(ls \"c:/Users/leosi/OneDrive/文件/GitHub/tzai-space-pro/.env\"*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx shadcn@latest init -y --style new-york --base-color zinc)",
+      "Bash(printf \"\\\\n\\\\n\")",
+      "Bash(npx shadcn@latest init -y)",
+      "Bash(npx shadcn@latest add button dialog input select sonner --yes)"
     ]
   }
 }
