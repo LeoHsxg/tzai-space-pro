@@ -1,43 +1,37 @@
 'use client'
 
 import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { Button } from "@/Components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/Components/ui/dialog";
 
 export default function AlertDialog() {
   const [open, setOpen] = React.useState(false);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
   return (
-    <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger render={<Button variant="outline" />}>
         Open alert dialog
-      </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{"Use Google's location service?"}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
-          <Button onClick={handleClose} autoFocus>
-            Agree
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </React.Fragment>
+      </DialogTrigger>
+      <DialogContent showCloseButton={false}>
+        <DialogHeader>
+          <DialogTitle>{"Use Google's location service?"}</DialogTitle>
+        </DialogHeader>
+        <DialogDescription>
+          Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running.
+        </DialogDescription>
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)}>Disagree</Button>
+          <Button onClick={() => setOpen(false)}>Agree</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
