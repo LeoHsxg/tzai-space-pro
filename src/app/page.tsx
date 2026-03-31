@@ -1,4 +1,2 @@
-'use client'
-import dynamic from 'next/dynamic'
-const Calendar = dynamic(() => import('../views/Calendar'), { ssr: false })
+import Calendar from '../views/Calendar'
 export default Calendar

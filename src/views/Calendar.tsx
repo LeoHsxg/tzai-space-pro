@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
-import { CircularProgress } from "@mui/material";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
 import { Event } from "../types/event";
@@ -123,7 +122,7 @@ const Calendar: React.FC = () => {
         {/* 載入中與預約列表 */}
         {loading ? (
           <div className="flex justify-center items-center w-full h-full">
-            <CircularProgress />
+            <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin" />
           </div>
         ) : (
           <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">

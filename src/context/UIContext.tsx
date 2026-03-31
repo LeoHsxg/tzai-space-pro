@@ -1,8 +1,8 @@
 'use client'
 
 import React, { createContext, useContext, useState } from "react";
+import { toast } from "sonner";
 
-// src/context/UIContext.tsx
 interface DialogState {
   open: boolean;
   title?: string;
@@ -16,12 +16,9 @@ interface SnackbarState {
 }
 
 interface UIContextType {
-  // Dialog 相關
   dialog: DialogState;
   showDialog: (title?: string, content?: React.ReactNode) => void;
   hideDialog: () => void;
-
-  // Snackbar 相關
   snackbar: SnackbarState;
   showSnackbar: (message: string, severity: "success" | "error" | "info" | "warning") => void;
   hideSnackbar: () => void;
@@ -29,8 +26,6 @@ interface UIContextType {
 
 const UIContext = createContext<UIContextType | null>(null);
 
-// 使用 UIContext 通常都要 useContext 來使用，太麻煩了
-// 所以為了方便使用，就把 useContext 出來的物件直接傳出去
 const noopUI = {
   dialog: { open: false } as DialogState,
   showDialog: () => {},
@@ -42,25 +37,19 @@ const noopUI = {
 
 export const useUI = () => useContext(UIContext) ?? noopUI;
 
-// 把 UIContext.Provider 打包送出去
-// 回傳了其他組件會用到的一些 hook 還有包裝好的控制函式
 export const UIProvider = ({ children }: { children: React.ReactNode }) => {
-  // Dialog 狀態
-  // 未賦值/初始值為 Loading Dialog
   const [dialog, setDialog] = useState<DialogState>({
     open: false,
     title: "",
     content: null,
   });
 
-  // Snackbar 狀態
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
+  const [snackbar] = useState<SnackbarState>({
     open: false,
     message: "",
     severity: "success",
   });
 
-  // Dialog 控制函數
   const showDialog = (title?: string, content?: React.ReactNode) => {
     setDialog({ open: true, title, content });
   };
@@ -69,25 +58,15 @@ export const UIProvider = ({ children }: { children: React.ReactNode }) => {
     setDialog(prev => ({ ...prev, open: false }));
   };
 
-  // Snackbar 控制函數
   const showSnackbar = (message: string, severity: "success" | "error" | "info" | "warning") => {
-    setSnackbar({ open: true, message, severity });
+    toast[severity](message);
   };
 
-  const hideSnackbar = () => {
-    setSnackbar(prev => ({ ...prev, open: false }));
-  };
+  const hideSnackbar = () => {};
 
   return (
     <UIContext.Provider
-      value={{
-        dialog,
-        showDialog,
-        hideDialog,
-        snackbar,
-        showSnackbar,
-        hideSnackbar,
-      }}>
+      value={{ dialog, showDialog, hideDialog, snackbar, showSnackbar, hideSnackbar }}>
       {children}
     </UIContext.Provider>
   );

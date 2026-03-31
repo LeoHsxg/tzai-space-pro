@@ -31,4 +31,4 @@ gitlog_tmp.txt
 functions/src/service_account.json
 service_account.json
 
-.next/
+.next/.worktrees/

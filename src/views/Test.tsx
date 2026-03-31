@@ -1,35 +1,26 @@
 'use client'
 
 import React from "react";
-import { Button, Box, Typography } from "@mui/material";
+import { Button } from "@/Components/ui/button";
 import { useUI } from "../context/UIContext";
 
 const Test: React.FC = () => {
   const { showDialog, hideDialog, showSnackbar } = useUI();
 
-  // 自定義 Dialog 標題（預設為 Loading Dialog）
   const handleTestLoading = () => {
     showDialog("載入中...");
-    // 3秒後自動關閉
-    // setTimeout(hideDialog, 3000);
   };
 
-  // 自定義 Dialog 標題與內容
   const handleTestCustomDialog = () => {
     showDialog(
       "自定義對話框",
-      <Box sx={{ p: 2, textAlign: "center" }}>
-        <Typography variant="body1" sx={{ mb: 2 }}>
-          這是一個自定義內容的對話框
-        </Typography>
-        <Button variant="contained" onClick={hideDialog}>
-          關閉
-        </Button>
-      </Box>
+      <div className="p-2 text-center">
+        <p className="mb-2">這是一個自定義內容的對話框</p>
+        <Button onClick={hideDialog}>關閉</Button>
+      </div>
     );
   };
 
-  // 測試各種 Snackbar
   const handleTestSnackbar = (severity: "success" | "error" | "info" | "warning") => {
     const messages = {
       success: "操作成功！",
@@ -42,47 +33,29 @@ const Test: React.FC = () => {
 
   return (
     <div className="p-8">
-      <Typography variant="h4" sx={{ mb: 4 }}>
-        UI 元件測試頁面
-      </Typography>
+      <h1 className="text-3xl font-bold mb-8">UI 元件測試頁面</h1>
 
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+      <div className="flex flex-col gap-4">
         {/* Dialog 測試按鈕 */}
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Dialog 測試
-          </Typography>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" onClick={handleTestLoading}>
-              測試載入中對話框
-            </Button>
-            <Button variant="contained" onClick={handleTestCustomDialog}>
-              測試自定義對話框
-            </Button>
-          </Box>
-        </Box>
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">Dialog 測試</h2>
+          <div className="flex gap-2">
+            <Button onClick={handleTestLoading}>測試載入中對話框</Button>
+            <Button onClick={handleTestCustomDialog}>測試自定義對話框</Button>
+          </div>
+        </div>
 
         {/* Snackbar 測試按鈕 */}
-        <Box>
-          <Typography variant="h6" sx={{ mb: 2 }}>
-            Snackbar 測試
-          </Typography>
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" color="success" onClick={() => handleTestSnackbar("success")}>
-              成功訊息
-            </Button>
-            <Button variant="contained" color="error" onClick={() => handleTestSnackbar("error")}>
-              錯誤訊息
-            </Button>
-            <Button variant="contained" color="info" onClick={() => handleTestSnackbar("info")}>
-              一般訊息
-            </Button>
-            <Button variant="contained" color="warning" onClick={() => handleTestSnackbar("warning")}>
-              警告訊息
-            </Button>
-          </Box>
-        </Box>
-      </Box>
+        <div>
+          <h2 className="text-xl font-semibold mb-4">Snackbar 測試</h2>
+          <div className="flex gap-2">
+            <Button onClick={() => handleTestSnackbar("success")}>成功訊息</Button>
+            <Button onClick={() => handleTestSnackbar("error")}>錯誤訊息</Button>
+            <Button onClick={() => handleTestSnackbar("info")}>一般訊息</Button>
+            <Button onClick={() => handleTestSnackbar("warning")}>警告訊息</Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
