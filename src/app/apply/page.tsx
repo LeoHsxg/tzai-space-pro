@@ -1,4 +1,2 @@
-'use client'
-import dynamic from 'next/dynamic'
-const ApplyForm = dynamic(() => import('../../views/ApplyForm'), { ssr: false })
+import ApplyForm from '../../views/ApplyForm'
 export default ApplyForm

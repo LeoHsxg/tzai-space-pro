@@ -1,4 +1,2 @@
-'use client'
-import dynamic from 'next/dynamic'
-const Rule = dynamic(() => import('../../views/Rule'), { ssr: false })
+import Rule from '../../views/Rule'
 export default Rule
