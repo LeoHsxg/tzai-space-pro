@@ -8,9 +8,49 @@
 }
 
 .ipt {
-  border-radius: 12px;  
+  border-radius: 12px;
   background-color: #fff;
   border: none;
+  height: 56px !important;
+  font-family: "Roboto", 'Noto Sans TC', 'PingFang TC', sans-serif !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.15px !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+}
+
+.ipt::placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Input-specific: mirror MUI's 16.5px/14px padding for proper centering; bottom +1 to offset CJK descent */
+input.ipt {
+  padding: 16.5px 14px 17.5px 14px !important;
+}
+
+/* Select trigger placeholder — light gray when no value selected */
+button.ipt[data-placeholder] {
+  color: rgba(0, 0, 0, 0.25) !important;
+  padding: 16.5px 14px 17.5px 14px !important;
+}
+
+/* Select dropdown items — match input font size, no blue ring */
+[data-slot="select-item"] {
+  color: rgba(0, 0, 0, 0.8) !important;
+  font-size: 1rem !important;
+  font-weight: 300 !important;
+  border-radius: 0 !important;
+}
+
+[data-slot="select-content"] {
+  outline: none !important;
+  box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.10) !important;
+}
+
+/* Force select popup to match trigger width */
+[data-slot="select-content"][data-align-trigger="true"] {
+  width: var(--anchor-width) !important;
+  min-width: 0 !important;
 }
 
 .ipt .MuiOutlinedInput-notchedOutline {

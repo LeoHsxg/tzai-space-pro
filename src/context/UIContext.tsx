@@ -59,7 +59,7 @@ export const UIProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const showSnackbar = (message: string, severity: "success" | "error" | "info" | "warning") => {
-    toast[severity](message);
+    toast[severity](message, { id: message });
   };
 
   const hideSnackbar = () => {};

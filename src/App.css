@@ -61,6 +61,23 @@ table {
     position: relative;
 }
 
+/* Toast text bold */
+[data-sonner-toast] [data-title] {
+  font-weight: 700 !important;
+}
+
+/* Info toast - solid blue style */
+[data-sonner-toast][data-type="info"] {
+  background-color: #4793C8 !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+  border-radius: 12px !important;
+}
+
+[data-sonner-toast][data-type="info"] svg {
+  color: #ffffff !important;
+}
+
 @layer base {
   .theme {
         --font-heading: var(--font-sans);

@@ -1,15 +1,9 @@
-'use client'
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Button } from "@/Components/ui/button";
 import { Input } from "@/Components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/Components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -87,54 +81,44 @@ const ApplyForm: React.FC = () => {
     <div className="mt-[5px] md:my-5 px-[5%] pb-20 md:pb-0 max-w-[640px] mx-auto">
       <form onSubmit={handleSubmit} className="gap-5 flex flex-col justify-center items-center">
         <div className="w-full">
-          <Input
-            className="ipt bg-white"
-            placeholder="申請人姓名"
-            onChange={e => setApplicantName(e.target.value)}
-          />
+          <Input className="ipt bg-white" placeholder="申請人姓名" onChange={e => setApplicantName(e.target.value)} />
         </div>
         <div className="flex justify-between w-full">
           <Input className="ipt w-full" placeholder="手機號碼" onChange={e => setPhone(e.target.value)} />
         </div>
         <div className="w-full justify-between flex gap-4">
-          <Input className="ipt w-24 shrink-0" placeholder="人數" onChange={e => setCrowdSize(e.target.value)} />
-          <Select onValueChange={(value) => setLocation(value as string)}>
-            <SelectTrigger className="ipt flex-1">
+          <Input className="ipt w-32 shrink-0" placeholder="人數" onChange={e => setCrowdSize(e.target.value)} />
+          <Select onValueChange={value => setLocation(value as string)}>
+            <SelectTrigger className="ipt flex-1 border-0 pl-4">
               <SelectValue placeholder="借用地點" />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="小導師室">小導師室</SelectItem>
-              <SelectItem value="書房">書房</SelectItem>
-              <SelectItem value="橘廳">橘廳</SelectItem>
-              <SelectItem value="會議室">會議室</SelectItem>
-              <SelectItem value="貢丸室">貢丸室</SelectItem>
+            <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0px_4px_24px_rgba(0,0,0,0.10)]">
+              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="小導師室">
+                小導師室
+              </SelectItem>
+              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="書房">
+                書房
+              </SelectItem>
+              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="橘廳">
+                橘廳
+              </SelectItem>
+              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="會議室">
+                會議室
+              </SelectItem>
+              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="貢丸室">
+                貢丸室
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
         <div className="w-full">
-          <DateTimePicker
-            className="ipt w-full"
-            label="開始日期"
-            value={startDate}
-            views={["month", "day", "hours", "minutes"]}
-            onChange={newValue => setStartDate(newValue)}
-          />
+          <DateTimePicker className="ipt w-full" label="開始日期" value={startDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setStartDate(newValue)} />
         </div>
         <div className="flex justify-between w-full">
-          <DateTimePicker
-            className="ipt w-full"
-            label="結束日期"
-            value={endDate}
-            views={["month", "day", "hours", "minutes"]}
-            onChange={newValue => setEndDate(newValue)}
-          />
+          <DateTimePicker className="ipt w-full" label="結束日期" value={endDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setEndDate(newValue)} />
         </div>
         <div className="w-full">
-          <Input
-            className="ipt"
-            placeholder="活動簡述（請認真寫！）"
-            onChange={e => setDescription(e.target.value)}
-          />
+          <Input className="ipt" placeholder="活動簡述（請認真寫！）" onChange={e => setDescription(e.target.value)} />
         </div>
       </form>
       <div className="mt-2 flex flex-col justify-center items-center gap-0.5">
