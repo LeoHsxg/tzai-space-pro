@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "tzai-space"
-  }
+    "default": "tzai-space-pro"
+  },
+  "targets": {},
+  "etags": {}
 }
+

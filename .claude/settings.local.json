@@ -11,7 +11,16 @@
       "Bash(npx shadcn@latest init -y --style new-york --base-color zinc)",
       "Bash(printf \"\\\\n\\\\n\")",
       "Bash(npx shadcn@latest init -y)",
-      "Bash(npx shadcn@latest add button dialog input select sonner --yes)"
+      "Bash(npx shadcn@latest add button dialog input select sonner --yes)",
+      "Bash(npm install:*)",
+      "Bash(npm audit:*)",
+      "mcp__plugin_firebase_firebase__apphosting_list_backends",
+      "mcp__plugin_firebase_firebase__developerknowledge_search_documents",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:unpkg.com)",
+      "WebFetch(domain:firebase.google.com)",
+      "WebFetch(domain:app.unpkg.com)"
     ]
   }
 }
