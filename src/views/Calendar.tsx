@@ -1,149 +1,119 @@
 'use client'
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
+import { collection, onSnapshot, query, where, orderBy } from "firebase/firestore";
+import { db } from "../firebase/firebase";
+import { Booking } from "../types/booking";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
-import { Event } from "../types/event";
 import "../styles/Calendar.css";
 
 const Calendar: React.FC = () => {
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs()); // 當前選中的日期
-  const [events, setEvents] = useState<Event[]>([]); // 儲存事件資料
-  const [filteredEvents, setFilteredEvents] = useState<Event[]>([]); // 當天的事件
-  const [filteredAmount, setFilteredAmount] = useState<number>(0); // 當天的事件數量
-  const [spanningEvents, setSpanningEvents] = useState<Event[]>([]); // 跨天的事件
-  const [todayEvents, setTodayEvents] = useState<Event[]>([]); // 今天的事件
-
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null); // 選中的事件
+  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [filteredAmount, setFilteredAmount] = useState<number>(0);
+  const [spanningBookings, setSpanningBookings] = useState<Booking[]>([]);
+  const [todayBookings, setTodayBookings] = useState<Booking[]>([]);
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState<boolean>(false); // 新增 loading 狀態
 
-  const fetchEvents = async (year: number, month: number) => {
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/get?year=${year}&month=${month}`);
-      const text = await response.text();
-      try {
-        const data = JSON.parse(text);
-        console.log("解析後的事件:", data.events);
-        setEvents(data.events || []);
-      } catch (error) {
-        console.error("JSON 解析失敗，回應內容:", text, "\n錯誤訊息:", error);
-      }
-    } catch (error) {
-      console.error("Error fetching events:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleClickOpen = (event: Event) => {
-    setSelectedEvent(event);
-    // console.log("selectedEvent:", selectedEvent);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const handleDeleteSuccess = () => {
-    // 重新獲取當前月份的事件
-    const today = dayjs();
-    fetchEvents(today.year(), today.month() + 1);
-  };
-
-  React.useEffect(() => {
-    const today = dayjs();
-    fetchEvents(today.year(), today.month() + 1);
+  // 訂閱所有 active 預約（onSnapshot 即時更新，有人新增/刪除時自動反映）
+  useEffect(() => {
+    const q = query(
+      collection(db, "bookings"),
+      where("status", "==", "active"),
+      orderBy("startTime")
+    );
+    const unsubscribe = onSnapshot(q, (snap) => {
+      const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Booking));
+      setBookings(data);
+    });
+    return () => unsubscribe();
   }, []);
 
-  const handleMonthChange = (newMonth: Dayjs) => {
-    console.log("Month changed to:", newMonth);
-    fetchEvents(newMonth.year(), newMonth.month() + 1);
-  };
-
-  // 當 value 改變時，篩選當天的事件
-  React.useEffect(() => {
+  // 當選擇日期或 bookings 更新時，篩選當天的預約
+  useEffect(() => {
     if (!value) return;
-    // 格式化為 YYYY-MM-DD, 撇除掉幾點幾分才有辦法比較
     const selectedDate = value.format("YYYY-MM-DD");
-    const dailyEvents = events.filter(event => {
-      const sd = dayjs(event.start.dateTime).format("YYYY-MM-DD");
-      const ed = dayjs(event.end.dateTime).format("YYYY-MM-DD");
+
+    // 時間重疊判斷：事件橫跨選擇日期（包含跨天事件）
+    const dailyBookings = bookings.filter((b) => {
+      const sd = dayjs(b.startTime.toDate()).format("YYYY-MM-DD");
+      const ed = dayjs(b.endTime.toDate()).format("YYYY-MM-DD");
       return sd <= selectedDate && selectedDate <= ed;
     });
-    // 拆成兩組
-    const spanningEventsData = dailyEvents.filter(event => dayjs(event.start.dateTime).isBefore(selectedDate));
-    const todayEventsData = dailyEvents.filter(event => dayjs(event.start.dateTime).isSame(selectedDate, "day"));
-    setFilteredEvents(dailyEvents);
-    setFilteredAmount(dailyEvents.length);
-    setSpanningEvents(spanningEventsData);
-    setTodayEvents(todayEventsData);
-  }, [value, events]); // 當 `value` 或 `events` 改變時重新篩選
+
+    // 橫跨事件：開始時間早於今天
+    const spanning = dailyBookings.filter((b) =>
+      dayjs(b.startTime.toDate()).isBefore(selectedDate)
+    );
+    // 今天開始的事件
+    const today = dailyBookings.filter((b) =>
+      dayjs(b.startTime.toDate()).isSame(selectedDate, "day")
+    );
+
+    setFilteredAmount(dailyBookings.length);
+    setSpanningBookings(spanning);
+    setTodayBookings(today);
+  }, [value, bookings]);
 
   return (
-    <div
-      className="
-        flex flex-col pb-16 
-        md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0
-      ">
+    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
       {/* 行事曆 */}
       <div className="px-[7.5%] md:pt-5 md:px-0 md:flex md:justify-end">
         <DateCalendar
           sx={{ minWidth: { xs: "100%", md: "320px" }, margin: { md: 0 } }}
           className="w-full bg-white rounded-xl"
           value={value}
-          onChange={newValue => setValue(newValue)}
-          onMonthChange={handleMonthChange}
+          onChange={(newValue) => setValue(newValue)}
         />
       </div>
 
       {/* 預約詳情 */}
-      <div
-        className="
-          w-full py-4 px-[5%] flex flex-col items-center inline-flex 
-          md:pt-5 md:pb-0 md:px-0 md:grow
-        ">
-        {/* 裝飾文字 */}
+      <div className="w-full py-4 px-[5%] flex flex-col items-center inline-flex md:pt-5 md:pb-0 md:px-0 md:grow">
         <div className="self-stretch px-2.5 justify-between items-center inline-flex">
           <div className="font">今日預約共 {filteredAmount} 筆</div>
           <a
             href="https://calendar.google.com/calendar/u/0/embed?src=oa27fmn21hoqd0hvdpg1bqlv1k@group.calendar.google.com&ctz=Asia/Taipei"
             target="_blank"
             rel="noopener noreferrer"
-            className="font underline">
+            className="font underline"
+          >
             預約詳情
           </a>
         </div>
 
-        {/* 載入中與預約列表 */}
-        {loading ? (
-          <div className="flex justify-center items-center w-full h-full">
-            <div className="w-8 h-8 border-2 border-gray-300 border-t-gray-800 rounded-full animate-spin" />
-          </div>
-        ) : (
-          <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
-            {spanningEvents.map((event, index) => (
-              <Reserve onClick={() => handleClickOpen(event)} key={index} event={event} />
-            ))}
+        <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
+          {spanningBookings.map((b, index) => (
+            <Reserve
+              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              key={index}
+              booking={b}
+            />
+          ))}
 
-            {/* 如果有橫跨事件又有今天事件，插入分隔線 */}
-            {spanningEvents.length > 0 && todayEvents.length > 0 && (
-              <div className="w-full px-2">
-                <div className="w-full border-t-2 border-dashed border-gray-400/40"></div>
-              </div>
-            )}
+          {spanningBookings.length > 0 && todayBookings.length > 0 && (
+            <div className="w-full px-2">
+              <div className="w-full border-t-2 border-dashed border-gray-400/40" />
+            </div>
+          )}
 
-            {todayEvents.map((event, index) => (
-              <Reserve onClick={() => handleClickOpen(event)} key={spanningEvents.length + index} event={event} />
-            ))}
+          {todayBookings.map((b, index) => (
+            <Reserve
+              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              key={spanningBookings.length + index}
+              booking={b}
+            />
+          ))}
 
-            <MyDialog open={open} onClose={handleClose} event={selectedEvent || ({} as Event)} onDeleteSuccess={handleDeleteSuccess} />
-          </div>
-        )}
+          <MyDialog
+            open={open}
+            onClose={() => setOpen(false)}
+            booking={selectedBooking}
+          />
+        </div>
       </div>
     </div>
   );
