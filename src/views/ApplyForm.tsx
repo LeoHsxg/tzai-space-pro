@@ -13,7 +13,6 @@ import { useUI } from "../context/UIContext";
 import ConsentCheckbox from "../Components/ConsentCheckbox";
 import "../styles/ApplyForm.css";
 
-const FUNCTION_URL = "api/add/";
 
 const ApplyForm: React.FC = () => {
   const user = useAuth();
@@ -41,6 +40,7 @@ const ApplyForm: React.FC = () => {
     showDialog("處理中...");
     try {
       if (!user) throw new Error("請先進行登入！");
+      const token = await user.getIdToken();
       const requestBody = {
         name: applicantName,
         phone: phone,
@@ -48,13 +48,15 @@ const ApplyForm: React.FC = () => {
         room: location,
         checkinTime: startDate.toISOString(),
         checkoutTime: endDate.toISOString(),
-        email: user.email ?? "test@gmail.com",
         eventDescription: description,
       };
-      await validateData(requestBody);
-      const response = await fetch(FUNCTION_URL, {
+      await validateData({ ...requestBody, email: user.email ?? "" });
+      const response = await fetch("/api/bookings", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(requestBody),
       });
       if (!response.ok) {
