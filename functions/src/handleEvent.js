@@ -188,7 +188,7 @@ async function listAllEvents() {
       timeMin: new Date(0).toISOString(), // 從 1970 年開始，確保拿到所有過去／未來事件
       maxResults: 2500, // 單頁最多 2500 筆
       pageToken: nextPageToken, // 分頁用
-      fields: "items(id,start,end,summary,description,extendedProperties(shared))",
+      fields: "nextPageToken,items(id,start,end,summary,description,extendedProperties(shared))",
     });
     const items = resp.data.items || [];
     events = events.concat(items);
