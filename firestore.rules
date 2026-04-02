@@ -1,13 +1,16 @@
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // /documents/collection/{documentId} 的讀取權限
     match /regulations/current {
       allow read: if true;
       allow write: if false;
     }
 
-    // catch-all（萬用匹配）, 要放在最下面
+    match /bookings/{bookingId} {
+      allow read: if true;    // 任何人可讀（Calendar 頁公開顯示）
+      allow write: if false;  // 所有寫入走 API Route（Admin SDK 繞過此規則）
+    }
+
     match /{document=**} {
       allow read, write: if false;
     }
