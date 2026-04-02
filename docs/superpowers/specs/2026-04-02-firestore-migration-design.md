@@ -1,7 +1,7 @@
 # Firestore 搬遷設計規格
 
-> 日期：2026-04-02
-> 分支：`dev`
+> 日期：2026-04-02  
+> 分支：`dev`  
 > 狀態：已確認，待實作
 
 ---
@@ -74,6 +74,7 @@ bookings/{docId}
 ```
 
 **docId 規則：**
+
 - 遷移資料：使用 Google Calendar `event.id`（讓 upsert 冪等，可重複跑遷移）
 - 新建預約：Firestore auto ID
 
@@ -110,7 +111,7 @@ Fields     : room (ASC), startTime (ASC), endTime (ASC)
 // 前端
 const token = await user.getIdToken();
 fetch("/api/bookings", {
-  headers: { Authorization: `Bearer ${token}` }
+  headers: { Authorization: `Bearer ${token}` },
 });
 
 // API Route
@@ -125,6 +126,7 @@ ID Token 由 Firebase Auth 簽發，含使用者 uid / email，有效期 1 小�
 ### `POST /api/bookings` — 建立預約
 
 **Request**
+
 ```typescript
 // Header: Authorization: Bearer <token>
 // Body:
@@ -133,13 +135,14 @@ ID Token 由 Firebase Auth 簽發，含使用者 uid / email，有效期 1 小�
   phone: string;
   crowdSize: string;
   room: string;
-  checkinTime: string;   // ISO datetime
-  checkoutTime: string;  // ISO datetime
+  checkinTime: string; // ISO datetime
+  checkoutTime: string; // ISO datetime
   eventDescription: string;
 }
 ```
 
 **流程**
+
 1. 解析 request body
 2. `verifyIdToken` 取得登入 email
 3. 執行 `validateData()`（複用 `applyFunc.ts`）
@@ -150,6 +153,7 @@ ID Token 由 Firebase Auth 簽發，含使用者 uid / email，有效期 1 小�
 5. 回傳 `201 { bookingId }`
 
 **衝突檢測查詢條件**
+
 ```typescript
 where("room", "==", room),
 where("status", "==", "active"),
@@ -162,12 +166,14 @@ where("endTime", ">", startTime),   // 現有事件在新事件開始後結束
 ### `DELETE /api/bookings/[id]` — 刪除預約
 
 **Request**
+
 ```
 // Header: Authorization: Bearer <token>
 // Method: DELETE /api/bookings/{bookingId}
 ```
 
 **流程**
+
 1. `verifyIdToken` 取得登入 email
 2. 讀取 `bookings/{id}`
 3. 確認 `decoded.email === booking.email`（本人才能刪）
@@ -179,12 +185,14 @@ where("endTime", ">", startTime),   // 現有事件在新事件開始後結束
 ### `POST /api/migrate` — 遷移 Calendar 資料
 
 **Request**
+
 ```
 POST /api/migrate
 （無需 body）
 ```
 
 **流程**
+
 1. 呼叫現有 `getAllEvents` Cloud Function 取回所有 Calendar 事件
 2. 逐筆轉換：`Event` → `Booking` schema
 3. Firestore `batch set()`，以 `calendarEventId` 為 doc ID（upsert）
@@ -200,42 +208,42 @@ POST /api/migrate
 
 ### Calendar.tsx
 
-| 項目 | 改動 |
-|------|------|
-| 資料來源 | `fetch /api/get` → `onSnapshot` |
-| 月份篩選 | `startTime < monthEnd AND endTime > monthStart`（時間重疊，支援跨月事件） |
-| 狀態篩選 | 只顯示 `status === "active"` |
-| 切月份 | 更新 query 條件，不再需要手動 fetch |
-| 刪除後刷新 | `onSnapshot` 自動反映，移除 `handleDeleteSuccess` fetch |
+| 項目       | 改動                                                                      |
+| ---------- | ------------------------------------------------------------------------- |
+| 資料來源   | `fetch /api/get` → `onSnapshot`                                           |
+| 月份篩選   | `startTime < monthEnd AND endTime > monthStart`（時間重疊，支援跨月事件） |
+| 狀態篩選   | 只顯示 `status === "active"`                                              |
+| 切月份     | 更新 query 條件，不再需要手動 fetch                                       |
+| 刪除後刷新 | `onSnapshot` 自動反映，移除 `handleDeleteSuccess` fetch                   |
 
 ### ApplyForm.tsx
 
-| 項目 | 改動 |
-|------|------|
-| API 端點 | `api/add/` → `/api/bookings` |
-| 加入 token | `user.getIdToken()` → `Authorization` header |
-| 前端驗證 | 保留 `validateData()`（快速 fail），後端再驗一次 |
+| 項目       | 改動                                             |
+| ---------- | ------------------------------------------------ |
+| API 端點   | `api/add/` → `/api/bookings`                     |
+| 加入 token | `user.getIdToken()` → `Authorization` header     |
+| 前端驗證   | 保留 `validateData()`（快速 fail），後端再驗一次 |
 
 ### MyDialog.tsx
 
-| 項目 | 改動 |
-|------|------|
-| API 端點 | `/api/delete/` → `DELETE /api/bookings/${bookingId}` |
-| 加入 token | `user.getIdToken()` → `Authorization` header |
-| body | 移除 `email` 欄位（改由 token 取得，不再信任前端傳入） |
-| `isEventOwner` | 保留於前端（控制按鈕顯示），實際授權在後端 |
+| 項目           | 改動                                                   |
+| -------------- | ------------------------------------------------------ |
+| API 端點       | `/api/delete/` → `DELETE /api/bookings/${bookingId}`   |
+| 加入 token     | `user.getIdToken()` → `Authorization` header           |
+| body           | 移除 `email` 欄位（改由 token 取得，不再信任前端傳入） |
+| `isEventOwner` | 保留於前端（控制按鈕顯示），實際授權在後端             |
 
 ### 新增 / 修改檔案
 
-| 檔案 | 說明 |
-|------|------|
-| `src/types/booking.ts` | 新增 `Booking` type |
-| `src/firebase/admin.ts` | Admin SDK 初始化（`adminAuth`, `adminDb`） |
-| `src/app/api/bookings/route.ts` | POST handler |
-| `src/app/api/bookings/[id]/route.ts` | DELETE handler |
-| `src/app/api/migrate/route.ts` | 遷移 handler |
-| `firestore.rules` | 新增 `bookings` 規則 |
-| `firestore.indexes.json` | 新增 composite index |
+| 檔案                                 | 說明                                       |
+| ------------------------------------ | ------------------------------------------ |
+| `src/types/booking.ts`               | 新增 `Booking` type                        |
+| `src/firebase/admin.ts`              | Admin SDK 初始化（`adminAuth`, `adminDb`） |
+| `src/app/api/bookings/route.ts`      | POST handler                               |
+| `src/app/api/bookings/[id]/route.ts` | DELETE handler                             |
+| `src/app/api/migrate/route.ts`       | 遷移 handler                               |
+| `firestore.rules`                    | 新增 `bookings` 規則                       |
+| `firestore.indexes.json`             | 新增 composite index                       |
 
 ### 暫時不動的檔案
 
@@ -279,3 +287,4 @@ FIREBASE_ADMIN_PRIVATE_KEY=...
 ```
 
 Firebase App Hosting 透過 `apphosting.yaml` 的 `environmentVariables` 或 Secret Manager 注入。
+
