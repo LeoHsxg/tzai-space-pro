@@ -28,6 +28,8 @@ gitlog_tmp.txt
 *.njsproj
 *.sln
 *.sw?
+tsconfig.tsbuildinfo
+
 functions/src/service_account.json
 service_account.json
 
