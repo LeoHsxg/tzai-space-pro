@@ -11,7 +11,11 @@ import MyDialog from "../Components/MyDialog";
 import "../styles/Calendar.css";
 
 const Calendar: React.FC = () => {
-  const [value, setValue] = useState<Dayjs | null>(dayjs());
+  const [value, setValue] = useState<Dayjs | null>(null);
+
+  useEffect(() => {
+    setValue(dayjs());
+  }, []);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredAmount, setFilteredAmount] = useState<number>(0);
   const [spanningBookings, setSpanningBookings] = useState<Booking[]>([]);
