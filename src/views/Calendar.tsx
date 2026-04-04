@@ -3,9 +3,8 @@
 import React, { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
-import { collection, onSnapshot, query, where, orderBy } from "firebase/firestore";
-import { db } from "../firebase/firebase";
 import { Booking } from "../types/booking";
+import { useBookings } from "../context/BookingsContext";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
 import "../styles/Calendar.css";
@@ -16,26 +15,12 @@ const Calendar: React.FC = () => {
   useEffect(() => {
     setValue(dayjs());
   }, []);
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const bookings = useBookings();
   const [filteredAmount, setFilteredAmount] = useState<number>(0);
   const [spanningBookings, setSpanningBookings] = useState<Booking[]>([]);
   const [todayBookings, setTodayBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
-
-  // 訂閱所有 active 預約（onSnapshot 即時更新，有人新增/刪除時自動反映）
-  useEffect(() => {
-    const q = query(
-      collection(db, "bookings"),
-      where("status", "==", "active"),
-      orderBy("startTime")
-    );
-    const unsubscribe = onSnapshot(q, (snap) => {
-      const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Booking));
-      setBookings(data);
-    });
-    return () => unsubscribe();
-  }, []);
 
   // 當選擇日期或 bookings 更新時，篩選當天的預約
   useEffect(() => {
