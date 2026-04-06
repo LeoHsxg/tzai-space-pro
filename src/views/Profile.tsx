@@ -44,7 +44,22 @@ const Profile: React.FC = () => {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const bookingId = uploadTargetRef.current;
-    if (!file || !bookingId || !user) return;
+    if (!file || !bookingId || !user) {
+      uploadTargetRef.current = null;
+      return;
+    }
+
+    // 客戶端驗證：限制圖片類型與大小
+    if (!file.type.startsWith("image/")) {
+      toast.error("請上傳圖片檔案");
+      uploadTargetRef.current = null;
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("圖片大小不可超過 5MB");
+      uploadTargetRef.current = null;
+      return;
+    }
 
     // Reset file input for re-use
     e.target.value = "";
