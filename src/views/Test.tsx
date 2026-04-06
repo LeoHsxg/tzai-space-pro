@@ -1,8 +1,17 @@
-'use client'
+"use client";
 
 import React from "react";
 import { Button } from "@/Components/ui/button";
 import { useUI } from "../context/UIContext";
+
+const spinnerStyle: React.CSSProperties = {
+  width: "32px",
+  height: "32px",
+  border: "3px solid #e5e7eb",
+  borderTopColor: "#f97316",
+  borderRadius: "50%",
+  animation: "spin 1s linear infinite",
+};
 
 const Test: React.FC = () => {
   const { showDialog, hideDialog, showSnackbar } = useUI();
@@ -17,7 +26,7 @@ const Test: React.FC = () => {
       <div className="p-2 text-center">
         <p className="mb-2">這是一個自定義內容的對話框</p>
         <Button onClick={hideDialog}>關閉</Button>
-      </div>
+      </div>,
     );
   };
 
@@ -33,9 +42,52 @@ const Test: React.FC = () => {
 
   return (
     <div className="p-8">
+      <style>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
       <h1 className="text-3xl font-bold mb-8">UI 元件測試頁面</h1>
 
       <div className="flex flex-col gap-4">
+        {/* 加載圈圈預覽 */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">加載圈圈預覽</h2>
+          <div className="flex gap-8 items-center flex-wrap">
+            {/* 圈圈v1 */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-[#F3F3F3] p-6 rounded-xl">
+                <div style={spinnerStyle} />
+              </div>
+              <span className="text-xs text-gray-500">小版</span>
+            </div>
+
+            {/* 圈圈v2 */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-[#F3F3F3] p-6 rounded-xl">
+                <div
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    border: "4px solid #e5e7eb",
+                    borderTopColor: "#f97316",
+                    borderRadius: "50%",
+                    animation: "spin 1s linear infinite",
+                  }}
+                />
+              </div>
+              <span className="text-xs text-gray-500">大版</span>
+            </div>
+
+            {/* 圈圈v3 白底 */}
+            <div className="flex flex-col items-center gap-2">
+              <div className="bg-white p-6 rounded-xl border border-gray-100">
+                <div style={spinnerStyle} />
+              </div>
+              <span className="text-xs text-gray-500">白底版</span>
+            </div>
+          </div>
+        </div>
         {/* Dialog 測試按鈕 */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Dialog 測試</h2>
