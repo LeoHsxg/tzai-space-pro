@@ -21,16 +21,16 @@
 
 頁面列出使用者所有借用紀錄，分三個 section：
 
-| Section | 顯示條件 |
-|---------|---------|
-| **待完成** | 借用時間已過 + 尚未上傳照片 |
-| **即將到來** | 借用時間未到 + 狀態 active |
-| **歷史紀錄** | 已上傳照片，或已取消 |
+| Section      | 顯示條件                    |
+| ------------ | --------------------------- |
+| **待完成**   | 借用時間已過 + 尚未上傳照片 |
+| **即將到來** | 借用時間未到 + 狀態 active  |
+| **歷史紀錄** | 已上傳照片，或已取消        |
 
 ### 照片上傳流程
 
 1. 使用者在「待完成」卡片點「上傳照片」
-2. 選擇圖片（限 image/*、最大 5MB）
+2. 選擇圖片（限 image/\*、最大 5MB）
 3. 直接從瀏覽器上傳至 Firebase Storage（路徑：`bookings/{bookingId}/{timestamp}.ext`）
 4. 取得下載 URL，呼叫 `PATCH /api/bookings/{id}` 寫回 Firestore
 5. onSnapshot 自動觸發，該筆移至「歷史紀錄」
@@ -47,19 +47,19 @@
 
 ## 異動檔案
 
-| 類型 | 路徑 |
-|------|------|
-| 新增 | `src/views/Profile.tsx` |
-| 新增 | `src/app/profile/page.tsx` |
-| 新增 | `src/func/bookingUtils.ts` |
-| 新增 | `storage.rules` |
-| 修改 | `src/types/booking.ts` — 新增 `photoRequired`, `photoUrl` |
+| 類型 | 路徑                                                               |
+| ---- | ------------------------------------------------------------------ |
+| 新增 | `src/views/Profile.tsx`                                            |
+| 新增 | `src/app/profile/page.tsx`                                         |
+| 新增 | `src/func/bookingUtils.ts`                                         |
+| 新增 | `storage.rules`                                                    |
+| 修改 | `src/types/booking.ts` — 新增 `photoRequired`, `photoUrl`          |
 | 修改 | `src/app/api/bookings/route.ts` — 新建時寫入 `photoRequired: true` |
-| 修改 | `src/app/api/bookings/[id]/route.ts` — 新增 PATCH endpoint |
-| 修改 | `src/firebase/firebase.ts` — 初始化 Firebase Storage |
-| 修改 | `src/Components/NavLinks.tsx` — 改連到 `/profile` |
-| 修改 | `src/views/ApplyForm.tsx` — 送出前檢查待完成 |
-| 修改 | `firebase.json` — 加入 Storage rules 設定與 emulator port |
+| 修改 | `src/app/api/bookings/[id]/route.ts` — 新增 PATCH endpoint         |
+| 修改 | `src/firebase/firebase.ts` — 初始化 Firebase Storage               |
+| 修改 | `src/Components/NavLinks.tsx` — 改連到 `/profile`                  |
+| 修改 | `src/views/ApplyForm.tsx` — 送出前檢查待完成                       |
+| 修改 | `firebase.json` — 加入 Storage rules 設定與 emulator port          |
 
 ---
 
@@ -75,3 +75,4 @@ firebase deploy --only storage
 ```bash
 firebase deploy --only firestore:indexes
 ```
+
