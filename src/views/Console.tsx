@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
-const Setting = () => {
+const Console = () => {
   const [redirecting, setRedirecting] = useState(false);
 
   const handleRedirectLogin = async () => {
@@ -38,4 +38,4 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default Console;
