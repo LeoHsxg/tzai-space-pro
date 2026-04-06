@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import imageCompression from "browser-image-compression";
 import { db, storage } from "../firebase/firebase";
 import { useAuth } from "../hooks/useAuth";
 import { Booking } from "../types/booking";
@@ -13,7 +14,9 @@ import dayjs from "dayjs";
 const Profile: React.FC = () => {
   const user = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [uploading, setUploading] = useState<string | null>(null); // bookingId being uploaded
+  const [uploading, setUploading] = useState<string | null>(null);
+  const [expandedPhoto, setExpandedPhoto] = useState<string | null>(null); // bookingId with expanded photo
+  const [loadingPhoto, setLoadingPhoto] = useState<string | null>(null);   // bookingId with loading photo
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadTargetRef = useRef<string | null>(null);
 
@@ -25,7 +28,6 @@ const Profile: React.FC = () => {
     );
     const unsub = onSnapshot(q, (snap) => {
       const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Booking));
-      // 依 startTime 降冪排序（最新在前）
       data.sort((a, b) => b.startTime.toMillis() - a.startTime.toMillis());
       setBookings(data);
     });
@@ -49,30 +51,34 @@ const Profile: React.FC = () => {
       return;
     }
 
-    // 客戶端驗證：限制圖片類型與大小
     if (!file.type.startsWith("image/")) {
       toast.error("請上傳圖片檔案");
       uploadTargetRef.current = null;
       return;
     }
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("圖片大小不可超過 5MB");
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("圖片大小不可超過 20MB");
       uploadTargetRef.current = null;
       return;
     }
 
-    // Reset file input for re-use
     e.target.value = "";
-
     setUploading(bookingId);
     try {
-      // 1. Upload to Firebase Storage
+      // 1. 前端壓縮（最大 1MB，長邊 1600px）
+      const compressed = await imageCompression(file, {
+        maxSizeMB: 1,
+        maxWidthOrHeight: 1600,
+        useWebWorker: true,
+      });
+
+      // 2. 上傳至 Firebase Storage
       const ext = file.name.split(".").pop() ?? "jpg";
       const storageRef = ref(storage, `bookings/${bookingId}/${Date.now()}.${ext}`);
-      await uploadBytes(storageRef, file);
+      await uploadBytes(storageRef, compressed);
       const downloadUrl = await getDownloadURL(storageRef);
 
-      // 2. PATCH Firestore via API route
+      // 3. PATCH Firestore via API route
       const token = await user.getIdToken();
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: "PATCH",
@@ -95,6 +101,15 @@ const Profile: React.FC = () => {
     }
   };
 
+  const togglePhoto = (bookingId: string) => {
+    if (expandedPhoto === bookingId) {
+      setExpandedPhoto(null);
+    } else {
+      setExpandedPhoto(bookingId);
+      setLoadingPhoto(bookingId);
+    }
+  };
+
   const formatTime = (b: Booking) =>
     `${dayjs(b.startTime.toDate()).format("MM/DD HH:mm")} – ${dayjs(b.endTime.toDate()).format("HH:mm")}`;
 
@@ -114,7 +129,6 @@ const Profile: React.FC = () => {
         </p>
         <p className="mb-4 px-[8%] noto text-xs text-black/40 md:pl-4 md:pr-0">{user.email}</p>
 
-        {/* Hidden file input */}
         <input
           ref={fileInputRef}
           type="file"
@@ -189,20 +203,38 @@ const Profile: React.FC = () => {
                         <p className="noto font-semibold text-sm text-black/60">{b.room}</p>
                         <p className="noto text-xs text-black/30">{formatTime(b)}</p>
                       </div>
-                      {b.status === "cancelled" && (
+                      {b.status === "cancelled" ? (
                         <span className="text-xs text-black/30 noto">已取消</span>
-                      )}
-                      {b.photoUrl && (
-                        <a
-                          href={b.photoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-xs text-blue-400 noto underline"
+                      ) : b.photoUrl ? (
+                        <button
+                          onClick={() => togglePhoto(b.id)}
+                          className="text-xs text-blue-400 noto flex items-center gap-1 hover:text-blue-500 transition-colors"
                         >
                           查看照片
-                        </a>
-                      )}
+                          <span className={`transition-transform duration-200 inline-block ${expandedPhoto === b.id ? "rotate-180" : ""}`}>
+                            ▾
+                          </span>
+                        </button>
+                      ) : null}
                     </div>
+
+                    {/* 展開照片（lazy load：只有展開時才設 src） */}
+                    {b.photoUrl && expandedPhoto === b.id && (
+                      <div className="mt-3 rounded-lg overflow-hidden relative">
+                        {loadingPhoto === b.id && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                            <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-400 rounded-full animate-spin" />
+                          </div>
+                        )}
+                        <img
+                          src={b.photoUrl}
+                          alt={`${b.room} 使用後照片`}
+                          className="w-full object-cover rounded-lg"
+                          onLoad={() => setLoadingPhoto(null)}
+                          onError={() => setLoadingPhoto(null)}
+                        />
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
