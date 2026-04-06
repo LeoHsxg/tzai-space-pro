@@ -25,8 +25,8 @@ const NavLinks = () => {
           <Link href="/rule">
             <img src={currentPath === '/rule' ? '/img/contract_s.svg' : '/img/contract_h.svg'} alt="Rule" className={currentPath === '/rule' ? 'icon_s' : 'icon_h'} />
           </Link>
-          <Link href="/console">
-            <img src={currentPath === '/console' ? '/img/settings_h.svg' : '/img/settings_h.svg'} alt="Console" className={currentPath === '/console' ? 'icon_s' : 'icon_h'} />
+          <Link href="/profile">
+            <img src={currentPath === '/profile' ? '/img/settings_h.svg' : '/img/settings_h.svg'} alt="Profile" className={currentPath === '/profile' ? 'icon_s' : 'icon_h'} />
           </Link>
         </div>
       </div>
@@ -35,7 +35,7 @@ const NavLinks = () => {
           <Link href="/"><div className="noto text-sm font-medium text-gray-600">日歷</div></Link>
           <Link href="/apply"><div className="noto text-sm font-medium text-gray-600">申請</div></Link>
           <Link href="/rule"><div className="noto text-sm font-medium text-gray-600">借用規章</div></Link>
-          <Link href="/console"><div className="noto text-sm font-medium text-gray-600">Console</div></Link>
+          <Link href="/profile"><div className="noto text-sm font-medium text-gray-600">個人檔案</div></Link>
         </div>
       </div>
     </div>
