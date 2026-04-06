@@ -1,0 +1,13 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // bookings/{bookingId}/ 下的任何檔案
+    match /bookings/{bookingId}/{allPaths=**} {
+      allow read: if true;                        // 公開讀（方便顯示照片）
+      allow write: if request.auth != null;       // 登入才能上傳
+    }
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
