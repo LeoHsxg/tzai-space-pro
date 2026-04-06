@@ -220,9 +220,9 @@ const Profile: React.FC = () => {
 
                     {/* 展開照片（lazy load：只有展開時才設 src） */}
                     {b.photoUrl && expandedPhoto === b.id && (
-                      <div className="mt-3 rounded-lg overflow-hidden relative">
+                      <div className={`mt-3 rounded-lg overflow-hidden relative ${loadingPhoto === b.id ? "min-h-[160px]" : ""}`}>
                         {loadingPhoto === b.id && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-gray-50">
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
                             <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-400 rounded-full animate-spin" />
                           </div>
                         )}

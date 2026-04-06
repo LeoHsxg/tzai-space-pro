@@ -17,6 +17,7 @@ const Calendar: React.FC = () => {
     setValue(dayjs());
   }, []);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
   const [filteredAmount, setFilteredAmount] = useState<number>(0);
   const [spanningBookings, setSpanningBookings] = useState<Booking[]>([]);
   const [todayBookings, setTodayBookings] = useState<Booking[]>([]);
@@ -33,6 +34,7 @@ const Calendar: React.FC = () => {
     const unsubscribe = onSnapshot(q, (snap) => {
       const data = snap.docs.map((doc) => ({ id: doc.id, ...doc.data() } as Booking));
       setBookings(data);
+      setLoadingBookings(false);
     });
     return () => unsubscribe();
   }, []);
@@ -90,6 +92,9 @@ const Calendar: React.FC = () => {
         </div>
 
         <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
+          {loadingBookings && (
+            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin mt-4" />
+          )}
           {spanningBookings.map((b, index) => (
             <Reserve
               onClick={() => { setSelectedBooking(b); setOpen(true); }}
