@@ -1,13 +1,23 @@
-'use client'
+"use client";
 
 import React, { useState, useEffect } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DateCalendar } from "@mui/x-date-pickers";
+import { collection, onSnapshot, query, where, orderBy } from "firebase/firestore";
+import { db } from "../firebase/firebase";
 import { Booking } from "../types/booking";
-import { useBookings } from "../context/BookingsContext";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
 import "../styles/Calendar.css";
+
+const loadingSpinnerStyle: React.CSSProperties = {
+  width: "32px",
+  height: "32px",
+  border: "3px solid #e5e7eb",
+  borderTopColor: "#f97316",
+  borderRadius: "50%",
+  animation: "spin 1s linear infinite",
+};
 
 const Calendar: React.FC = () => {
   const [value, setValue] = useState<Dayjs | null>(null);
@@ -15,12 +25,24 @@ const Calendar: React.FC = () => {
   useEffect(() => {
     setValue(dayjs());
   }, []);
-  const bookings = useBookings();
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [loadingBookings, setLoadingBookings] = useState(true);
   const [filteredAmount, setFilteredAmount] = useState<number>(0);
   const [spanningBookings, setSpanningBookings] = useState<Booking[]>([]);
   const [todayBookings, setTodayBookings] = useState<Booking[]>([]);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
+
+  // 訂閱所有 active 預約（onSnapshot 即時更新，有人新增/刪除時自動反映）
+  useEffect(() => {
+    const q = query(collection(db, "bookings"), where("status", "==", "active"), orderBy("startTime"));
+    const unsubscribe = onSnapshot(q, snap => {
+      const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Booking);
+      setBookings(data);
+      setLoadingBookings(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // 當選擇日期或 bookings 更新時，篩選當天的預約
   useEffect(() => {
@@ -28,20 +50,16 @@ const Calendar: React.FC = () => {
     const selectedDate = value.format("YYYY-MM-DD");
 
     // 時間重疊判斷：事件橫跨選擇日期（包含跨天事件）
-    const dailyBookings = bookings.filter((b) => {
+    const dailyBookings = bookings.filter(b => {
       const sd = dayjs(b.startTime.toDate()).format("YYYY-MM-DD");
       const ed = dayjs(b.endTime.toDate()).format("YYYY-MM-DD");
       return sd <= selectedDate && selectedDate <= ed;
     });
 
     // 橫跨事件：開始時間早於今天
-    const spanning = dailyBookings.filter((b) =>
-      dayjs(b.startTime.toDate()).isBefore(selectedDate)
-    );
+    const spanning = dailyBookings.filter(b => dayjs(b.startTime.toDate()).isBefore(selectedDate));
     // 今天開始的事件
-    const today = dailyBookings.filter((b) =>
-      dayjs(b.startTime.toDate()).isSame(selectedDate, "day")
-    );
+    const today = dailyBookings.filter(b => dayjs(b.startTime.toDate()).isSame(selectedDate, "day"));
 
     setFilteredAmount(dailyBookings.length);
     setSpanningBookings(spanning);
@@ -56,7 +74,7 @@ const Calendar: React.FC = () => {
           sx={{ minWidth: { xs: "100%", md: "320px" }, margin: { md: 0 } }}
           className="w-full bg-white rounded-xl"
           value={value}
-          onChange={(newValue) => setValue(newValue)}
+          onChange={newValue => setValue(newValue)}
         />
       </div>
 
@@ -68,16 +86,19 @@ const Calendar: React.FC = () => {
             href="https://calendar.google.com/calendar/u/0/embed?src=oa27fmn21hoqd0hvdpg1bqlv1k@group.calendar.google.com&ctz=Asia/Taipei"
             target="_blank"
             rel="noopener noreferrer"
-            className="font underline"
-          >
+            className="font underline">
             預約詳情
           </a>
         </div>
 
         <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
+          {loadingBookings && <div style={{ ...loadingSpinnerStyle, marginTop: "24px" }} />}
           {spanningBookings.map((b, index) => (
             <Reserve
-              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              onClick={() => {
+                setSelectedBooking(b);
+                setOpen(true);
+              }}
               key={index}
               booking={b}
             />
@@ -91,17 +112,16 @@ const Calendar: React.FC = () => {
 
           {todayBookings.map((b, index) => (
             <Reserve
-              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              onClick={() => {
+                setSelectedBooking(b);
+                setOpen(true);
+              }}
               key={spanningBookings.length + index}
               booking={b}
             />
           ))}
 
-          <MyDialog
-            open={open}
-            onClose={() => setOpen(false)}
-            booking={selectedBooking}
-          />
+          <MyDialog open={open} onClose={() => setOpen(false)} booking={selectedBooking} />
         </div>
       </div>
     </div>

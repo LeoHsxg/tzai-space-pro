@@ -22,7 +22,8 @@
       "WebFetch(domain:firebase.google.com)",
       "WebFetch(domain:app.unpkg.com)",
       "Bash(npm view:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(npx skills:*)"
     ]
   }
 }

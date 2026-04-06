@@ -25,7 +25,9 @@ const NavLinks = () => {
           <Link href="/rule">
             <img src={currentPath === '/rule' ? '/img/contract_s.svg' : '/img/contract_h.svg'} alt="Rule" className={currentPath === '/rule' ? 'icon_s' : 'icon_h'} />
           </Link>
-          <img src="/img/settings_h.svg" alt="Settings" className="icon_h" onClick={handleClick} />
+          <Link href="/profile">
+            <img src={currentPath === '/profile' ? '/img/settings_h.svg' : '/img/settings_h.svg'} alt="Profile" className={currentPath === '/profile' ? 'icon_s' : 'icon_h'} />
+          </Link>
         </div>
       </div>
       <div className="hidden md:flex grow w-full mx-3 h-12 z-[100]">
@@ -33,7 +35,7 @@ const NavLinks = () => {
           <Link href="/"><div className="noto text-sm font-medium text-gray-600">日歷</div></Link>
           <Link href="/apply"><div className="noto text-sm font-medium text-gray-600">申請</div></Link>
           <Link href="/rule"><div className="noto text-sm font-medium text-gray-600">借用規章</div></Link>
-          <div className="cursor-pointer noto text-sm font-medium text-gray-600" onClick={handleClick}>設定</div>
+          <Link href="/profile"><div className="noto text-sm font-medium text-gray-600">個人檔案</div></Link>
         </div>
       </div>
     </div>
