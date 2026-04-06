@@ -1,6 +1,8 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../firebase/firebase";
 import { Button } from "@/Components/ui/button";
 import { useUI } from "../context/UIContext";
 
@@ -15,6 +17,14 @@ const spinnerStyle: React.CSSProperties = {
 
 const Test: React.FC = () => {
   const { showDialog, hideDialog, showSnackbar } = useUI();
+  const [redirecting, setRedirecting] = useState(false);
+
+  const handleRedirectLogin = async () => {
+    if (redirecting) return;
+    setRedirecting(true);
+    const provider = new GoogleAuthProvider();
+    await signInWithRedirect(auth, provider);
+  };
 
   const handleTestLoading = () => {
     showDialog("載入中...");
@@ -88,6 +98,15 @@ const Test: React.FC = () => {
             </div>
           </div>
         </div>
+        {/* 登入測試 */}
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-4">登入測試</h2>
+          <p className="text-sm text-gray-500 mb-2">使用 redirect 方式登入（Safari 相容）</p>
+          <Button onClick={handleRedirectLogin} disabled={redirecting}>
+            {redirecting ? "跳轉中…" : "Redirect 登入"}
+          </Button>
+        </div>
+
         {/* Dialog 測試按鈕 */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Dialog 測試</h2>
