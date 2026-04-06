@@ -93,7 +93,7 @@ const Calendar: React.FC = () => {
 
         <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
           {loadingBookings && (
-            <div className="w-5 h-5 border-2 border-gray-300 border-t-gray-500 rounded-full animate-spin mt-4" />
+            <div className="w-8 h-8 border-[3px] border-gray-200 border-t-orange-400 rounded-full animate-spin mt-6" />
           )}
           {spanningBookings.map((b, index) => (
             <Reserve
