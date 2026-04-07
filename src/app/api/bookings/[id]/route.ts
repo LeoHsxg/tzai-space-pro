@@ -38,6 +38,11 @@ export async function DELETE(
 
   const booking = snap.data()!;
 
+  // 已取消的預約不可再刪除
+  if (booking.status === "cancelled") {
+    return NextResponse.json({ message: "預約已取消" }, { status: 409 });
+  }
+
   // 非本人 → 確認是否為管理員
   if (booking.email !== email && !(await isAdmin(email))) {
     return NextResponse.json({ message: "無權限刪除他人預約" }, { status: 403 });
