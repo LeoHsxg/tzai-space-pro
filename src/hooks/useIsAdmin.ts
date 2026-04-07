@@ -20,10 +20,26 @@ export function useIsAdmin(): { isAdmin: boolean; loading: boolean } {
       setLoading(false);
       return;
     }
-    getDoc(doc(db, "admins", user.email)).then((snap) => {
-      setIsAdmin(snap.exists());
-      setLoading(false);
-    });
+
+    let isMounted = true;
+
+    getDoc(doc(db, "admins", user.email))
+      .then((snap) => {
+        if (isMounted) {
+          setIsAdmin(snap.exists());
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setIsAdmin(false);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, [user?.email]);
 
   return { isAdmin, loading };
