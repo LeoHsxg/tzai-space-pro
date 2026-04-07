@@ -85,7 +85,7 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
         <DialogFooter>
           {canDelete && (
             <Button variant="destructive" onClick={handleDelete}>
-              刪除預約
+              取消預約
             </Button>
           )}
           <Button variant="outline" onClick={onClose}>
