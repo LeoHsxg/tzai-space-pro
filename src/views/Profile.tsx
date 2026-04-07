@@ -230,7 +230,7 @@ const Profile: React.FC = () => {
             ) : (
               <div className="flex flex-col gap-2">
                 {history.map((b) => (
-                  <div key={b.id} className="bg-white rounded-xl p-4 border border-gray-100 opacity-70">
+                  <div key={b.id} className="bg-white rounded-xl p-4 border border-gray-100">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="noto font-semibold text-sm text-black/60">{b.room}</p>
@@ -259,14 +259,24 @@ const Profile: React.FC = () => {
                             <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-400 rounded-full animate-spin" />
                           </div>
                         )}
-                        <img
-                          src={b.photoUrl}
-                          alt={`${b.room} 使用後照片`}
-                          className="w-full object-cover rounded-lg"
-                          onLoad={() => setLoadingPhoto(null)}
-                          onError={() => setLoadingPhoto(null)}
-                        />
-                        <div className="mt-2 flex justify-end">
+                        <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                          <img
+                            src={b.photoUrl}
+                            alt={`${b.room} 使用後照片`}
+                            className="w-full h-full object-cover"
+                            onLoad={() => setLoadingPhoto(null)}
+                            onError={() => setLoadingPhoto(null)}
+                          />
+                        </div>
+                        <div className="mt-2 flex justify-between items-center">
+                          <a
+                            href={b.photoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-black/30 noto hover:text-black/50 transition-colors"
+                          >
+                            開啟原圖
+                          </a>
                           <button
                             onClick={() => setConfirmDeleteId(b.id)}
                             disabled={deletingPhoto === b.id}
