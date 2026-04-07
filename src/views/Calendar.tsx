@@ -37,13 +37,7 @@ const Calendar: React.FC = () => {
   useEffect(() => {
     const start = Timestamp.fromDate(dayjs().subtract(4, "month").startOf("month").toDate());
     const end = Timestamp.fromDate(dayjs().add(1, "month").endOf("month").toDate());
-    const q = query(
-      collection(db, "bookings"),
-      where("status", "==", "active"),
-      where("startTime", ">=", start),
-      where("startTime", "<=", end),
-      orderBy("startTime")
-    );
+    const q = query(collection(db, "bookings"), where("status", "==", "active"), where("startTime", ">=", start), where("startTime", "<=", end), orderBy("startTime"));
     const unsubscribe = onSnapshot(q, snap => {
       const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Booking);
       setBookings(data);
@@ -51,6 +45,10 @@ const Calendar: React.FC = () => {
     });
     return () => unsubscribe();
   }, []);
+
+  const windowStart = dayjs().subtract(4, "month").startOf("month");
+  const windowEnd = dayjs().add(1, "month").endOf("month");
+  const isOutOfWindow = value !== null && (value.isBefore(windowStart, "day") || value.isAfter(windowEnd, "day"));
 
   // 當選擇日期或 bookings 更新時，篩選當天的預約
   useEffect(() => {
@@ -101,6 +99,11 @@ const Calendar: React.FC = () => {
 
         <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
           {loadingBookings && <div style={{ ...loadingSpinnerStyle, marginTop: "24px" }} />}
+          {isOutOfWindow && (
+            <p className="text-xs text-gray-400 text-center px-4 pt-2">
+              因為一次加載太多資料會讓管管的錢包很有負荷，而管管又很懶得寫動態加載，所以只加載最近半年的資料，造成不便敬請見諒，如有需求請再聯繫管管。
+            </p>
+          )}
           {spanningBookings.map((b, index) => (
             <Reserve
               onClick={() => {
