@@ -23,7 +23,8 @@
       "WebFetch(domain:app.unpkg.com)",
       "Bash(npm view:*)",
       "Bash(npx tsc:*)",
-      "Bash(npx skills:*)"
+      "Bash(npx skills:*)",
+      "Bash(git push:*)"
     ]
   }
 }

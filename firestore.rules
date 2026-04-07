@@ -1,5 +1,13 @@
+rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
+    match /admins/{email} {
+      // 只有本人可讀自己是否為管理員（client SDK 查詢用）
+      // 寫入只允許 Admin SDK（server-side），client 一律禁止
+      allow read: if request.auth != null && request.auth.token.email == email;
+      allow write: if false;
+    }
 
     match /regulations/current {
       allow read: if true;

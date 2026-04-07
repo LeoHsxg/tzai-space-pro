@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminDb, adminAuth } from "@/firebase/admin";
+import { adminDb, adminAuth, adminStorage } from "@/firebase/admin";
+import { isAdmin } from "@/lib/isAdmin";
+import { parseStoragePath } from "@/lib/storageUtils";
 
 /** Verify Bearer token, return email or a NextResponse error */
 async function verifyToken(request: NextRequest): Promise<{ email: string } | NextResponse> {
@@ -36,8 +38,26 @@ export async function DELETE(
 
   const booking = snap.data()!;
 
-  if (booking.email !== email) {
+  // 已取消的預約不可再刪除
+  if (booking.status === "cancelled") {
+    return NextResponse.json({ message: "預約已取消" }, { status: 409 });
+  }
+
+  // 非本人 → 確認是否為管理員
+  if (booking.email !== email && !(await isAdmin(email))) {
     return NextResponse.json({ message: "無權限刪除他人預約" }, { status: 403 });
+  }
+
+  // 若有照片，先清理 Storage（失敗不阻擋主流程）
+  if (booking.photoUrl) {
+    const storagePath = parseStoragePath(booking.photoUrl);
+    if (storagePath) {
+      try {
+        await adminStorage.bucket().file(storagePath).delete();
+      } catch {
+        // Storage 孤兒檔可接受，繼續軟刪除
+      }
+    }
   }
 
   // 軟刪除（保留歷史紀錄）

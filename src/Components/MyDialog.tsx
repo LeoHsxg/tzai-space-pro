@@ -12,6 +12,7 @@ import { Button } from "@/Components/ui/button";
 import { Booking } from "../types/booking";
 import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
+import { useIsAdmin } from "../hooks/useIsAdmin";
 import dayjs from "dayjs";
 
 interface MyDialogProps {
@@ -23,6 +24,7 @@ interface MyDialogProps {
 const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
   const user = useAuth();
   const { showSnackbar, showDialog, hideDialog } = useUI();
+  const { isAdmin } = useIsAdmin();
 
   const handleDelete = async () => {
     if (!booking || !user) return;
@@ -45,6 +47,8 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
   };
 
   const isEventOwner = user?.email === booking?.email;
+  const eventStarted = booking ? dayjs(booking.startTime.toDate()).isBefore(dayjs()) : false;
+  const canDelete = isAdmin || (isEventOwner && !eventStarted);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
@@ -79,9 +83,9 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
           </div>
         )}
         <DialogFooter>
-          {isEventOwner && (
+          {canDelete && (
             <Button variant="destructive" onClick={handleDelete}>
-              刪除預約
+              取消預約
             </Button>
           )}
           <Button variant="outline" onClick={onClose}>

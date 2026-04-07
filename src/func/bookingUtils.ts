@@ -22,7 +22,7 @@ export function getBookingSection(b: Booking): BookingSection {
   const now = Date.now();
   const ended = b.endTime.toMillis() < now;
 
-  if (b.photoRequired === true && !b.photoUrl && ended) return "pending";
+  if (b.status !== "cancelled" && b.photoRequired === true && !b.photoUrl && ended) return "pending";
   if (b.status === "active" && !ended) return "upcoming";
   return "history";
 }
