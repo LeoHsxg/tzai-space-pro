@@ -266,6 +266,22 @@ const Profile: React.FC = () => {
                           onLoad={() => setLoadingPhoto(null)}
                           onError={() => setLoadingPhoto(null)}
                         />
+                        <div className="mt-2 flex justify-end">
+                          <button
+                            onClick={() => setConfirmDeleteId(b.id)}
+                            disabled={deletingPhoto === b.id}
+                            className="text-xs text-red-400 noto hover:text-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                          >
+                            {deletingPhoto === b.id ? (
+                              <>
+                                <div className="w-3 h-3 border border-red-400 border-t-transparent rounded-full animate-spin" />
+                                刪除中…
+                              </>
+                            ) : (
+                              "刪除照片"
+                            )}
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
@@ -275,6 +291,35 @@ const Profile: React.FC = () => {
           </section>
         </div>
       </div>
+
+      {/* 確認刪除照片 Dialog */}
+      <Dialog
+        open={confirmDeleteId !== null}
+        onOpenChange={(open) => { if (!open) setConfirmDeleteId(null); }}
+      >
+        <DialogContent showCloseButton={false}>
+          <DialogHeader>
+            <DialogTitle className="noto">確定要刪除這張照片嗎？</DialogTitle>
+            <DialogDescription className="noto">
+              刪除後此借用將退回「待完成」狀態，需要重新上傳照片才能完成紀錄。
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <button
+              onClick={() => setConfirmDeleteId(null)}
+              className="px-4 py-2 rounded-lg text-sm noto text-black/50 hover:text-black/70 transition-colors"
+            >
+              取消
+            </button>
+            <button
+              onClick={() => confirmDeleteId && handleDeletePhoto(confirmDeleteId)}
+              className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold noto hover:bg-red-600 transition-colors"
+            >
+              確認刪除
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
