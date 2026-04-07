@@ -18,6 +18,8 @@ async function verifyToken(request: NextRequest): Promise<{ email: string } | Ne
 }
 
 /** 從 Firebase Storage 下載 URL 解析出 Storage 內部路徑
+ *  只處理 googleapis.com/v0/b/.../o/... 格式（Client SDK 預設格式）。
+ *  若 URL 格式不符，回傳 null，Storage 孤兒檔可接受。
  *  例：https://firebasestorage.googleapis.com/v0/b/tzai-space-pro.firebasestorage.app/o/bookings%2Fabc%2F123.jpg?alt=media&token=xxx
  *  → "bookings/abc/123.jpg"
  */
@@ -52,6 +54,10 @@ export async function DELETE(
 
   if (booking.email !== email) {
     return NextResponse.json({ message: "無權限刪除他人照片" }, { status: 403 });
+  }
+
+  if (booking.status === "cancelled") {
+    return NextResponse.json({ message: "已取消的預約不可操作" }, { status: 409 });
   }
 
   if (!booking.photoUrl) {
