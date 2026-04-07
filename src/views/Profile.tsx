@@ -10,6 +10,14 @@ import { Booking } from "../types/booking";
 import { getBookingSection } from "../func/bookingUtils";
 import { toast } from "sonner";
 import dayjs from "dayjs";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/Components/ui/dialog";
 
 const Profile: React.FC = () => {
   const user = useAuth();
@@ -17,6 +25,8 @@ const Profile: React.FC = () => {
   const [uploading, setUploading] = useState<string | null>(null);
   const [expandedPhoto, setExpandedPhoto] = useState<string | null>(null); // bookingId with expanded photo
   const [loadingPhoto, setLoadingPhoto] = useState<string | null>(null);   // bookingId with loading photo
+  const [deletingPhoto, setDeletingPhoto] = useState<string | null>(null);   // 正在執行刪除的 bookingId
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null); // 打開確認 dialog 的 bookingId
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadTargetRef = useRef<string | null>(null);
 
@@ -107,6 +117,29 @@ const Profile: React.FC = () => {
     } else {
       setExpandedPhoto(bookingId);
       setLoadingPhoto(bookingId);
+    }
+  };
+
+  const handleDeletePhoto = async (bookingId: string) => {
+    if (!user) return;
+    setConfirmDeleteId(null);
+    setDeletingPhoto(bookingId);
+    try {
+      const token = await user.getIdToken();
+      const res = await fetch(`/api/bookings/${bookingId}/photo`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message ?? "刪除失敗");
+      }
+      toast.success("照片已刪除，借用退回待完成");
+      setExpandedPhoto(null);
+    } catch (err) {
+      toast.error((err as Error).message || "刪除失敗，請再試一次");
+    } finally {
+      setDeletingPhoto(null);
     }
   };
 
