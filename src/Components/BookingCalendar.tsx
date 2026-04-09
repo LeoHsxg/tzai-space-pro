@@ -61,7 +61,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
           if (isSelected) {
             circleClass += " bg-[#f97316] text-white font-bold";
           } else if (isToday) {
-            circleClass += " border border-[#9ca3af] font-medium text-[#374151]";
+            circleClass += " border-[1.5px] border-[#9ca3af] border-solid font-medium text-[#374151]";
           } else if (isOutside) {
             circleClass += " text-[#d1d5db]";
           } else {
