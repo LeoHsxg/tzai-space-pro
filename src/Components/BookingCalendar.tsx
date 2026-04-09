@@ -4,6 +4,7 @@ import React from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { Calendar } from "@/Components/ui/calendar";
 import type { DayButtonProps } from "react-day-picker";
+import { cn } from "@/lib/utils";
 
 const ROOM_COLORS: Record<string, string> = {
   書房:    "#E44C4C",
@@ -46,9 +47,15 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
         weekday: "text-[11px] font-medium text-[#9ca3af] flex-1 text-center",
         // day cell wrapper — give it auto height for dots
         day: "relative w-full p-0 text-center",
+        today: "bg-transparent",
       }}
       components={{
         DayButton: ({ day, modifiers, ...props }: DayButtonProps) => {
+          const ref = React.useRef<HTMLButtonElement>(null);
+          React.useEffect(() => {
+            if (modifiers.focused) ref.current?.focus();
+          }, [modifiers.focused]);
+
           const dateStr = dayjs(day.date).format("YYYY-MM-DD");
           const rooms = bookingsByDate.get(dateStr) ?? [];
 
@@ -71,7 +78,11 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({
           return (
             <button
               {...props}
-              className="flex flex-col items-center w-full py-1 pb-1.5 rounded-md hover:bg-[#f9fafb] transition-colors cursor-pointer border-0 bg-transparent"
+              ref={ref}
+              className={cn(
+                "flex flex-col items-center w-full py-1 pb-1.5 rounded-md hover:bg-[#f9fafb] transition-colors cursor-pointer border-0 bg-transparent",
+                props.className
+              )}
             >
               <span className={circleClass}>
                 {day.date.getDate()}
