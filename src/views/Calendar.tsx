@@ -37,14 +37,8 @@ const Calendar: React.FC = () => {
   // Subscribe to active bookings within ±4 months window
   useEffect(() => {
     const start = Timestamp.fromDate(dayjs().subtract(4, "month").startOf("month").toDate());
-    const end   = Timestamp.fromDate(dayjs().add(1, "month").endOf("month").toDate());
-    const q = query(
-      collection(db, "bookings"),
-      where("status", "==", "active"),
-      where("startTime", ">=", start),
-      where("startTime", "<=", end),
-      orderBy("startTime"),
-    );
+    const end = Timestamp.fromDate(dayjs().add(1, "month").endOf("month").toDate());
+    const q = query(collection(db, "bookings"), where("status", "==", "active"), where("startTime", ">=", start), where("startTime", "<=", end), orderBy("startTime"));
     const unsubscribe = onSnapshot(q, snap => {
       const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Booking);
       setBookings(data);
@@ -58,8 +52,8 @@ const Calendar: React.FC = () => {
     const map = new Map<string, string[]>();
     bookings.forEach(b => {
       const start = dayjs(b.startTime.toDate());
-      const end   = dayjs(b.endTime.toDate());
-      let cursor  = start.startOf("day");
+      const end = dayjs(b.endTime.toDate());
+      let cursor = start.startOf("day");
       while (cursor.isBefore(end, "day") || cursor.isSame(end, "day")) {
         const key = cursor.format("YYYY-MM-DD");
         const existing = map.get(key) ?? [];
@@ -72,11 +66,9 @@ const Calendar: React.FC = () => {
     return map;
   }, [bookings]);
 
-  const windowStart  = dayjs().subtract(4, "month").startOf("month");
-  const windowEnd    = dayjs().add(1, "month").endOf("month");
-  const isOutOfWindow =
-    value !== null &&
-    (value.isBefore(windowStart, "day") || value.isAfter(windowEnd, "day"));
+  const windowStart = dayjs().subtract(4, "month").startOf("month");
+  const windowEnd = dayjs().add(1, "month").endOf("month");
+  const isOutOfWindow = value !== null && (value.isBefore(windowStart, "day") || value.isAfter(windowEnd, "day"));
 
   // Filter bookings for selected date
   useEffect(() => {
@@ -89,12 +81,8 @@ const Calendar: React.FC = () => {
       return sd <= selectedDate && selectedDate <= ed;
     });
 
-    const spanning = dailyBookings.filter(b =>
-      dayjs(b.startTime.toDate()).isBefore(selectedDate),
-    );
-    const today = dailyBookings.filter(b =>
-      dayjs(b.startTime.toDate()).isSame(selectedDate, "day"),
-    );
+    const spanning = dailyBookings.filter(b => dayjs(b.startTime.toDate()).isBefore(selectedDate));
+    const today = dailyBookings.filter(b => dayjs(b.startTime.toDate()).isSame(selectedDate, "day"));
 
     setFilteredAmount(dailyBookings.length);
     setSpanningBookings(spanning);
@@ -104,13 +92,9 @@ const Calendar: React.FC = () => {
   return (
     <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
       {/* 行事曆 */}
-      <div className="px-[7.5%] md:pt-5 md:px-0 md:flex md:justify-end">
+      <div className="px-[5%] md:pt-5 md:px-0 md:flex md:justify-end">
         <div style={{ minWidth: "320px" }}>
-          <BookingCalendar
-            value={value}
-            onChange={setValue}
-            bookingsByDate={bookingsByDate}
-          />
+          <BookingCalendar value={value} onChange={setValue} bookingsByDate={bookingsByDate} />
         </div>
       </div>
 
@@ -136,21 +120,27 @@ const Calendar: React.FC = () => {
           )}
           {spanningBookings.map((b, index) => (
             <Reserve
-              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              onClick={() => {
+                setSelectedBooking(b);
+                setOpen(true);
+              }}
               key={index}
               booking={b}
             />
           ))}
 
           {spanningBookings.length > 0 && todayBookings.length > 0 && (
-            <div className="w-full px-2">
+            <div className="w-full px-1">
               <div className="w-full border-t-2 border-dashed border-gray-400/40" />
             </div>
           )}
 
           {todayBookings.map((b, index) => (
             <Reserve
-              onClick={() => { setSelectedBooking(b); setOpen(true); }}
+              onClick={() => {
+                setSelectedBooking(b);
+                setOpen(true);
+              }}
               key={spanningBookings.length + index}
               booking={b}
             />
