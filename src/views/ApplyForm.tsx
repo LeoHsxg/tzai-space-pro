@@ -46,6 +46,7 @@ const ApplyForm: React.FC = () => {
         query(
           collection(db, "bookings"),
           where("email", "==", user.email),
+          where("status", "==", "active"),
           where("photoRequired", "==", true),
           where("photoUrl", "==", null)
         )

@@ -24,7 +24,9 @@
       "Bash(npm view:*)",
       "Bash(npx tsc:*)",
       "Bash(npx skills:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(npm list:*)",
+      "Bash(npm ls:*)"
     ]
   }
 }

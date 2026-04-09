@@ -187,13 +187,29 @@ const Profile: React.FC = () => {
               <p className="noto text-xs text-black/30">目前沒有即將到來的借用</p>
             ) : (
               <div className="flex flex-col gap-2">
-                {upcoming.map(b => (
-                  <div key={b.id} className="bg-white rounded-xl p-4 border border-blue-50">
-                    <p className="noto font-semibold text-sm text-black/80">{b.room}</p>
-                    <p className="noto text-xs text-black/40">{formatTime(b)}</p>
-                    <p className="noto text-xs text-black/30 mt-1">{b.description}</p>
-                  </div>
-                ))}
+                {upcoming.map(b => {
+                  const started = dayjs(b.startTime.toDate()).isBefore(dayjs());
+                  const needsUpload = b.photoRequired && !b.photoUrl && started;
+                  return (
+                    <div key={b.id} className="bg-white rounded-xl p-4 border border-blue-50">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="noto font-semibold text-sm text-black/80">{b.room}</p>
+                          <p className="noto text-xs text-black/40">{formatTime(b)}</p>
+                          <p className="noto text-xs text-black/30 mt-1">{b.description}</p>
+                        </div>
+                        {needsUpload && (
+                          <button
+                            onClick={() => handleUploadClick(b.id)}
+                            disabled={uploading === b.id}
+                            className="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-semibold noto hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-2 shrink-0">
+                            {uploading === b.id ? "上傳中…" : "上傳照片"}
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>

@@ -35,3 +35,20 @@ Firebase Storage 計費三個計費維度：
 | 展開式 + lazy load        | 點了才下載，跟連結一樣   |
 
 如果要用展開式，必須要搭配 lazy load。——只有使用者真的點開的時候才載入圖片。
+
+---
+
+### GSAP 的優勢
+
+- 時間軸控制（Timeline）：可以精確串接多個動畫，這是 CSS animation 很難做到的
+- 緩動函數非常豐富，內建 elastic、bounce 等效果
+- 跨瀏覽器一致性比純 CSS 好
+- ScrollTrigger 插件：滾動觸發動畫，這是 GSAP 最大的賣點之一
+
+### Framer Motion
+
+- React 原生整合更好
+- 有 AnimatePresence 專門處理頁面切換，對你的 Next.js 專案更合適。
+- variants — 狀態機式動畫
+- whileHover / whileTap / touchstart — 互動微動畫，按鈕、卡片的互動回饋
+- layout prop — 佈局變化自動補間，Framer Motion 自動做過渡動畫

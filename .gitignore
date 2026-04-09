@@ -35,3 +35,4 @@ service_account.json
 
 .next/
 .worktrees/
+.superpowers/

@@ -7,6 +7,7 @@ export function hasPendingPhoto(bookings: Booking[]): boolean {
   const now = Date.now();
   return bookings.some(
     (b) =>
+      b.status === "active" &&
       b.photoRequired === true &&
       !b.photoUrl &&
       b.endTime.toMillis() < now
@@ -22,7 +23,7 @@ export function getBookingSection(b: Booking): BookingSection {
   const now = Date.now();
   const ended = b.endTime.toMillis() < now;
 
-  if (b.status !== "cancelled" && b.photoRequired === true && !b.photoUrl && ended) return "pending";
+  if (b.status === "active" && b.photoRequired === true && !b.photoUrl && ended) return "pending";
   if (b.status === "active" && !ended) return "upcoming";
   return "history";
 }
