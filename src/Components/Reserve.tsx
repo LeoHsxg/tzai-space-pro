@@ -30,8 +30,8 @@ const Reserve = ({ onClick, booking }: ReserveProps) => {
     <div className="w-full h-12 pl-1 justify-start items-center gap-[15px] inline-flex">
       <div className="w-4 h-4 rounded-full" style={{ aspectRatio: "1 / 1", backgroundColor: circleColor }} />
       <div className="w-full h-12 flex flex-row px-5 bg-white rounded-[10px] items-center" onClick={() => onClick(booking)}>
-        <div className="basis-3/5 text-black/80 text-sm font-normal font-['Inter']">{timeRange}</div>
-        <div className="basis-2/5 text-black/80 text-sm font-normal font-['Inter']">{room}</div>
+        <div className="basis-1/2 text-black/80 text-sm font-normal font-['Inter']">{timeRange}</div>
+        <div className="basis-1/2 text-black/80 text-sm font-normal font-['Inter']">{room}</div>
       </div>
     </div>
   );
