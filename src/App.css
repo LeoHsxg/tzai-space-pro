@@ -34,8 +34,13 @@ footer, header, hgroup, menu, nav, section {
 body {
     line-height: 1;
     background-color: #f0f0f0;
-    font-family: 'Noto Sans TC', 'PingFang TC', 'Heiti TC', sans-serif;
+    font-family: var(--font-roboto), Roboto, 'Noto Sans TC', 'PingFang TC', 'Heiti TC', sans-serif;
+}
 
+@layer utilities {
+  .font-roboto {
+    font-family: var(--font-roboto), Roboto, sans-serif;
+  }
 }
 
 ol, ul {

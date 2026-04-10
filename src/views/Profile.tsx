@@ -146,15 +146,55 @@ const Profile: React.FC = () => {
   return (
     <div className="w-full pb-20 md:pb-0 md:mt-4">
       <div className="w-full md:max-w-[900px] m-auto">
-        <p className="-mt-1 mb-1 px-[8%] noto font-bold text-black/80 text-lg md:mt-0 md:pl-4 md:pr-0">個人檔案</p>
-        <p className="mb-4 px-[8%] noto text-xs text-black/40 md:pl-4 md:pr-0">{user.email}</p>
+        {/* Profile Card */}
+        <div className="mx-[5%] md:mx-4 mb-4 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+          {/* Upper: Avatar + Name/Email */}
+          <div className="px-6 pt-5 pb-4 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-100">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="頭像" className="w-full h-full object-cover" />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                  <span className="text-gray-500 text-xl font-bold noto">{(user.displayName || user.email || "U")[0].toUpperCase()}</span>
+                </div>
+              )}
+            </div>
+            <div className="flex flex-col justify-center min-w-0 -mt-1">
+              <p className="noto font-bold text-black/70 text-base truncate">{user.displayName || "使用者"}</p>
+              <p className="noto text-xs text-black/40 truncate">{user.email}</p>
+            </div>
+          </div>
+          {/* Thin divider */}
+          <div className="h-px bg-gray-100 mx-5" />
+          {/* Lower: Stats */}
+          <div className="flex py-4">
+            <div className="flex-1 flex flex-col items-center gap-0.5">
+              <span className="font-roboto font-bold text-[#e44c4c] text-lg leading-none">{pending.length}</span>
+              <span className="noto text-[11px] text-black/40 mt-1">待完成</span>
+            </div>
+            <div className="w-px bg-gray-200 self-stretch" />
+            <div className="flex-1 flex flex-col items-center gap-0.5">
+              <span className="font-roboto font-bold text-[#5796DF] text-lg leading-none">{upcoming.length}</span>
+              <span className="noto text-[11px] text-black/40 mt-1">即將到來</span>
+            </div>
+            <div className="w-px bg-gray-200 self-stretch" />
+            <div className="flex-1 flex flex-col items-center gap-0.5">
+              <span className="font-roboto font-bold text-black/50 text-lg leading-none">{history.length}</span>
+              <span className="noto text-[11px] text-black/40 mt-1">歷史紀錄</span>
+            </div>
+          </div>
+        </div>
 
         <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 
-        <div className="flex flex-col gap-6 px-[8%] md:px-4">
+        <div className="flex flex-col gap-6 px-[5%] md:px-4">
           {/* 待完成 */}
           <section>
-            <h2 className="noto text-sm font-semibold text-red-500 mb-2">待完成 {pending.length > 0 && `(${pending.length})`}</h2>
+            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+              <div className="w-2 h-2 rounded-full bg-[#e44c4c] shrink-0" />
+              <span className="noto text-sm font-semibold text-[#e44c4c] shrink-0">待完成 {pending.length > 0 && `(${pending.length})`}</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
             {pending.length === 0 ? (
               <p className="noto text-xs text-black/30">目前沒有待完成項目</p>
             ) : (
@@ -169,11 +209,11 @@ const Profile: React.FC = () => {
                       <button
                         onClick={() => handleUploadClick(b.id)}
                         disabled={uploading === b.id}
-                        className="px-3 py-1.5 rounded-lg bg-red-500 text-white text-xs font-semibold noto hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                        className="px-3 py-1.5 rounded-lg bg-[#e44c4c] text-white text-xs font-semibold noto hover:bg-[#c83c3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
                         {uploading === b.id ? "上傳中…" : "上傳照片"}
                       </button>
                     </div>
-                    <p className="noto text-xs text-red-400">請上傳使用後的空間照片以完成借用紀錄</p>
+                    <p className="noto text-xs text-[#e44c4c]/60">請上傳使用後的空間照片以完成借用紀錄</p>
                   </div>
                 ))}
               </div>
@@ -182,7 +222,11 @@ const Profile: React.FC = () => {
 
           {/* 即將到來 */}
           <section>
-            <h2 className="noto text-sm font-semibold text-blue-500 mb-2">即將到來 {upcoming.length > 0 && `(${upcoming.length})`}</h2>
+            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+              <div className="w-2 h-2 rounded-full bg-[#5796DF] shrink-0" />
+              <span className="noto text-sm font-semibold text-[#5796DF] shrink-0">即將到來 {upcoming.length > 0 && `(${upcoming.length})`}</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
             {upcoming.length === 0 ? (
               <p className="noto text-xs text-black/30">目前沒有即將到來的借用</p>
             ) : (
@@ -202,7 +246,7 @@ const Profile: React.FC = () => {
                           <button
                             onClick={() => handleUploadClick(b.id)}
                             disabled={uploading === b.id}
-                            className="px-3 py-1.5 rounded-lg bg-blue-500 text-white text-xs font-semibold noto hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-2 shrink-0">
+                            className="px-3 py-1.5 rounded-lg bg-[#5796DF] text-white text-xs font-semibold noto hover:bg-[#3A7BC8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-2 shrink-0">
                             {uploading === b.id ? "上傳中…" : "上傳照片"}
                           </button>
                         )}
@@ -216,7 +260,11 @@ const Profile: React.FC = () => {
 
           {/* 歷史紀錄 */}
           <section>
-            <h2 className="noto text-sm font-semibold text-black/40 mb-2">歷史紀錄</h2>
+            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+              <div className="w-2 h-2 rounded-full bg-gray-300 shrink-0" />
+              <span className="noto text-sm font-semibold text-black/40 shrink-0">歷史紀錄</span>
+              <div className="flex-1 h-px bg-gray-200" />
+            </div>
             {history.length === 0 ? (
               <p className="noto text-xs text-black/30">尚無歷史紀錄</p>
             ) : (
@@ -231,7 +279,7 @@ const Profile: React.FC = () => {
                       {b.status === "cancelled" ? (
                         <span className="text-xs text-black/30 noto">已取消</span>
                       ) : b.photoUrl ? (
-                        <button onClick={() => togglePhoto(b.id)} className="text-xs text-blue-400 noto flex items-center gap-1 hover:text-blue-500 transition-colors">
+                        <button onClick={() => togglePhoto(b.id)} className="text-xs text-[#5796DF] noto flex items-center gap-1 hover:text-[#3A7BC8] transition-colors">
                           查看照片
                           <span className={`transition-transform duration-200 inline-block ${expandedPhoto === b.id ? "rotate-180" : ""}`}>▾</span>
                         </button>
@@ -243,7 +291,7 @@ const Profile: React.FC = () => {
                       <div className={`mt-3 overflow-hidden relative ${loadingPhoto === b.id ? "min-h-[160px]" : ""}`}>
                         {loadingPhoto === b.id && (
                           <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
-                            <div className="w-5 h-5 border-2 border-gray-300 border-t-blue-400 rounded-full animate-spin" />
+                            <div className="w-5 h-5 border-2 border-gray-300 border-t-[#5796DF] rounded-full animate-spin" />
                           </div>
                         )}
                         <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
@@ -262,10 +310,10 @@ const Profile: React.FC = () => {
                           <button
                             onClick={() => setConfirmDeleteId(b.id)}
                             disabled={deletingPhoto === b.id}
-                            className="text-xs text-red-400 noto hover:text-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
+                            className="text-xs text-[#e44c4c] noto hover:text-[#c83c3c] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1">
                             {deletingPhoto === b.id ? (
                               <>
-                                <div className="w-3 h-3 border border-red-400 border-t-transparent rounded-full animate-spin" />
+                                <div className="w-3 h-3 border border-[#e44c4c] border-t-transparent rounded-full animate-spin" />
                                 刪除中…
                               </>
                             ) : (
@@ -300,7 +348,7 @@ const Profile: React.FC = () => {
             </button>
             <button
               onClick={() => confirmDeleteId && handleDeletePhoto(confirmDeleteId)}
-              className="px-4 py-2 rounded-lg bg-red-500 text-white text-sm font-semibold noto hover:bg-red-600 transition-colors">
+              className="px-4 py-2 rounded-lg bg-[#e44c4c] text-white text-sm font-semibold noto hover:bg-[#c83c3c] transition-colors">
               確認刪除
             </button>
           </DialogFooter>
