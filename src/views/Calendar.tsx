@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import dayjs, { Dayjs } from "dayjs";
 import { collection, onSnapshot, query, where, orderBy, Timestamp } from "firebase/firestore";
 import { db } from "../firebase/firebase";
@@ -24,9 +25,13 @@ const loadingSpinnerStyle: React.CSSProperties = {
 const Calendar: React.FC = () => {
   const [value, setValue] = useState<Dayjs | null>(null);
   const [applyOpen, setApplyOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const dragStartY = useRef(0);
 
   useEffect(() => {
     setValue(dayjs());
+    setMounted(true);
   }, []);
 
   // Lock body scroll when bottom sheet is open
@@ -98,8 +103,66 @@ const Calendar: React.FC = () => {
     setTodayBookings(today);
   }, [value, bookings]);
 
+  // Drag-to-dismiss handlers
+  const handleDragStart = (e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+  };
+  const handleDragMove = (e: React.TouchEvent) => {
+    const delta = e.touches[0].clientY - dragStartY.current;
+    if (delta > 0) setDragOffset(delta);
+  };
+  const handleDragEnd = () => {
+    if (dragOffset > 80) {
+      setApplyOpen(false);
+    }
+    setDragOffset(0);
+  };
+
+  const sheetStyle: React.CSSProperties = {
+    maxHeight: "92vh",
+    transform: applyOpen ? `translateY(${dragOffset}px)` : "translateY(100%)",
+    transition: dragOffset > 0 ? "none" : "transform 0.3s ease-out",
+  };
+
+  const overlay = (
+    <>
+      {/* Backdrop — rendered in document.body portal to clear all z-index stacking contexts */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-[9998] md:hidden transition-opacity duration-300 ${applyOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setApplyOpen(false)}
+      />
+
+      {/* Bottom sheet */}
+      <div
+        className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden bg-[#F3F3F3] rounded-t-2xl shadow-2xl"
+        style={sheetStyle}>
+        {/* Drag handle — touch target */}
+        <div
+          className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}>
+          <div className="w-10 h-1 rounded-full bg-gray-300" />
+        </div>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-1 pb-3">
+          <span className="noto font-semibold text-base text-black/80">申請借用</span>
+          <button
+            onClick={() => setApplyOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black/70 hover:bg-black/5 transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        {/* Scrollable form */}
+        <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 68px)" }}>
+          <ApplyForm />
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0 relative">
+    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
       {/* 行事曆 */}
       <div className="px-[5%] md:pt-5 md:px-0 md:flex md:justify-end">
         <div style={{ minWidth: "320px" }}>
@@ -166,34 +229,8 @@ const Calendar: React.FC = () => {
         <Plus className="w-6 h-6" />
       </button>
 
-      {/* Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/40 z-[150] md:hidden transition-opacity duration-300 ${applyOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
-        onClick={() => setApplyOpen(false)}
-      />
-
-      {/* Bottom sheet */}
-      <div
-        className={`fixed bottom-0 left-0 right-0 z-[160] md:hidden bg-white rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out ${applyOpen ? "translate-y-0" : "translate-y-full"}`}
-        style={{ maxHeight: "92vh" }}>
-        {/* Drag handle */}
-        <div className="flex justify-center pt-3 pb-1">
-          <div className="w-10 h-1 rounded-full bg-gray-300" />
-        </div>
-        {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-2 pb-3">
-          <span className="noto font-semibold text-base text-black/80">申請借用</span>
-          <button
-            onClick={() => setApplyOpen(false)}
-            className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black/70 hover:bg-gray-100 transition-colors">
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-        {/* Scrollable form */}
-        <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 72px)" }}>
-          <ApplyForm />
-        </div>
-      </div>
+      {/* Portal: backdrop + sheet rendered directly on document.body */}
+      {mounted && createPortal(overlay, document.body)}
     </div>
   );
 };
