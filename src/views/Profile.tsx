@@ -291,7 +291,7 @@ const Profile: React.FC = () => {
                             <div className="w-5 h-5 border-2 border-gray-300 border-t-[#4a88d4] rounded-full animate-spin" />
                           </div>
                         )}
-                        <div className="relative aspect-video bg-gray-100 rounded overflow-hidden">
+                        <div className="relative aspect-video bg-gray-100 rounded overflow-hidden max-h-[200px]">
                           <img
                             src={b.photoUrl}
                             alt={`${b.room} 使用後照片`}
