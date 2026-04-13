@@ -225,8 +225,8 @@ const Calendar: React.FC = () => {
       {/* FAB — mobile only, above footer */}
       <button
         onClick={() => setApplyOpen(true)}
-        className="md:hidden fixed bottom-20 right-4 z-[110] w-14 h-14 rounded-full bg-[#5796DF] text-white shadow-lg flex items-center justify-center hover:bg-[#4a88d4] active:scale-95 transition-all">
-        <Plus className="w-6 h-6" />
+        className="md:hidden fixed bottom-20 right-4 z-[110] w-16 h-16 rounded-full bg-[#5796DF] text-white flex items-center justify-center hover:bg-[#4a88d4] active:scale-95 transition-all">
+        <Plus className="w-7 h-7" />
       </button>
 
       {/* Portal: backdrop + sheet rendered directly on document.body */}
