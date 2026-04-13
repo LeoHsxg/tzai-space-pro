@@ -37,7 +37,9 @@ const Calendar: React.FC = () => {
   // Lock body scroll when bottom sheet is open
   useEffect(() => {
     document.body.style.overflow = applyOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [applyOpen]);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -119,7 +121,7 @@ const Calendar: React.FC = () => {
   };
 
   const sheetStyle: React.CSSProperties = {
-    maxHeight: "92vh",
+    height: "91vh",
     transform: applyOpen ? `translateY(${dragOffset}px)` : "translateY(100%)",
     transition: dragOffset > 0 ? "none" : "transform 0.3s ease-out",
   };
@@ -133,9 +135,7 @@ const Calendar: React.FC = () => {
       />
 
       {/* Bottom sheet */}
-      <div
-        className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden bg-[#F3F3F3] rounded-t-2xl shadow-2xl"
-        style={sheetStyle}>
+      <div className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden bg-[#F3F3F3] rounded-t-2xl shadow-2xl" style={sheetStyle}>
         {/* Drag handle — touch target */}
         <div
           className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
@@ -145,8 +145,8 @@ const Calendar: React.FC = () => {
           <div className="w-10 h-1 rounded-full bg-gray-300" />
         </div>
         {/* Header */}
-        <div className="flex items-center justify-between px-5 pt-1 pb-3">
-          <span className="noto font-semibold text-base text-black/80">申請借用</span>
+        <div className="flex items-center justify-between px-5 pt-3 pb-2">
+          <span className="noto font-bold text-lg ml-3 mt-1 text-black/60">申請借用</span>
           <button
             onClick={() => setApplyOpen(false)}
             className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black/70 hover:bg-black/5 transition-colors">
@@ -236,3 +236,4 @@ const Calendar: React.FC = () => {
 };
 
 export default Calendar;
+
