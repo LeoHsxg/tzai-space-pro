@@ -12,6 +12,12 @@ import { toast } from "sonner";
 import dayjs from "dayjs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 
+const SECTION_COLORS = {
+  pending: "#d94040",   // 待完成 — 略深於文字色以補圓點的視覺落差
+  upcoming: "#4a88d4",  // 即將到來
+  history: "#9ca3af",   // 歷史紀錄
+};
+
 const Profile: React.FC = () => {
   const user = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -168,19 +174,19 @@ const Profile: React.FC = () => {
           <div className="h-px bg-gray-100 mx-5" />
           {/* Lower: Stats */}
           <div className="flex py-4">
-            <div className="flex-1 flex flex-col items-center gap-0.5">
-              <span className="font-roboto font-bold text-[#e44c4c] text-lg leading-none">{pending.length}</span>
-              <span className="noto text-[11px] text-black/40 mt-1">待完成</span>
+            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
+              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.pending }}>{pending.length}</span>
+              <span className="noto text-[11px] text-black/40">待完成</span>
             </div>
             <div className="w-px bg-gray-200 self-stretch" />
-            <div className="flex-1 flex flex-col items-center gap-0.5">
-              <span className="font-roboto font-bold text-[#5796DF] text-lg leading-none">{upcoming.length}</span>
-              <span className="noto text-[11px] text-black/40 mt-1">即將到來</span>
+            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
+              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.upcoming }}>{upcoming.length}</span>
+              <span className="noto text-[11px] text-black/40">即將到來</span>
             </div>
             <div className="w-px bg-gray-200 self-stretch" />
-            <div className="flex-1 flex flex-col items-center gap-0.5">
-              <span className="font-roboto font-bold text-black/50 text-lg leading-none">{history.length}</span>
-              <span className="noto text-[11px] text-black/40 mt-1">歷史紀錄</span>
+            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
+              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.history }}>{history.length}</span>
+              <span className="noto text-[11px] text-black/40">歷史紀錄</span>
             </div>
           </div>
         </div>
@@ -191,8 +197,8 @@ const Profile: React.FC = () => {
           {/* 待完成 */}
           <section>
             <div className="flex items-center gap-2 mb-2 pl-[2px]">
-              <div className="w-2 h-2 rounded-full bg-[#e44c4c] shrink-0" />
-              <span className="noto text-sm font-semibold text-[#e44c4c] shrink-0">待完成 {pending.length > 0 && `(${pending.length})`}</span>
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.pending }} />
+              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.pending }}>待完成 {pending.length > 0 && `(${pending.length})`}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {pending.length === 0 ? (
@@ -223,8 +229,8 @@ const Profile: React.FC = () => {
           {/* 即將到來 */}
           <section>
             <div className="flex items-center gap-2 mb-2 pl-[2px]">
-              <div className="w-2 h-2 rounded-full bg-[#5796DF] shrink-0" />
-              <span className="noto text-sm font-semibold text-[#5796DF] shrink-0">即將到來 {upcoming.length > 0 && `(${upcoming.length})`}</span>
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.upcoming }} />
+              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.upcoming }}>即將到來 {upcoming.length > 0 && `(${upcoming.length})`}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {upcoming.length === 0 ? (
@@ -261,7 +267,7 @@ const Profile: React.FC = () => {
           {/* 歷史紀錄 */}
           <section>
             <div className="flex items-center gap-2 mb-2 pl-[2px]">
-              <div className="w-2 h-2 rounded-full bg-gray-300 shrink-0" />
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.history }} />
               <span className="noto text-sm font-semibold text-black/40 shrink-0">歷史紀錄</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
@@ -288,13 +294,13 @@ const Profile: React.FC = () => {
 
                     {/* 展開照片（lazy load：只有展開時才設 src） */}
                     {b.photoUrl && expandedPhoto === b.id && (
-                      <div className={`mt-3 overflow-hidden relative ${loadingPhoto === b.id ? "min-h-[160px]" : ""}`}>
+                      <div className="mt-3 overflow-hidden relative">
                         {loadingPhoto === b.id && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg">
-                            <div className="w-5 h-5 border-2 border-gray-300 border-t-[#5796DF] rounded-full animate-spin" />
+                          <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded">
+                            <div className="w-5 h-5 border-2 border-gray-300 border-t-[#4a88d4] rounded-full animate-spin" />
                           </div>
                         )}
-                        <div className="relative aspect-video bg-gray-100 rounded-lg overflow-hidden">
+                        <div className="relative aspect-video bg-gray-100 rounded overflow-hidden">
                           <img
                             src={b.photoUrl}
                             alt={`${b.room} 使用後照片`}

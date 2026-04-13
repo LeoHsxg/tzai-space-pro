@@ -14,7 +14,7 @@ const loadingSpinnerStyle: React.CSSProperties = {
   width: "32px",
   height: "32px",
   border: "3px solid #e5e7eb",
-  borderTopColor: "#f97316",
+  borderTopColor: "#5796DF",
   borderRadius: "50%",
   animation: "spin 1s linear infinite",
 };
