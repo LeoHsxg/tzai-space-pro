@@ -36,7 +36,8 @@
       "Read(//usr/local/**)",
       "Bash(command -v python3 python py)",
       "Bash(py --version)",
-      "Bash(py -c ':*)"
+      "Bash(py -c ':*)",
+      "Bash(npm info:*)"
     ]
   }
 }

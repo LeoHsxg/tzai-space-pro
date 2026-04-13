@@ -48,6 +48,7 @@ export default {
         md: ["0 2px 4px rgb(0 0 0 / 0.07)", "0 1px 3px rgb(0 0 0 / 0.06)"],
       },
       fontFamily: {
+        sans: ["var(--font-roboto)", "Roboto", "sans-serif"],
         roboto: ["var(--font-roboto)", "Roboto", "sans-serif"],
         noto: ["var(--font-roboto)", "Roboto", '"Noto Sans TC"', "sans-serif"],
       },

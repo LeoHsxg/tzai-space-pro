@@ -1,12 +1,10 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Noto_Sans_TC, Roboto, Geist } from 'next/font/google'
+import { Noto_Sans_TC, Roboto } from 'next/font/google'
 import { AppShell } from '@/Components/AppShell'
 import '../App.css'
 import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const notoSans = Noto_Sans_TC({
   subsets: ['latin'],
@@ -31,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant" className={cn("font-sans", geist.variable)}>
+    <html lang="zh-Hant" className={cn(notoSans.variable, roboto.variable)}>
       <body className={`${notoSans.variable} ${roboto.variable}`}>
         <AppShell>{children}</AppShell>
         {/* Google Analytics */}

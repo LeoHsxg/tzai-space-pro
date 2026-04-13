@@ -1,66 +1,170 @@
-'use client'
+"use client";
 
-import React, { useEffect, useState } from "react";
-import { getRegulationsData } from "../firebase/firebase"; // ← 你設定的 firebase 檔案
-import Ruleblock from "../Components/Ruleblock"; // ← 你設定的 Ruleblock 檔案
+import React, { useState } from "react";
+import { ChevronDown } from "lucide-react";
+
+const steps = [
+  {
+    title: "預約申請",
+    desc: "最多可提前預約 30 天內時段。同一小組每週限借 3 次，每次上限 4 小時。",
+  },
+  {
+    title: "準時到達",
+    desc: "超過預約三十分鐘未使用則視為自動取消，開放其他齋民直接入內使用。",
+  },
+  {
+    title: "環境復原",
+    desc: "離開前請打掃乾淨與恢復原狀，並確認門窗、燈光、電扇及電源皆已關閉。",
+  },
+  {
+    title: "上傳照片",
+    desc: (
+      <>
+        使用完畢後須拍攝空間現況並上傳。在
+        <strong className="font-bold text-gray-800">確保空間已完全復原</strong>的前提下，歡迎分享活動搞怪合照。
+      </>
+    ),
+  },
+];
+
+type BadgeVariant = "warning" | "danger" | "neutral";
+
+const rules: { badge: BadgeVariant; symbol: string; text: React.ReactNode }[] = [
+  {
+    badge: "danger",
+    symbol: "×",
+    text: (
+      <>
+        小導師室入內請脫鞋，外層玻璃門可自由開關，但
+        <strong className="font-bold text-gray-800">內層防火門任何情況下不能關閉</strong>
+        ，違者立即取消本次及後續借用資格。
+      </>
+    ),
+  },
+  {
+    badge: "danger",
+    symbol: "×",
+    text: "結案照片若涉及不雅或違反善良風俗，經舉報查證後取消後續借用資格。",
+  },
+  {
+    badge: "warning",
+    symbol: "!",
+    text: "預約空間後若臨時無法到場，仍須負起維護空間與上傳空間照片之責任。",
+  },
+  {
+    badge: "neutral",
+    symbol: "?",
+    text: "若有任何疑問或爭議，請聯絡現任齋長，齋長擁有調解與最終裁決權。",
+  },
+];
+
+// Brand-aligned palette: low-saturation, warm-toned
+const badgeClass: Record<BadgeVariant, string> = {
+  warning: "bg-[#CF6C35]", // brand warm orange
+  danger: "bg-[#B85858]", // muted warm red (matches brand's low-sat tone)
+  neutral: "bg-[#8A9EAF]", // muted blue-gray
+};
 
 const Rule = () => {
-  const [rules, setRules] = useState<string[]>([]);
-
-  const fetchRules = async () => {
-    try {
-      const rules: string[] = await getRegulationsData();
-      setRules(rules);
-    } catch (error) {
-      console.error("載入條例失敗:", error);
-    }
-  };
-
-  // useEffect(() => {
-  //   fetchRules();
-  // }, []);
-
-  const ruleItems = [
-    "小導師室請脫鞋入內, 外層玻璃門自由開關, 但內層防火門嚴禁關閉, 違者立即取消借用及往後借用資格。",
-    "使用完畢後，請將空間恢復原狀，並關閉門、窗、燈光、電扇與其他電源。",
-    "同一天借用多個不相鄰時段請填寫多份表單。",
-    "同一小組的人員一週最多借用三次公共空間，每次至多四小時，違反規定經發現，仁齋齋團隊有權刪除。",
-    "借用的預定時間不得提前超過 30 天。",
-    "為保障大家使用空間的權益，超過預約三十分鐘內未使用，則視為取消預約，並開放其他齋民直接入內使用空間。",
-    "如遭遇任何爭議或對規定不清楚等問題，請聯絡現任齋長，齋長有調解與最終裁決權。",
-    "仁齋齋團隊保有對本條例的修改與解釋權。",
-    "當您借用或使用任何仁齋公共空間視為您已閱讀、了解並同意本條例的所有內容。",
-  ];
+  const [expanded, setExpanded] = useState(false);
 
   return (
-    <div className="w-full md:mt-4">
-      {/* <div className="rule pb-[5%]">
-        {rules.map((text, idx) => (<div key={idx} className="content">
-            {text}
-          </div>))}
-      </div> */}
-      <div className="w-full pb-20 md:max-w-[900px] m-auto md:pb-0 ">
-        <p
-          className="
-          -mt-1 mb-3 px-[8%] noto font-bold text-black/80 text-lg
-          md:mt-0 md:pl-4 md:pr-0
-        ">
-          空間借用條例
-        </p>
-        <div
-          className="
-            w-full px-[5%] self-stretch flex flex-col gap-3 justify-start items-center md:px-0
-            md:h-[450px] md:flex-wrap
-        ">
-          {ruleItems.map((text, index) => (
-            <div key={index} className="w-full md:w-[calc(50%-0.5rem)]">
-              <Ruleblock key={index} text={text} />
-            </div>
+    <div
+      className="
+        w-full px-[5%] pb-28
+        flex flex-col gap-4
+        md:max-w-lg md:mx-auto md:py-8 md:pb-8
+        font-[family-name:var(--font-noto-sans-tc)]
+      ">
+      {/* ── Section 1: 借用流程 — timeline style ─────────────── */}
+      <div className="bg-white rounded-2xl overflow-hidden">
+        <div className="px-5 pt-4 pb-3">
+          <p className="font-bold text-base text-gray-700">借用流程</p>
+        </div>
+        <div className="h-px bg-gray-100" />
+
+        <div className="px-5 pt-1 pb-4">
+          {steps.map((step, i) => {
+            const isLast = i === steps.length - 1;
+            return (
+              <div key={i} className="flex gap-3">
+                {/* Timeline track: badge + vertical connector */}
+                <div className="flex flex-col items-center">
+                  <div className="w-6 h-6 rounded-full bg-[#5991C4] text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0 mt-3 font-[family-name:var(--font-roboto)]">
+                    {i + 1}
+                  </div>
+                  {!isLast && <div className="w-px flex-1 bg-gray-200 mt-2.5" />}
+                </div>
+
+                {/* Content */}
+                <div className={`flex-1 min-w-0 pt-3 ${isLast ? "pb-2" : "pb-3"}`}>
+                  <p className="font-semibold text-sm text-gray-800 leading-snug">{step.title}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed mt-1">{step.desc}</p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Section 2: 空間使用守則 ──────────────────────────── */}
+      <div className="bg-white rounded-2xl overflow-hidden">
+        <div className="px-5 pt-4 pb-3">
+          <p className="font-bold text-base text-gray-700">空間使用守則</p>
+        </div>
+        <div className="h-px bg-gray-100" />
+
+        <div className="px-5 pb-2.5">
+          {rules.map((rule, i) => (
+            <React.Fragment key={i}>
+              <div className="flex gap-3 items-start py-3.5">
+                <div className={`w-7 h-7 rounded-full ${badgeClass[rule.badge]} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5`}>
+                  {rule.symbol}
+                </div>
+                <p className="text-sm text-gray-600 leading-relaxed flex-1 min-w-0">{rule.text}</p>
+              </div>
+              {i < rules.length - 1 && <div className="h-px bg-gray-100" />}
+            </React.Fragment>
           ))}
         </div>
       </div>
+
+      {/* ── Section 3: 其他補充事項 (collapsible) ────────────── */}
+      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+        <button onClick={() => setExpanded(v => !v)} aria-expanded={expanded} className="w-full flex items-center justify-between px-5 py-4 cursor-pointer">
+          <span className="text-sm font-medium text-gray-500">其他補充事項</span>
+          <ChevronDown
+            size={16}
+            className={`
+              text-gray-400 flex-shrink-0
+              transition-transform duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]
+              ${expanded ? "rotate-180" : ""}
+            `}
+          />
+        </button>
+
+        {/* Grid accordion — avoids animating height */}
+        <div className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]" style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}>
+          <div className="overflow-hidden min-h-0">
+            <div className="px-5 pb-5 flex flex-col gap-2.5">
+              <p className="text-sm text-gray-500 leading-relaxed">仁齋齋團隊保有對以上條例的修改與解釋權，並有權刪除任何預約以及封禁帳號的借用權限。</p>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                若齋長需要取得後台管理權限，請聯繫管理員{" "}
+                <a href="mailto:leosimba9487@gmail.com" className="text-[#5991C4] underline-offset-2 hover:underline">
+                  leosimba9487@gmail.com
+                </a>
+              </p>
+              <p className="text-sm text-gray-500 leading-relaxed">如有熱心齋民遇到系統或使用層面上的問題需要回報，也歡迎來聯繫管理員。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Footer disclaimer ────────────────────────────────── */}
+      <p className="text-xs text-gray-400 text-center px-2 leading-relaxed">借用或使用任何仁齋公共空間視為您已閱讀、了解並同意本條例的所有內容。</p>
     </div>
   );
 };
 
 export default Rule;
+

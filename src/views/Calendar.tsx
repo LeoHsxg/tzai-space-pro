@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { createPortal } from "react-dom";
 import dayjs, { Dayjs } from "dayjs";
 import { collection, onSnapshot, query, where, orderBy, Timestamp } from "firebase/firestore";
 import { db } from "../firebase/firebase";
@@ -8,23 +9,38 @@ import { Booking } from "../types/booking";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
 import { BookingCalendar } from "../Components/BookingCalendar";
+import ApplyForm from "./ApplyForm";
+import { Plus, X } from "lucide-react";
 import "../styles/Calendar.css";
 
 const loadingSpinnerStyle: React.CSSProperties = {
   width: "32px",
   height: "32px",
   border: "3px solid #e5e7eb",
-  borderTopColor: "#f97316",
+  borderTopColor: "#5991C4",
   borderRadius: "50%",
   animation: "spin 1s linear infinite",
 };
 
 const Calendar: React.FC = () => {
   const [value, setValue] = useState<Dayjs | null>(null);
+  const [applyOpen, setApplyOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const dragStartY = useRef(0);
 
   useEffect(() => {
     setValue(dayjs());
+    setMounted(true);
   }, []);
+
+  // Lock body scroll when bottom sheet is open
+  useEffect(() => {
+    document.body.style.overflow = applyOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [applyOpen]);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
@@ -89,6 +105,62 @@ const Calendar: React.FC = () => {
     setTodayBookings(today);
   }, [value, bookings]);
 
+  // Drag-to-dismiss handlers
+  const handleDragStart = (e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+  };
+  const handleDragMove = (e: React.TouchEvent) => {
+    const delta = e.touches[0].clientY - dragStartY.current;
+    if (delta > 0) setDragOffset(delta);
+  };
+  const handleDragEnd = () => {
+    if (dragOffset > 80) {
+      setApplyOpen(false);
+    }
+    setDragOffset(0);
+  };
+
+  const sheetStyle: React.CSSProperties = {
+    height: "91vh",
+    transform: applyOpen ? `translateY(${dragOffset}px)` : "translateY(100%)",
+    transition: dragOffset > 0 ? "none" : "transform 0.3s ease-out",
+  };
+
+  const overlay = (
+    <>
+      {/* Backdrop — rendered in document.body portal to clear all z-index stacking contexts */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-[9998] md:hidden transition-opacity duration-300 ${applyOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setApplyOpen(false)}
+      />
+
+      {/* Bottom sheet */}
+      <div className="fixed bottom-0 left-0 right-0 z-[9999] md:hidden bg-[#F3F3F3] rounded-t-2xl shadow-2xl" style={sheetStyle}>
+        {/* Drag handle — touch target */}
+        <div
+          className="flex justify-center pt-3 pb-2 cursor-grab active:cursor-grabbing touch-none"
+          onTouchStart={handleDragStart}
+          onTouchMove={handleDragMove}
+          onTouchEnd={handleDragEnd}>
+          <div className="w-10 h-1 rounded-full bg-gray-300" />
+        </div>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-3 pb-2">
+          <span className="noto font-bold text-lg ml-3 mt-1 text-black/60">申請借用</span>
+          <button
+            onClick={() => setApplyOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black/70 hover:bg-black/5 transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        {/* Scrollable form */}
+        <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 68px)" }}>
+          <ApplyForm />
+        </div>
+      </div>
+    </>
+  );
+
   return (
     <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
       {/* 行事曆 */}
@@ -149,6 +221,16 @@ const Calendar: React.FC = () => {
           <MyDialog open={open} onClose={() => setOpen(false)} booking={selectedBooking} />
         </div>
       </div>
+
+      {/* FAB — mobile only, above footer */}
+      <button
+        onClick={() => setApplyOpen(true)}
+        className="md:hidden fixed bottom-20 right-4 z-[110] w-16 h-16 rounded-full bg-[#5796DF] text-white flex items-center justify-center hover:bg-[#4a88d4] active:scale-95 transition-all">
+        <Plus className="w-7 h-7" />
+      </button>
+
+      {/* Portal: backdrop + sheet rendered directly on document.body */}
+      {mounted && createPortal(overlay, document.body)}
     </div>
   );
 };
