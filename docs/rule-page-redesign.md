@@ -2,41 +2,48 @@
 
 **日期：** 2026-04-14  
 **檔案：** `src/views/Rule.tsx`  
-**依據內容：** `docs/new-borrowing-regulations.md`
+**依據：** `docs/new-borrowing-regulations.md`、`.impeccable.md`
 
 ---
 
 ## 設計目標
 
-將舊版的「一條規則一個白色卡片」扁平列表，改為分段式卡片版型，提升資訊層次感與可讀性。版面以 wireframe 截圖為方向參考，不是逐像素還原。
+將舊版「一條規則一個白色卡片」的扁平列表，改為分段式卡片版型，提升資訊層次與可讀性；同時對齊 `.impeccable.md` 中定義的品牌語言——低飽和暖色調、Threads 節奏感、社群溫度。
 
 ---
 
 ## 版面結構
 
 ```
-┌─────────────────────────────────┐
-│  借用流程                        │  白色卡片，rounded-2xl
-│  ① 預約申請  ─────────────────  │
-│  ② 準時到達  ─────────────────  │
-│  ③ 環境復原  ─────────────────  │
-│  ④ 上傳照片  ─────────────────  │
-└─────────────────────────────────┘
+┌────────────────────────────────┐
+│  借用流程                       │  白色卡片
+│  ─────────────────────────── │
+│  ① ┐ 預約申請                  │
+│    │  可預約 30 天…              │
+│    │                           │
+│  ② ┘ 準時到達                  │  ← 圓形之間有垂直連接線
+│    │  超過三十分鐘…              │
+│   ...                          │
+└────────────────────────────────┘
 
-┌─────────────────────────────────┐
-│  空間使用守則                    │  白色卡片
-│  🟡 ! ────────────────────────  │
-│  🔴 × ────────────────────────  │
-│  🔴 × ────────────────────────  │
-│  ⚪ ? ────────────────────────  │
-└─────────────────────────────────┘
+┌────────────────────────────────┐
+│  空間使用守則                   │  白色卡片
+│  ─────────────────────────── │
+│  🔴 × ─────────────────────  │
+│  ─────────────────────────── │
+│  🔴 × ─────────────────────  │
+│  ─────────────────────────── │
+│  🟠 ! ─────────────────────  │
+│  ─────────────────────────── │
+│  ⚪ ? ─────────────────────  │
+└────────────────────────────────┘
 
-┌─────────────────────────────────┐
-│  其他補充事項              ▼    │  可收合，預設收起
-│  （展開後顯示補充條款）          │
-└─────────────────────────────────┘
+┌────────────────────────────────┐
+│  其他補充事項              ▼   │  可收合，預設收起
+│  （展開後顯示補充條款）         │
+└────────────────────────────────┘
 
-  借用或使用任何仁齋公共空間...       footer 小字
+  借用或使用任何仁齋公共空間…        footer 小字
 ```
 
 ---
@@ -45,84 +52,85 @@
 
 ### 色票
 
-| 用途 | 顏色 | Tailwind / Hex |
-|------|------|----------------|
-| 步驟號碼徽章背景 | 藍色 | `bg-[#0284C7]` |
-| `!` 警告徽章 | 琥珀 | `bg-[#D97706]` |
-| `×` 禁止徽章 | 紅色 | `bg-[#DC2626]` |
-| `?` 聯絡徽章 | 灰藍 | `bg-[#64748B]` |
-| 卡片背景 | 白色 | `bg-white` |
-| 頁面背景 | 淺灰 | `#f0f0f0`（全域已設定）|
-| 分隔線 | 淡灰 | `border-gray-100` |
+| 用途 | 顏色 | 來源 |
+|------|------|------|
+| 步驟號碼徽章 | `#5991C4` | 品牌主藍 |
+| `×` 禁止徽章 | `#B85858` | 低飽和暖紅 |
+| `!` 警告徽章 | `#CF6C35` | 品牌暖橘 |
+| `?` 聯絡徽章 | `#8A9EAF` | 霧藍灰 |
+| 分隔線 | `bg-gray-100` | Tailwind（以 `h-px` div 實現，繞開 CSS reset 的 `border: 0`）|
+| 卡片背景 | `bg-white` | — |
+| 頁面背景 | `#F3F3F3` | 全域設定 |
+
+### 徽章規格
+
+| | 步驟號碼 | 守則圖示 |
+|---|---|---|
+| 尺寸 | `w-6 h-6`（24px）| `w-7 h-7`（28px）|
+| 字型 | Roboto（`var(--font-roboto)`）| Noto Sans TC |
+| 字號 | `text-[12px]` | `text-xs` |
 
 ### 字型
 
-使用專案已有的 `--font-noto-sans-tc` CSS 變數（Next.js Google Font 注入）。
-
 | 層級 | 規格 |
 |------|------|
-| 卡片標題 | `font-bold text-base text-gray-800` |
+| 卡片標題 | `font-bold text-base text-gray-700` |
 | 步驟標題 | `font-semibold text-sm text-gray-800` |
-| 步驟說明 / 守則內文 | `text-sm text-gray-500 / text-gray-600` |
+| 步驟說明 / 守則內文 | `text-sm` `text-gray-500` / `text-gray-600`，`leading-relaxed` |
 | 補充事項 | `text-sm text-gray-500` |
-| Footer 免責聲明 | `text-xs text-gray-400` |
-
-### 間距
-
-- 外層容器：`px-4 py-6`，桌機：`md:max-w-lg md:mx-auto md:py-8`
-- 各 section 間距：`gap-4`
-- 卡片內 padding：`px-5 pt-5 pb-4`
-- 各項目 vertical padding：`py-3.5`
-- 分隔線縮排：`ml-11`（步驟）/ `ml-10`（守則），與文字對齊，不從徽章起始
-
-### 動畫
-
-`其他補充事項` 的展開/收合使用 `grid-template-rows: 0fr → 1fr` transition，  
-**不 animate `height`**（避免 layout thrash，符合 motion-design 指引）。
-
-```css
-/* 等效的 Tailwind inline style 寫法 */
-grid-template-rows: 0fr;  /* 收起 */
-grid-template-rows: 1fr;  /* 展開 */
-transition: grid-template-rows 300ms cubic-bezier(0.65, 0, 0.35, 1);
-```
-
-子層需設 `overflow-hidden min-h-0` 才能讓 grid row 壓縮生效。
+| Footer | `text-xs text-gray-400` |
 
 ---
 
-## 元件結構
+## Section 1 — Timeline 設計
+
+步驟列表採 **timeline 連接線** 結構（參考 Threads 回覆串），讓「流程」的概念在視覺上成立。
 
 ```
-Rule (useState: expanded)
-├── Section 1 Card
-│   └── steps.map → Fragment
-│       ├── flex row: StepBadge + div(title, desc)
-│       └── (divider, ml-11)
-├── Section 2 Card
-│   └── rules.map → Fragment
-│       ├── flex row: IconBadge + p(text / JSX)
-│       └── (divider, ml-10)
-├── Section 3 Card (collapsible)
-│   ├── <button> 標題列 + ChevronDown (rotates on expand)
-│   └── grid accordion wrapper
-│       └── 3 × <p> 補充條款（含 mailto: 連結）
-└── <p> Footer disclaimer
+flex gap-3
+├── 左欄 flex-col items-center
+│   ├── 圓形號碼徽章（mt-3）
+│   └── w-px 垂直灰線（mt-2.5，最後一項不渲染）
+└── 右欄 flex-1
+    ├── 步驟標題
+    └── 說明文字（mt-1）
 ```
+
+不使用 divider，連接線本身即節奏。最後一個步驟無連接線，底部 `pb-2`；其餘 `pb-3`。
 
 ---
 
-## 移除的舊邏輯
+## Section 2 — 守則徽章邏輯
 
-- 移除 `getRegulationsData` import 與 `fetchRules` 函式（Firestore 遠端規則功能已停用）
-- 移除 `Ruleblock` component import
-- 移除舊 `ruleItems` 字串陣列
+| 徽章 | 語意 | 使用條件 |
+|------|------|---------|
+| `×`（紅）| 明確禁止事項，違者取消資格 | 防火門規定、不雅照片 |
+| `!`（橘）| 提醒注意，行為責任 | 臨時未到場的責任 |
+| `?`（灰）| 資訊提供、聯絡指引 | 疑問與爭議處理 |
 
-> 若日後需要重新從 Firestore 動態拉規則，需重新設計資料結構以符合新的分段格式（流程步驟 vs 守則 vs 補充）。
+項目間以 `h-px bg-gray-100` 分隔，最後一項不加。
+
+---
+
+## Section 3 — 手風琴收合
+
+預設收起。展開動畫使用 `grid-template-rows: 0fr → 1fr` transition，不 animate `height`（避免 layout reflow）。子層設 `overflow-hidden min-h-0` 確保壓縮生效。
+
+```
+<div style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}
+     className="grid transition-[grid-template-rows] duration-300 ease-[...]">
+  <div className="overflow-hidden min-h-0">
+    {/* 內容 */}
+  </div>
+</div>
+```
+
+ChevronDown 圖示在展開時旋轉 180°，transition 同步。
 
 ---
 
 ## 已知限制
 
-- `grid-template-rows` transition 在 Safari 15 以下無動畫效果（但功能正常，只是瞬間展開）。
-- 守則中的粗體強調（`<strong>`）直接寫在 JSX，若日後改為 Firestore 動態資料，需評估 Markdown 解析方案。
+- `grid-template-rows` transition 在 Safari 15 以下無動畫（功能正常，瞬間展開）。
+- 守則 `<strong>` 粗體強調直接寫在 JSX。若日後改為 Firestore 動態資料，需評估 Markdown 解析方案。
+- `h-px bg-gray-100` 繞開 CSS reset 的 `border: 0` 問題（App.css 的 unlayered reset 優先於 Tailwind `@layer base` 的 `border-style: solid`，導致 `border-t` 類別失效）。

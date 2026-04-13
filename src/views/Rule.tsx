@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 const steps = [
   {
     title: "預約申請",
-    desc: "可預約 30 天內時段。同一小組每週限借 3 次，每次上限 4 小時。",
+    desc: "最多可提前預約 30 天內時段。同一小組每週限借 3 次，每次上限 4 小時。",
   },
   {
     title: "準時到達",
@@ -18,7 +18,12 @@ const steps = [
   },
   {
     title: "上傳照片",
-    desc: "使用完畢後須拍攝空間現況並上傳。歡迎分享活動合照或搞怪照片。",
+    desc: (
+      <>
+        使用完畢後須拍攝空間現況並上傳。在
+        <strong className="font-bold text-gray-800">確保空間已完全復原</strong>的前提下，歡迎分享活動搞怪合照。
+      </>
+    ),
   },
 ];
 
@@ -26,12 +31,12 @@ type BadgeVariant = "warning" | "danger" | "neutral";
 
 const rules: { badge: BadgeVariant; symbol: string; text: React.ReactNode }[] = [
   {
-    badge: "warning",
-    symbol: "!",
+    badge: "danger",
+    symbol: "×",
     text: (
       <>
         小導師室入內請脫鞋，外層玻璃門可自由開關，但
-        <strong className="font-semibold text-gray-800">內層防火門任何情況下不能關閉</strong>
+        <strong className="font-bold text-gray-800">內層防火門任何情況下不能關閉</strong>
         ，違者立即取消本次及後續借用資格。
       </>
     ),
@@ -39,12 +44,12 @@ const rules: { badge: BadgeVariant; symbol: string; text: React.ReactNode }[] = 
   {
     badge: "danger",
     symbol: "×",
-    text: "結案照片若涉及不雅或違反善良風俗，經舉報後取消後續借用資格。",
+    text: "結案照片若涉及不雅或違反善良風俗，經舉報查證後取消後續借用資格。",
   },
   {
-    badge: "danger",
-    symbol: "×",
-    text: "預約空間後若臨時未到，仍須負起維護空間與上傳空間照片之責任。",
+    badge: "warning",
+    symbol: "!",
+    text: "預約空間後若臨時無法到場，仍須負起維護空間與上傳空間照片之責任。",
   },
   {
     badge: "neutral",
@@ -56,7 +61,7 @@ const rules: { badge: BadgeVariant; symbol: string; text: React.ReactNode }[] = 
 // Brand-aligned palette: low-saturation, warm-toned
 const badgeClass: Record<BadgeVariant, string> = {
   warning: "bg-[#CF6C35]", // brand warm orange
-  danger:  "bg-[#B85858]", // muted warm red (matches brand's low-sat tone)
+  danger: "bg-[#B85858]", // muted warm red (matches brand's low-sat tone)
   neutral: "bg-[#8A9EAF]", // muted blue-gray
 };
 
@@ -70,38 +75,31 @@ const Rule = () => {
         flex flex-col gap-4
         md:max-w-lg md:mx-auto md:py-8 md:pb-8
         font-[family-name:var(--font-noto-sans-tc)]
-      "
-    >
+      ">
       {/* ── Section 1: 借用流程 — timeline style ─────────────── */}
       <div className="bg-white rounded-2xl overflow-hidden">
-        <div className="px-5 pt-5 pb-3">
-          <p className="font-bold text-base text-gray-800">借用流程</p>
+        <div className="px-5 pt-4 pb-3">
+          <p className="font-bold text-base text-gray-700">借用流程</p>
         </div>
         <div className="h-px bg-gray-100" />
 
-        <div className="px-5 pt-2 pb-3">
+        <div className="px-5 pt-1 pb-4">
           {steps.map((step, i) => {
             const isLast = i === steps.length - 1;
             return (
               <div key={i} className="flex gap-3">
                 {/* Timeline track: badge + vertical connector */}
                 <div className="flex flex-col items-center">
-                  <div className="w-8 h-8 rounded-full bg-[#5991C4] text-white flex items-center justify-center text-sm font-bold flex-shrink-0 mt-3">
+                  <div className="w-6 h-6 rounded-full bg-[#5991C4] text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0 mt-3 font-[family-name:var(--font-roboto)]">
                     {i + 1}
                   </div>
-                  {!isLast && (
-                    <div className="w-px flex-1 bg-gray-200 my-1.5" />
-                  )}
+                  {!isLast && <div className="w-px flex-1 bg-gray-200 mt-2.5" />}
                 </div>
 
                 {/* Content */}
-                <div className={`flex-1 min-w-0 pt-3 ${isLast ? "pb-2" : "pb-5"}`}>
-                  <p className="font-semibold text-sm text-gray-800 leading-snug">
-                    {step.title}
-                  </p>
-                  <p className="text-sm text-gray-500 leading-relaxed mt-1">
-                    {step.desc}
-                  </p>
+                <div className={`flex-1 min-w-0 pt-3 ${isLast ? "pb-2" : "pb-3"}`}>
+                  <p className="font-semibold text-sm text-gray-800 leading-snug">{step.title}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed mt-1">{step.desc}</p>
                 </div>
               </div>
             );
@@ -111,23 +109,19 @@ const Rule = () => {
 
       {/* ── Section 2: 空間使用守則 ──────────────────────────── */}
       <div className="bg-white rounded-2xl overflow-hidden">
-        <div className="px-5 pt-5 pb-3">
-          <p className="font-bold text-base text-gray-800">空間使用守則</p>
+        <div className="px-5 pt-4 pb-3">
+          <p className="font-bold text-base text-gray-700">空間使用守則</p>
         </div>
         <div className="h-px bg-gray-100" />
 
-        <div className="px-5 pb-4">
+        <div className="px-5 pb-2.5">
           {rules.map((rule, i) => (
             <React.Fragment key={i}>
               <div className="flex gap-3 items-start py-3.5">
-                <div
-                  className={`w-7 h-7 rounded-full ${badgeClass[rule.badge]} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5`}
-                >
+                <div className={`w-7 h-7 rounded-full ${badgeClass[rule.badge]} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5`}>
                   {rule.symbol}
                 </div>
-                <p className="text-sm text-gray-600 leading-relaxed flex-1 min-w-0">
-                  {rule.text}
-                </p>
+                <p className="text-sm text-gray-600 leading-relaxed flex-1 min-w-0">{rule.text}</p>
               </div>
               {i < rules.length - 1 && <div className="h-px bg-gray-100" />}
             </React.Fragment>
@@ -167,11 +161,10 @@ const Rule = () => {
       </div>
 
       {/* ── Footer disclaimer ────────────────────────────────── */}
-      <p className="text-xs text-gray-400 text-center px-2 leading-relaxed">
-        借用或使用任何仁齋公共空間視為您已閱讀、了解並同意本條例的所有內容。
-      </p>
+      <p className="text-xs text-gray-400 text-center px-2 leading-relaxed">借用或使用任何仁齋公共空間視為您已閱讀、了解並同意本條例的所有內容。</p>
     </div>
   );
 };
 
 export default Rule;
+
