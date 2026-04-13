@@ -8,6 +8,8 @@ import { Booking } from "../types/booking";
 import Reserve from "../Components/Reserve";
 import MyDialog from "../Components/MyDialog";
 import { BookingCalendar } from "../Components/BookingCalendar";
+import ApplyForm from "./ApplyForm";
+import { Plus, X } from "lucide-react";
 import "../styles/Calendar.css";
 
 const loadingSpinnerStyle: React.CSSProperties = {
@@ -21,10 +23,17 @@ const loadingSpinnerStyle: React.CSSProperties = {
 
 const Calendar: React.FC = () => {
   const [value, setValue] = useState<Dayjs | null>(null);
+  const [applyOpen, setApplyOpen] = useState(false);
 
   useEffect(() => {
     setValue(dayjs());
   }, []);
+
+  // Lock body scroll when bottom sheet is open
+  useEffect(() => {
+    document.body.style.overflow = applyOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [applyOpen]);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
@@ -90,7 +99,7 @@ const Calendar: React.FC = () => {
   }, [value, bookings]);
 
   return (
-    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
+    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0 relative">
       {/* 行事曆 */}
       <div className="px-[5%] md:pt-5 md:px-0 md:flex md:justify-end">
         <div style={{ minWidth: "320px" }}>
@@ -147,6 +156,42 @@ const Calendar: React.FC = () => {
           ))}
 
           <MyDialog open={open} onClose={() => setOpen(false)} booking={selectedBooking} />
+        </div>
+      </div>
+
+      {/* FAB — mobile only, above footer */}
+      <button
+        onClick={() => setApplyOpen(true)}
+        className="md:hidden fixed bottom-20 right-4 z-[110] w-14 h-14 rounded-full bg-[#5796DF] text-white shadow-lg flex items-center justify-center hover:bg-[#4a88d4] active:scale-95 transition-all">
+        <Plus className="w-6 h-6" />
+      </button>
+
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/40 z-[150] md:hidden transition-opacity duration-300 ${applyOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setApplyOpen(false)}
+      />
+
+      {/* Bottom sheet */}
+      <div
+        className={`fixed bottom-0 left-0 right-0 z-[160] md:hidden bg-white rounded-t-2xl shadow-2xl transition-transform duration-300 ease-out ${applyOpen ? "translate-y-0" : "translate-y-full"}`}
+        style={{ maxHeight: "92vh" }}>
+        {/* Drag handle */}
+        <div className="flex justify-center pt-3 pb-1">
+          <div className="w-10 h-1 rounded-full bg-gray-300" />
+        </div>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 pt-2 pb-3">
+          <span className="noto font-semibold text-base text-black/80">申請借用</span>
+          <button
+            onClick={() => setApplyOpen(false)}
+            className="w-8 h-8 flex items-center justify-center rounded-full text-black/40 hover:text-black/70 hover:bg-gray-100 transition-colors">
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        {/* Scrollable form */}
+        <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 72px)" }}>
+          <ApplyForm />
         </div>
       </div>
     </div>
