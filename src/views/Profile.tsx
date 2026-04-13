@@ -13,9 +13,9 @@ import dayjs from "dayjs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 
 const SECTION_COLORS = {
-  pending: "#d94040",   // 待完成 — 略深於文字色以補圓點的視覺落差
-  upcoming: "#4a88d4",  // 即將到來
-  history: "#9ca3af",   // 歷史紀錄
+  pending: "#d94040", // 待完成 — 略深於文字色以補圓點的視覺落差
+  upcoming: "#4a88d4", // 即將到來
+  history: "#9ca3af", // 歷史紀錄
 };
 
 const Profile: React.FC = () => {
@@ -152,42 +152,22 @@ const Profile: React.FC = () => {
   return (
     <div className="w-full pb-20 md:pb-0 md:mt-4">
       <div className="w-full md:max-w-[900px] m-auto">
-        {/* Profile Card */}
-        <div className="mx-[5%] md:mx-4 mb-4 bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
-          {/* Upper: Avatar + Name/Email */}
-          <div className="px-6 pt-5 pb-4 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 bg-gray-100">
-              {user.photoURL ? (
-                <img src={user.photoURL} alt="頭像" className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center bg-gray-200">
-                  <span className="text-gray-500 text-xl font-bold noto">{(user.displayName || user.email || "U")[0].toUpperCase()}</span>
-                </div>
-              )}
-            </div>
-            <div className="flex flex-col justify-center min-w-0 -mt-1">
-              <p className="noto font-bold text-black/70 text-base truncate">{user.displayName || "使用者"}</p>
-              <p className="noto text-xs text-black/40 truncate">{user.email}</p>
-            </div>
+        {/* Profile Header: floating avatar + name/email card */}
+        <div className="mx-[5%] md:mx-4 mb-3 flex items-center gap-3">
+          {/* Avatar — standalone, outside card */}
+          <div className="w-11 h-11 rounded-full overflow-hidden shrink-0 bg-gray-200">
+            {user.photoURL ? (
+              <img src={user.photoURL} alt="頭像" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <span className="text-gray-500 text-xl font-bold noto">{(user.displayName || user.email || "U")[0].toUpperCase()}</span>
+              </div>
+            )}
           </div>
-          {/* Thin divider */}
-          <div className="h-px bg-gray-100 mx-5" />
-          {/* Lower: Stats */}
-          <div className="flex py-4">
-            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
-              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.pending }}>{pending.length}</span>
-              <span className="noto text-[11px] text-black/40">待完成</span>
-            </div>
-            <div className="w-px bg-gray-200 self-stretch" />
-            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
-              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.upcoming }}>{upcoming.length}</span>
-              <span className="noto text-[11px] text-black/40">即將到來</span>
-            </div>
-            <div className="w-px bg-gray-200 self-stretch" />
-            <div className="flex-1 flex flex-row items-center justify-center gap-1.5">
-              <span className="font-roboto font-bold text-lg leading-none" style={{ color: SECTION_COLORS.history }}>{history.length}</span>
-              <span className="noto text-[11px] text-black/40">歷史紀錄</span>
-            </div>
+          {/* Name + Email card — no shadow */}
+          <div className="flex-1 bg-white rounded-2xl px-6 py-3 border border-gray-100 min-w-0">
+            <p className="noto font-bold text-black/60 text-base truncate">{user.displayName || "使用者"}</p>
+            <p className="noto text-sm text-black/40 truncate -mt-1">{user.email}</p>
           </div>
         </div>
 
@@ -196,13 +176,18 @@ const Profile: React.FC = () => {
         <div className="flex flex-col gap-6 px-[5%] md:px-4">
           {/* 待完成 */}
           <section>
-            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+            <div className="flex items-center gap-2 mb-2 pl-1">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.pending }} />
-              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.pending }}>待完成 {pending.length > 0 && `(${pending.length})`}</span>
+              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.pending }}>
+                待完成
+              </span>
+              <span className="font-roboto font-bold text-sm shrink-0" style={{ color: SECTION_COLORS.pending }}>
+                {pending.length}
+              </span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {pending.length === 0 ? (
-              <p className="noto text-xs text-black/30">目前沒有待完成項目</p>
+              <p className="noto text-xs text-black/30 pl-[2px]">目前沒有待完成項目</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {pending.map(b => (
@@ -228,13 +213,18 @@ const Profile: React.FC = () => {
 
           {/* 即將到來 */}
           <section>
-            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+            <div className="flex items-center gap-2 mb-2 pl-1">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.upcoming }} />
-              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.upcoming }}>即將到來 {upcoming.length > 0 && `(${upcoming.length})`}</span>
+              <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.upcoming }}>
+                即將到來
+              </span>
+              <span className="font-roboto font-bold text-sm shrink-0" style={{ color: SECTION_COLORS.upcoming }}>
+                {upcoming.length}
+              </span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {upcoming.length === 0 ? (
-              <p className="noto text-xs text-black/30">目前沒有即將到來的借用</p>
+              <p className="noto text-xs text-black/30 pl-[2px]">目前沒有即將到來的借用</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {upcoming.map(b => {
@@ -266,13 +256,14 @@ const Profile: React.FC = () => {
 
           {/* 歷史紀錄 */}
           <section>
-            <div className="flex items-center gap-2 mb-2 pl-[2px]">
+            <div className="flex items-center gap-2 mb-2 pl-1">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.history }} />
               <span className="noto text-sm font-semibold text-black/40 shrink-0">歷史紀錄</span>
+              <span className="font-roboto font-bold text-sm text-black/40 shrink-0">{history.length}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {history.length === 0 ? (
-              <p className="noto text-xs text-black/30">尚無歷史紀錄</p>
+              <p className="noto text-xs text-black/30 pl-[2px]">尚無歷史紀錄</p>
             ) : (
               <div className="flex flex-col gap-2">
                 {history.map(b => (
