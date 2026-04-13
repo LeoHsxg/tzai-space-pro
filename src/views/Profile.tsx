@@ -13,8 +13,8 @@ import dayjs from "dayjs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/Components/ui/dialog";
 
 const SECTION_COLORS = {
-  pending: "#d94040", // 待完成 — 略深於文字色以補圓點的視覺落差
-  upcoming: "#4a88d4", // 即將到來
+  pending: "#d35c3c", // 待完成 — 略深於文字色以補圓點的視覺落差
+  upcoming: "#4d8dc8", // 即將到來
   history: "#9ca3af", // 歷史紀錄
 };
 
@@ -276,7 +276,7 @@ const Profile: React.FC = () => {
                       {b.status === "cancelled" ? (
                         <span className="text-xs text-black/30 noto">已取消</span>
                       ) : b.photoUrl ? (
-                        <button onClick={() => togglePhoto(b.id)} className="text-xs text-[#5796DF] noto flex items-center gap-1 hover:text-[#3A7BC8] transition-colors">
+                        <button onClick={() => togglePhoto(b.id)} style={{ color: SECTION_COLORS.upcoming }} className="text-xs noto flex items-center gap-1 transition-colors">
                           查看照片
                           <span className={`transition-transform duration-200 inline-block ${expandedPhoto === b.id ? "rotate-180" : ""}`}>▾</span>
                         </button>
