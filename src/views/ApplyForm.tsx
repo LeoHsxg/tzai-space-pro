@@ -16,7 +16,6 @@ import { useUI } from "../context/UIContext";
 import ConsentCheckbox from "../Components/ConsentCheckbox";
 import "../styles/ApplyForm.css";
 
-
 const ApplyForm: React.FC = () => {
   const user = useAuth();
   const { showSnackbar, showDialog, hideDialog } = useUI();
@@ -43,18 +42,10 @@ const ApplyForm: React.FC = () => {
     // 檢查是否有待完成（未上傳照片）的借用
     if (user) {
       const pendingSnap = await getDocs(
-        query(
-          collection(db, "bookings"),
-          where("email", "==", user.email),
-          where("status", "==", "active"),
-          where("photoRequired", "==", true),
-          where("photoUrl", "==", null)
-        )
+        query(collection(db, "bookings"), where("email", "==", user.email), where("status", "==", "active"), where("photoRequired", "==", true), where("photoUrl", "==", null)),
       );
       const now = Date.now();
-      const hasPending = pendingSnap.docs.some(
-        (doc) => (doc.data() as Booking).endTime.toMillis() < now
-      );
+      const hasPending = pendingSnap.docs.some(doc => (doc.data() as Booking).endTime.toMillis() < now);
       if (hasPending) {
         showSnackbar("你有借用尚未上傳照片，請先至個人檔案完成上傳", "warning");
         return;
@@ -97,7 +88,7 @@ const ApplyForm: React.FC = () => {
   useEffect(() => {
     const isSafari = /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent) && !/Chromium/.test(navigator.userAgent);
     if (isSafari) {
-      showSnackbar("Safari 可能會有 Cookie 與跨站追蹤阻擋的問題，建議使用 Chrome", "info");
+      // showSnackbar("Safari 可能會有 Cookie 與跨站追蹤阻擋的問題，建議使用 Chrome", "info");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -148,7 +139,7 @@ const ApplyForm: React.FC = () => {
       </form>
       <div className="mt-2 flex flex-col justify-center items-center gap-0.5">
         <div className="px-2 noto font-normal text-gray-400 text-xs text-center leading-relaxed">
-          *建議使用 Chrome 等原生瀏覽器，Safari 可能會阻擋，臉書與 Line 瀏覽器則無法使用
+          *使用 Safari 可能會無法登入，臉書與 Line 瀏覽器則無法使用，建議使用 Chrome 等原生瀏覽器
         </div>
         <ConsentCheckbox checked={consent} onChange={handleConsentChange} />
         <Button className="myBtn w-full" type="submit" size="lg" onClick={handleSubmit}>
