@@ -73,7 +73,7 @@ table {
 
 /* Info toast - solid blue style */
 [data-sonner-toast][data-type="info"] {
-  background-color: #4793C8 !important;
+  background-color: #5991C4 !important;
   color: #ffffff !important;
   border-color: transparent !important;
   border-radius: 12px !important;

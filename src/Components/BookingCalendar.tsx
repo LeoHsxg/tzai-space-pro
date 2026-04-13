@@ -89,7 +89,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({ value, onChang
           let circleClass = "w-7 h-7 flex items-center justify-center rounded-full text-[12px]";
 
           if (isSelected) {
-            circleClass += " bg-[#5796DF] text-white font-bold";
+            circleClass += " bg-[#5991C4] text-white font-bold";
           } else if (isToday) {
             circleClass += " border-[1.2px] border-[#9ca3af] border-solid font-medium text-[#374151]";
           } else if (isOutside) {

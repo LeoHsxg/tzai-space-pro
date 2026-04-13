@@ -17,7 +17,7 @@ const loadingSpinnerStyle: React.CSSProperties = {
   width: "32px",
   height: "32px",
   border: "3px solid #e5e7eb",
-  borderTopColor: "#5796DF",
+  borderTopColor: "#5991C4",
   borderRadius: "50%",
   animation: "spin 1s linear infinite",
 };
@@ -236,4 +236,3 @@ const Calendar: React.FC = () => {
 };
 
 export default Calendar;
-

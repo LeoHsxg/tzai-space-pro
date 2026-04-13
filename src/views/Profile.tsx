@@ -242,7 +242,7 @@ const Profile: React.FC = () => {
                           <button
                             onClick={() => handleUploadClick(b.id)}
                             disabled={uploading === b.id}
-                            className="px-3 py-1.5 rounded-lg bg-[#5796DF] text-white text-xs font-semibold noto hover:bg-[#3A7BC8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-2 shrink-0">
+                            className="px-3 py-1.5 rounded-lg bg-[#5991C4] text-white text-xs font-semibold noto hover:bg-[#4880B0] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ml-2 shrink-0">
                             {uploading === b.id ? "上傳中…" : "上傳照片"}
                           </button>
                         )}
