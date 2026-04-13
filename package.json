@@ -14,7 +14,7 @@
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@google-cloud/local-auth": "^2.1.0",
-    "@mui/x-date-pickers": "^7.17.0",
+    "@mui/x-date-pickers": "^8.0.0",
     "@types/lodash": "^4.17.7",
     "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.1",
