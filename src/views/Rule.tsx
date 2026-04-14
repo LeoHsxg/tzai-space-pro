@@ -21,7 +21,7 @@ const steps = [
     desc: (
       <>
         使用完畢後須拍攝空間現況並上傳。在
-        <strong className="font-bold text-gray-800">確保空間已完全復原</strong>的前提下，歡迎分享活動搞怪合照。
+        <strong className="font-bold text-gray-700">確保空間已完全復原</strong>的前提下，歡迎分享活動搞怪合照。
       </>
     ),
   },
@@ -79,7 +79,7 @@ const Rule = () => {
       {/* ── Section 1: 借用流程 — timeline style ─────────────── */}
       <div className="bg-white rounded-2xl overflow-hidden">
         <div className="px-5 pt-4 pb-3">
-          <p className="font-bold text-base text-gray-700">借用流程</p>
+          <p className="font-bold text-base text-gray-600">借用流程</p>
         </div>
         <div className="h-px bg-gray-100" />
 
@@ -90,15 +90,13 @@ const Rule = () => {
               <div key={i} className="flex gap-3">
                 {/* Timeline track: badge + vertical connector */}
                 <div className="flex flex-col items-center">
-                  <div className="w-6 h-6 rounded-full bg-[#5991C4] text-white flex items-center justify-center text-[12px] font-bold flex-shrink-0 mt-3 font-[family-name:var(--font-roboto)]">
-                    {i + 1}
-                  </div>
+                  <div className="w-3 h-3 rounded-full bg-[#5991C4] flex-shrink-0 mt-4" />
                   {!isLast && <div className="w-px flex-1 bg-gray-200 mt-2.5" />}
                 </div>
 
                 {/* Content */}
-                <div className={`flex-1 min-w-0 pt-3 ${isLast ? "pb-2" : "pb-3"}`}>
-                  <p className="font-semibold text-sm text-gray-800 leading-snug">{step.title}</p>
+                <div className={`flex-1 min-w-0 pt-3 ${isLast ? "pb-2" : "pb-2"}`}>
+                  <p className="font-bold text-sm text-gray-700 leading-snug">{step.title}</p>
                   <p className="text-sm text-gray-500 leading-relaxed mt-1">{step.desc}</p>
                 </div>
               </div>
@@ -118,9 +116,7 @@ const Rule = () => {
           {rules.map((rule, i) => (
             <React.Fragment key={i}>
               <div className="flex gap-3 items-start py-3.5">
-                <div className={`w-7 h-7 rounded-full ${badgeClass[rule.badge]} text-white flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5`}>
-                  {rule.symbol}
-                </div>
+                <div className={`w-3 h-3 rounded-full ${badgeClass[rule.badge]} flex-shrink-0 mt-2`} />
                 <p className="text-sm text-gray-600 leading-relaxed flex-1 min-w-0">{rule.text}</p>
               </div>
               {i < rules.length - 1 && <div className="h-px bg-gray-100" />}
