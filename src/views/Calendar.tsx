@@ -121,7 +121,7 @@ const Calendar: React.FC = () => {
   };
 
   const sheetStyle: React.CSSProperties = {
-    height: "91vh",
+    height: "87dvh",
     transform: applyOpen ? `translateY(${dragOffset}px)` : "translateY(100%)",
     transition: dragOffset > 0 ? "none" : "transform 0.3s ease-out",
   };
