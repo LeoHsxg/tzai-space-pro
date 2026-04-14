@@ -151,6 +151,7 @@ const Rule = () => {
                 </a>
               </p>
               <p className="text-sm text-gray-500 leading-relaxed">如有熱心齋民遇到系統或使用層面上的問題需要回報，也歡迎來聯繫管理員。</p>
+              <p className="text-sm text-gray-300 leading-relaxed">貢丸室並不存在。</p>
             </div>
           </div>
         </div>
