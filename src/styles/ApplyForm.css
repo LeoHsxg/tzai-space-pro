@@ -55,7 +55,7 @@ button.ipt[data-placeholder] {
 
 .ipt .MuiOutlinedInput-notchedOutline {
   border-radius: 12px;
-  border: none;
+  border: none !important;
 }
 
 .ipt .MuiOutlinedInput-root {
