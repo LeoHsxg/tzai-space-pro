@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SignBt from "./SignBt";
 import NavLinks from "./NavLinks";
+import { NotificationBell } from "./NotificationBell";
 
 const NavBar = () => {
   const [sticking, setSticking] = useState(false);
@@ -23,6 +24,7 @@ const NavBar = () => {
         <div className="hidden md:block">
           <NavLinks />
         </div>
+        <NotificationBell />
         <SignBt />
       </div>
     </div>

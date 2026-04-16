@@ -9,8 +9,15 @@ import { UIProvider } from "@/context/UIContext";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import { GlobalUI } from "./GlobalUI";
+import { AnnouncementModal } from "./AnnouncementModal";
+import type { AnnouncementData } from "@/types/announcement";
 
-export function AppShell({ children }: { children: React.ReactNode }) {
+interface AppShellProps {
+  children: React.ReactNode;
+  announcement: AnnouncementData | null;
+}
+
+export function AppShell({ children, announcement }: AppShellProps) {
   return (
     <AuthProvider>
       <UIProvider>
@@ -18,6 +25,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <Toaster position="top-center" richColors />
           <div className="bg-[#F3F3F3] gap-2 min-h-screen flex flex-col relative">
             <GlobalUI />
+            <AnnouncementModal announcement={announcement} />
             <NavBar />
             <main className="flex-grow">{children}</main>
             <Footer />
