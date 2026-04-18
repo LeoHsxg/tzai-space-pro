@@ -4,21 +4,40 @@ import React from "react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
 } from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
 import { Booking } from "../types/booking";
 import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
 import { useIsAdmin } from "../hooks/useIsAdmin";
 import dayjs from "dayjs";
 
+const ROOM_COLOR: Record<string, string> = {
+  書房:    "#E44C4C",
+  橘廳:    "#FF6F0D",
+  會議室:  "#54A0F9",
+  小導師室: "#FFD81E",
+  貢丸室:  "#9458E2",
+};
+
 interface MyDialogProps {
   open: boolean;
   onClose: () => void;
   booking: Booking | null;
+}
+
+interface InfoRowProps {
+  label: string;
+  children: React.ReactNode;
+  align?: "center" | "start";
+}
+
+function InfoRow({ label, children, align = "center" }: InfoRowProps) {
+  return (
+    <div className={`flex gap-3 ${align === "start" ? "items-start" : "items-center"}`}>
+      <span className="noto text-xs text-gray-400 w-8 shrink-0 leading-5">{label}</span>
+      <div className="flex-1 min-w-0">{children}</div>
+    </div>
+  );
 }
 
 const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
@@ -47,51 +66,85 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
   };
 
   const isEventOwner = user?.email === booking?.email;
-  const eventStarted = booking ? dayjs(booking.startTime.toDate()).isBefore(dayjs()) : false;
+  const eventStarted = booking
+    ? dayjs(booking.startTime.toDate()).isBefore(dayjs())
+    : false;
   const canDelete = isAdmin || (isEventOwner && !eventStarted);
+  const roomColor = booking ? (ROOM_COLOR[booking.room] ?? "#CCCCCC") : "#CCCCCC";
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle className="font-bold text-black/80">{booking?.room}</DialogTitle>
-        </DialogHeader>
+      <DialogContent showCloseButton={false} className="p-0 overflow-hidden gap-0">
         {!booking ? (
-          <div>加載不出資料欸？</div>
+          <div className="p-5 noto text-sm text-gray-400">載入失敗</div>
         ) : (
-          <div className="space-y-0.5 text-sm text-muted-foreground">
-            <div>
-              <span className="font-bold text-foreground">姓名</span>&nbsp;{booking.name}
+          <>
+            {/* Header */}
+            <div className="px-5 pt-5 pb-4">
+              <div className="flex items-center gap-2 mb-0.5">
+                <span
+                  className="w-2.5 h-2.5 rounded-full shrink-0"
+                  style={{ backgroundColor: roomColor }}
+                />
+                <h2 className="noto text-base font-bold text-gray-900">
+                  {booking.room}
+                </h2>
+              </div>
+              <p className="roboto text-xs text-gray-400 pl-[18px]">
+                {dayjs(booking.startTime.toDate()).format("YYYY年M月D日")}
+              </p>
             </div>
-            <div>
-              <span className="font-bold text-foreground">郵件</span>&nbsp;{booking.email}
+
+            <div className="h-px bg-gray-100 mx-5" />
+
+            {/* Info */}
+            <div className="px-5 py-4 flex flex-col gap-3">
+              <InfoRow label="時間">
+                <span className="roboto text-sm text-gray-800">
+                  {dayjs(booking.startTime.toDate()).format("HH:mm")}
+                  <span className="text-gray-300 mx-1.5">—</span>
+                  {dayjs(booking.endTime.toDate()).format("HH:mm")}
+                </span>
+              </InfoRow>
+              <InfoRow label="姓名">
+                <span className="noto text-sm text-gray-800">{booking.name}</span>
+              </InfoRow>
+              <InfoRow label="人數">
+                <span className="roboto text-sm text-gray-800">{booking.crowdSize} 人</span>
+              </InfoRow>
+              {booking.description && (
+                <InfoRow label="簡述" align="start">
+                  <span className="noto text-sm text-gray-700 leading-relaxed">
+                    {booking.description}
+                  </span>
+                </InfoRow>
+              )}
+              <InfoRow label="信箱">
+                <span className="roboto text-xs text-gray-400 truncate block">
+                  {booking.email}
+                </span>
+              </InfoRow>
             </div>
-            <div>
-              <span className="font-bold text-foreground">人數</span>&nbsp;{booking.crowdSize}
+
+            {/* Actions */}
+            <div className="px-5 pb-5 pt-1 flex flex-col gap-1.5">
+              <button
+                onClick={onClose}
+                className="noto w-full py-2.5 rounded-xl bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200 active:bg-gray-200 transition-colors"
+              >
+                關閉
+              </button>
+              {canDelete && (
+                <button
+                  onClick={handleDelete}
+                  className="noto w-full py-2 text-sm text-red-400 hover:text-red-500 active:text-red-500 transition-colors"
+                >
+                  取消預約
+                </button>
+              )}
             </div>
-            <div>
-              <span className="font-bold text-foreground">起始</span>&nbsp;
-              {dayjs(booking.startTime.toDate()).format("YYYY-MM-DD HH:mm")}
-            </div>
-            <div>
-              <span className="font-bold text-foreground">結束</span>&nbsp;
-              {dayjs(booking.endTime.toDate()).format("YYYY-MM-DD HH:mm")}
-            </div>
-            <div>
-              <span className="font-bold text-foreground">簡述</span>&nbsp;{booking.description}
-            </div>
-          </div>
+          </>
         )}
-        <DialogFooter>
-          {canDelete && (
-            <Button variant="destructive" onClick={handleDelete}>
-              取消預約
-            </Button>
-          )}
-          <Button variant="outline" onClick={onClose}>
-            關閉
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

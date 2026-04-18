@@ -6,10 +6,15 @@ import { Bell } from "lucide-react";
 import { marked } from "marked";
 import { db } from "@/firebase/firebase";
 import type { AnnouncementData } from "@/types/announcement";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/Components/ui/dialog";
-import { Button } from "@/Components/ui/button";
+import { Dialog, DialogContent } from "@/Components/ui/dialog";
 
 const READ_KEY = "readNotifications";
+
+const TYPE_CONFIG: Record<AnnouncementData["type"], { label: string; accent: string; bg: string }> = {
+  info: { label: "公告", accent: "#5991C4", bg: "#EEF4FB" },
+  warning: { label: "注意", accent: "#C8A500", bg: "#FDFAEE" },
+  danger: { label: "警示", accent: "#E44C4C", bg: "#FEF2F2" },
+};
 
 function getReadIds(): string[] {
   try {
@@ -23,17 +28,12 @@ function saveReadIds(ids: string[]) {
   localStorage.setItem(READ_KEY, JSON.stringify(ids));
 }
 
-const typeLabel = {
-  info: "資訊",
-  warning: "注意",
-  danger: "重要",
-};
-
-const typeBadge = {
-  info: "bg-blue-100 text-blue-700",
-  warning: "bg-yellow-100 text-yellow-700",
-  danger: "bg-red-100 text-red-700",
-};
+// "2025-04-04" → "4月4日"
+function formatDate(id: string) {
+  const parts = id.split("-");
+  if (parts.length !== 3) return id;
+  return `${parseInt(parts[1])}月${parseInt(parts[2])}日`;
+}
 
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
@@ -66,7 +66,7 @@ export function NotificationBell() {
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
-      if (selected) return; // 詳情 modal 開著時不關閉 dropdown
+      if (selected) return;
       if (ref.current && !ref.current.contains(e.target as Node)) {
         setOpen(false);
       }
@@ -94,13 +94,12 @@ export function NotificationBell() {
     setSelected(item);
   };
 
-  const handleDetailClose = () => {
-    setSelected(null);
-  };
+  const handleDetailClose = () => setSelected(null);
 
   return (
     <>
       <div ref={ref} className="relative">
+        {/* Bell button */}
         <button onClick={() => setOpen(v => !v)} aria-label="通知" className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors">
           <Bell className="w-4 h-4 text-gray-600" />
           {unreadCount > 0 && (
@@ -110,13 +109,14 @@ export function NotificationBell() {
           )}
         </button>
 
+        {/* Dropdown panel */}
         {open && (
-          <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
+          <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-gray-100 z-50 overflow-hidden">
+            {/* Panel header */}
             <div className="flex items-center justify-between px-4 py-3">
-              <span className="noto text-sm font-bold text-gray-700 mt-0.5">系統通知</span>
-
+              <span className="noto text-sm font-bold text-gray-800">系統通知</span>
               {unreadCount > 0 && (
-                <button onClick={markAllRead} className="noto text-xs text-blue-600 hover:text-blue-800">
+                <button onClick={markAllRead} className="noto text-xs text-[#5991C4] hover:text-[#4880B0] transition-colors">
                   全部已讀
                 </button>
               )}
@@ -124,19 +124,27 @@ export function NotificationBell() {
             <div className="h-px bg-gray-100" />
 
             {items.length === 0 ? (
-              <div className="px-4 py-6 text-center noto text-sm text-gray-400">暫無通知</div>
+              <div className="px-4 py-8 text-center">
+                <p className="noto text-sm text-gray-400">暫無通知</p>
+              </div>
             ) : (
-              <ul className="max-h-72 overflow-y-auto divide-y divide-gray-50">
+              <ul className="max-h-56 overflow-y-auto divide-y divide-gray-50">
                 {items.map(item => {
                   const isRead = readIds.includes(item.id);
+                  const { accent } = TYPE_CONFIG[item.type];
                   return (
-                    <li key={item.id} onClick={() => handleItemClick(item)} className={`px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors ${isRead ? "opacity-60" : ""}`}>
-                      <div className="flex items-center gap-2 mb-0.5">
-                        {!isRead && <span className="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0" />}
-                        <span className={`noto text-[10px] font-semibold px-1.5 py-0.5 rounded ${typeBadge[item.type]}`}>{typeLabel[item.type]}</span>
-                        <span className="noto text-xs text-gray-400 ml-auto shrink-0">{item.id}</span>
+                    <li key={item.id} onClick={() => handleItemClick(item)} className={`flex cursor-pointer transition-colors hover:bg-gray-50 ${isRead ? "" : "bg-blue-50/30"}`}>
+                      {/* Type color strip */}
+                      <div className="w-0.5 shrink-0 self-stretch" style={{ backgroundColor: isRead ? "transparent" : accent }} />
+
+                      {/* Item content */}
+                      <div className="flex-1 px-4 py-3 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className={`noto text-sm leading-snug flex-1 min-w-0 ${isRead ? "text-gray-500 font-normal" : "text-gray-800 font-medium"}`}>{item.title}</p>
+                          {!isRead && <span className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5" style={{ backgroundColor: accent }} />}
+                        </div>
+                        <p className="roboto text-xs text-gray-400 mt-1">{formatDate(item.id)}</p>
                       </div>
-                      <p className="noto text-sm text-gray-800 font-medium leading-snug">{item.title}</p>
                     </li>
                   );
                 })}
@@ -146,32 +154,52 @@ export function NotificationBell() {
         )}
       </div>
 
-      {/* 通知詳情 modal */}
+      {/* Detail modal */}
       <Dialog
         open={!!selected}
         onOpenChange={o => {
           if (!o) handleDetailClose();
         }}>
         {selected && (
-          <DialogContent showCloseButton={false}>
-            <DialogHeader>
-              <div className="flex items-center gap-2 mb-1">
-                <span className={`noto text-[10px] font-semibold px-1.5 py-0.5 rounded ${typeBadge[selected.type]}`}>{typeLabel[selected.type]}</span>
-                <span className="noto text-xs text-gray-400">{selected.id}</span>
+          <DialogContent showCloseButton={false} className="p-0 overflow-hidden gap-0">
+            {/* Type accent strip */}
+            <div className="h-1 w-full shrink-0" style={{ backgroundColor: TYPE_CONFIG[selected.type].accent }} />
+
+            {/* Header */}
+            <div className="px-5 pt-4 pb-3">
+              <div className="flex items-center gap-2 mb-3">
+                <span
+                  className="noto inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
+                  style={{
+                    backgroundColor: TYPE_CONFIG[selected.type].bg,
+                    color: TYPE_CONFIG[selected.type].accent,
+                  }}>
+                  {TYPE_CONFIG[selected.type].label}
+                </span>
+                <span className="roboto text-xs text-gray-400">{formatDate(selected.id)}</span>
               </div>
-              <DialogTitle className="noto">{selected.title}</DialogTitle>
-            </DialogHeader>
-            <div
-              className="prose prose-sm max-w-none whitespace-pre-wrap noto text-sm text-muted-foreground"
-              dangerouslySetInnerHTML={{
-                __html: marked.parse(selected.content) as string,
-              }}
-            />
-            <DialogFooter>
-              <Button onClick={handleDetailClose} className="noto w-full sm:w-auto">
+              <h2 className="noto text-[15px] font-bold text-gray-900 leading-snug">{selected.title}</h2>
+            </div>
+
+            <div className="h-px bg-gray-100 mx-5" />
+
+            {/* Content */}
+            <div className="px-5 py-4">
+              <div
+                className="noto text-sm text-gray-500 leading-relaxed prose prose-sm max-w-none
+                  prose-p:my-1 prose-ul:my-1 prose-li:my-0"
+                dangerouslySetInnerHTML={{
+                  __html: marked.parse(selected.content) as string,
+                }}
+              />
+            </div>
+
+            {/* Action */}
+            <div className="px-5 pb-5">
+              <button onClick={handleDetailClose} className="noto w-full py-2.5 rounded-xl bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors">
                 關閉
-              </Button>
-            </DialogFooter>
+              </button>
+            </div>
           </DialogContent>
         )}
       </Dialog>
