@@ -13,8 +13,8 @@ const TYPE_CONFIG: Record<
   { label: string; accent: string; bg: string }
 > = {
   info:    { label: "公告", accent: "#5991C4", bg: "#EEF4FB" },
-  warning: { label: "注意", accent: "#C8A500", bg: "#FDFAEE" },
-  danger:  { label: "警示", accent: "#E44C4C", bg: "#FEF2F2" },
+  warning: { label: "注意", accent: "#C4883A", bg: "#FBF4E8" },
+  danger:  { label: "警示", accent: "#B85858", bg: "#F7EDED" },
 };
 
 interface Props {
