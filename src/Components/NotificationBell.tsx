@@ -112,14 +112,16 @@ export function NotificationBell() {
 
         {open && (
           <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 overflow-hidden">
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <span className="noto text-sm font-semibold text-gray-800">系統通知</span>
+            <div className="flex items-center justify-between px-4 py-3">
+              <span className="noto text-sm font-bold text-gray-700 mt-0.5">系統通知</span>
+
               {unreadCount > 0 && (
                 <button onClick={markAllRead} className="noto text-xs text-blue-600 hover:text-blue-800">
                   全部已讀
                 </button>
               )}
             </div>
+            <div className="h-px bg-gray-100" />
 
             {items.length === 0 ? (
               <div className="px-4 py-6 text-center noto text-sm text-gray-400">暫無通知</div>
