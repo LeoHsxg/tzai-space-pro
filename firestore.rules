@@ -14,6 +14,11 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    match /announcements/{announcementId} {
+      allow read: if true;   // 公告任何人可讀（通知鈴鐺 client 查詢用）
+      allow write: if false; // 寫入只走 API Route（Admin SDK）
+    }
+
     match /bookings/{bookingId} {
       allow read: if true;    // 任何人可讀（Calendar 頁公開顯示）
       allow write: if false;  // 所有寫入走 API Route（Admin SDK 繞過此規則）
