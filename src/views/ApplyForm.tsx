@@ -128,10 +128,12 @@ const ApplyForm: React.FC = () => {
           </Select>
         </div>
         <div className="w-full">
-          <DateTimePicker className="ipt w-full" label="開始日期" value={startDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setStartDate(newValue)} />
+          <DateTimePicker className="ipt w-full" label="開始日期" value={startDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setStartDate(newValue)}
+            slotProps={{ textField: { sx: { "& .MuiPickersOutlinedInput-notchedOutline": { border: "none" } } } }} />
         </div>
         <div className="flex justify-between w-full">
-          <DateTimePicker className="ipt w-full" label="結束日期" value={endDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setEndDate(newValue)} />
+          <DateTimePicker className="ipt w-full" label="結束日期" value={endDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setEndDate(newValue)}
+            slotProps={{ textField: { sx: { "& .MuiPickersOutlinedInput-notchedOutline": { border: "none" } } } }} />
         </div>
         <div className="w-full">
           <Input className="ipt" placeholder="活動簡述（請認真寫！）" onChange={e => setDescription(e.target.value)} />
