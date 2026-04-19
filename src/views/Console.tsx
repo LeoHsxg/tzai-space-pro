@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/Components/ui/select";
 import type { AnnouncementData } from "@/types/announcement";
+import { AnnouncementModal } from "@/Components/AnnouncementModal";
 
 type FormState = Omit<AnnouncementData, "publishedAt">;
 
@@ -33,6 +34,18 @@ const Console = () => {
   const [form, setForm] = useState<FormState>(DEFAULT_FORM);
   const [loadingData, setLoadingData] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [previewAnnouncement, setPreviewAnnouncement] = useState<AnnouncementData | null>(null);
+
+  const handlePreview = () => {
+    const fake: AnnouncementData = {
+      ...form,
+      id: "__preview__",
+      showModal: true,
+      publishedAt: new Date().toISOString(),
+    };
+    localStorage.removeItem("seenAnnouncement");
+    setPreviewAnnouncement(fake);
+  };
 
   useEffect(() => {
     fetch("/api/announcements")
@@ -131,9 +144,9 @@ const Console = () => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="info">Info（藍色）</SelectItem>
-            <SelectItem value="warning">Warning（黃色）</SelectItem>
-            <SelectItem value="danger">Danger（紅色）</SelectItem>
+            <SelectItem value="info">公告（藍色）</SelectItem>
+            <SelectItem value="warning">提醒（橘色）</SelectItem>
+            <SelectItem value="danger">緊急（紅色）</SelectItem>
           </SelectContent>
         </Select>
       </label>
@@ -148,13 +161,30 @@ const Console = () => {
         <span className="noto text-sm text-gray-700">發布時彈出公告視窗</span>
       </label>
 
-      <Button
-        onClick={handleSave}
-        disabled={saving || loadingData}
-        className="noto"
-      >
-        {saving ? "發布中..." : "發布公告"}
-      </Button>
+      <div className="flex gap-2">
+        <Button
+          onClick={handleSave}
+          disabled={saving || loadingData}
+          className="noto flex-1"
+        >
+          {saving ? "發布中..." : "發布公告"}
+        </Button>
+        <Button
+          variant="outline"
+          onClick={handlePreview}
+          disabled={!form.title.trim()}
+          className="noto"
+        >
+          預覽 Modal
+        </Button>
+      </div>
+
+      {previewAnnouncement && (
+        <AnnouncementModal
+          key={previewAnnouncement.publishedAt}
+          announcement={previewAnnouncement}
+        />
+      )}
     </div>
   );
 };
