@@ -1,10 +1,7 @@
-'use client'
+"use client";
 
 import React from "react";
-import {
-  Dialog,
-  DialogContent,
-} from "@/Components/ui/dialog";
+import { Dialog, DialogContent } from "@/Components/ui/dialog";
 import { Booking } from "../types/booking";
 import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
@@ -12,11 +9,11 @@ import { useIsAdmin } from "../hooks/useIsAdmin";
 import dayjs from "dayjs";
 
 const ROOM_COLOR: Record<string, string> = {
-  書房:    "#E44C4C",
-  橘廳:    "#FF6F0D",
-  會議室:  "#54A0F9",
+  書房: "#E44C4C",
+  橘廳: "#FF6F0D",
+  會議室: "#54A0F9",
   小導師室: "#FFD81E",
-  貢丸室:  "#9458E2",
+  貢丸室: "#9458E2",
 };
 
 interface MyDialogProps {
@@ -66,39 +63,34 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
   };
 
   const isEventOwner = user?.email === booking?.email;
-  const eventStarted = booking
-    ? dayjs(booking.startTime.toDate()).isBefore(dayjs())
-    : false;
+  const eventStarted = booking ? dayjs(booking.startTime.toDate()).isBefore(dayjs()) : false;
   const canDelete = isAdmin || (isEventOwner && !eventStarted);
   const roomColor = booking ? (ROOM_COLOR[booking.room] ?? "#CCCCCC") : "#CCCCCC";
 
   return (
-    <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={isOpen => {
+        if (!isOpen) onClose();
+      }}>
       <DialogContent showCloseButton={false} className="p-0 overflow-hidden gap-0">
         {!booking ? (
           <div className="p-5 noto text-sm text-gray-400">載入失敗</div>
         ) : (
           <>
             {/* Header */}
-            <div className="px-5 pt-5 pb-4">
+            <div className="px-5 pt-4 pb-3">
               <div className="flex items-center gap-2 mb-0.5">
-                <span
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: roomColor }}
-                />
-                <h2 className="noto text-base font-bold text-gray-900">
-                  {booking.room}
-                </h2>
+                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: roomColor }} />
+                <h2 className="noto text-base font-bold text-gray-900">{booking.room}</h2>
               </div>
-              <p className="roboto text-xs text-gray-400 pl-[18px]">
-                {dayjs(booking.startTime.toDate()).format("YYYY年M月D日")}
-              </p>
+              <p className="roboto text-xs text-gray-400 pl-[18px]">{dayjs(booking.startTime.toDate()).format("YYYY年M月D日")}</p>
             </div>
 
-            <div className="h-px bg-gray-100 mx-5" />
+            <div className="h-px bg-gray-100 mx-4" />
 
             {/* Info */}
-            <div className="px-5 py-4 flex flex-col gap-3">
+            <div className="px-5 py-3 flex flex-col gap-2.5">
               <InfoRow label="時間">
                 <span className="roboto text-sm text-gray-800">
                   {dayjs(booking.startTime.toDate()).format("HH:mm")}
@@ -114,31 +106,23 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
               </InfoRow>
               {booking.description && (
                 <InfoRow label="簡述" align="start">
-                  <span className="noto text-sm text-gray-700 leading-relaxed">
-                    {booking.description}
-                  </span>
+                  <span className="noto text-sm text-gray-700 leading-relaxed">{booking.description}</span>
                 </InfoRow>
               )}
               <InfoRow label="信箱">
-                <span className="roboto text-xs text-gray-400 truncate block">
-                  {booking.email}
-                </span>
+                <span className="roboto text-xs text-gray-400 truncate block">{booking.email}</span>
               </InfoRow>
             </div>
 
             {/* Actions */}
-            <div className="px-5 pb-5 pt-1 flex flex-col gap-1.5">
+            <div className="px-5 pb-4 pt-1 flex flex-col gap-1.5">
               <button
                 onClick={onClose}
-                className="noto w-full py-2.5 rounded-xl bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200 active:bg-gray-200 transition-colors"
-              >
+                className="noto w-full py-2.5 rounded-xl bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200 active:bg-gray-200 transition-colors">
                 關閉
               </button>
               {canDelete && (
-                <button
-                  onClick={handleDelete}
-                  className="noto w-full py-2 text-sm text-red-400 hover:text-red-500 active:text-red-500 transition-colors"
-                >
+                <button onClick={handleDelete} className="noto w-full py-1 text-sm text-red-400 hover:text-red-500 active:text-red-500 transition-colors">
                   取消預約
                 </button>
               )}
@@ -151,3 +135,4 @@ const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, booking }) => {
 };
 
 export default MyDialog;
+
