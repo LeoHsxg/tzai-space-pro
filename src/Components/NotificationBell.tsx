@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
-import { Bell } from "lucide-react";
 import { marked } from "marked";
 import { db } from "@/firebase/firebase";
 import type { AnnouncementData } from "@/types/announcement";
@@ -11,9 +10,9 @@ import { Dialog, DialogContent } from "@/Components/ui/dialog";
 const READ_KEY = "readNotifications";
 
 const TYPE_CONFIG: Record<AnnouncementData["type"], { label: string; accent: string; bg: string }> = {
-  info:    { label: "公告", accent: "#5991C4", bg: "#EEF4FB" },
-  warning: { label: "注意", accent: "#C4883A", bg: "#FBF4E8" },
-  danger:  { label: "警示", accent: "#B85858", bg: "#F7EDED" },
+  info: { label: "公告", accent: "#5991C4", bg: "#EEF4FB" },
+  warning: { label: "提醒", accent: "#EAC42A", bg: "#fbf8e9" },
+  danger: { label: "緊急", accent: "#B85858", bg: "#F7EDED" },
 };
 
 function getReadIds(): string[] {
@@ -100,8 +99,11 @@ export function NotificationBell() {
     <>
       <div ref={ref} className="relative">
         {/* Bell button */}
-        <button onClick={() => setOpen(v => !v)} aria-label="通知" className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors">
-          <Bell className="w-4 h-4 text-gray-600" />
+        <button
+          onClick={() => setOpen(v => !v)}
+          aria-label="通知"
+          className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors translate-y-0.5">
+          <img src="/img/notifications.svg" className="w-7 h-7" alt="" />
           {unreadCount > 0 && (
             <span className="absolute top-0.5 right-0.5 min-w-[14px] h-[14px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
               {unreadCount > 9 ? "9+" : unreadCount}
@@ -166,7 +168,7 @@ export function NotificationBell() {
             <div className="h-1 w-full shrink-0" style={{ backgroundColor: TYPE_CONFIG[selected.type].accent }} />
 
             {/* Header */}
-            <div className="px-5 pt-4 pb-3">
+            <div className="px-4 pt-3 pb-2.5">
               <div className="flex items-center gap-2 mb-3">
                 <span
                   className="noto inline-block text-[11px] font-semibold px-2.5 py-0.5 rounded-full"
@@ -181,10 +183,10 @@ export function NotificationBell() {
               <h2 className="noto text-[15px] font-bold text-gray-900 leading-snug">{selected.title}</h2>
             </div>
 
-            <div className="h-px bg-gray-100 mx-5" />
+            <div className="h-px bg-gray-100 mx-4" />
 
             {/* Content */}
-            <div className="px-5 py-4">
+            <div className="px-4 pt-3 pb-4">
               <div
                 className="noto text-sm text-gray-500 leading-relaxed prose prose-sm max-w-none
                   prose-p:my-1 prose-ul:my-1 prose-li:my-0"
@@ -195,7 +197,7 @@ export function NotificationBell() {
             </div>
 
             {/* Action */}
-            <div className="px-5 pb-5">
+            <div className="px-4 pb-4">
               <button onClick={handleDetailClose} className="noto w-full py-2.5 rounded-xl bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors">
                 關閉
               </button>
