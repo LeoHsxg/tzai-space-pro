@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import SignBt from "./SignBt";
 import NavLinks from "./NavLinks";
+import { NotificationBell } from "./NotificationBell";
 
 const NavBar = () => {
   const [sticking, setSticking] = useState(false);
@@ -19,10 +20,11 @@ const NavBar = () => {
         sticking ? "shadow-[0px_0px_10px_0px_rgba(0,0,0,0.05)]" : ""
       }`}>
       <img className="w-16 h-6" src="/img/LOGO_9x3.svg" alt="Logo" />
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-3">
         <div className="hidden md:block">
           <NavLinks />
         </div>
+        <NotificationBell />
         <SignBt />
       </div>
     </div>
