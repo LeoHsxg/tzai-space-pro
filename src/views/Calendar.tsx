@@ -174,13 +174,7 @@ const Calendar: React.FC = () => {
       <div className="w-full py-4 px-[5%] flex flex-col items-center inline-flex md:pt-5 md:pb-0 md:px-0 md:grow">
         <div className="self-stretch px-2.5 justify-between items-center inline-flex">
           <div className="font">今日預約共 {filteredAmount} 筆</div>
-          <a
-            href="https://calendar.google.com/calendar/u/0/embed?src=oa27fmn21hoqd0hvdpg1bqlv1k@group.calendar.google.com&ctz=Asia/Taipei"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font underline">
-            預約詳情
-          </a>
+          <div className="font">預約詳情</div>
         </div>
 
         <div className="self-stretch py-2.5 flex-col justify-start items-center gap-3.5 flex">
