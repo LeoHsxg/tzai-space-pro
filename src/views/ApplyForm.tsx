@@ -7,9 +7,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
 
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { Booking } from "../types/booking";
 import { useAuth } from "../hooks/useAuth";
 import { validateData } from "../func/applyFunc";
 import { useUI } from "../context/UIContext";
@@ -38,18 +35,6 @@ const ApplyForm: React.FC = () => {
     if (!applicantName || !phone || !crowdSize || !location || !startDate || !endDate || !description || !consent) {
       showSnackbar("請填寫所有必填欄位，並同意隱私權政策", "warning");
       return;
-    }
-    // 檢查是否有待完成（未上傳照片）的借用
-    if (user) {
-      const pendingSnap = await getDocs(
-        query(collection(db, "bookings"), where("email", "==", user.email), where("status", "==", "active"), where("photoRequired", "==", true), where("photoUrl", "==", null)),
-      );
-      const now = Date.now();
-      const hasPending = pendingSnap.docs.some(doc => (doc.data() as Booking).endTime.toMillis() < now);
-      if (hasPending) {
-        showSnackbar("你有借用尚未上傳照片，請先至個人檔案完成上傳", "warning");
-        return;
-      }
     }
     showDialog("處理中...");
     try {

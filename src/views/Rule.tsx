@@ -16,15 +16,6 @@ const steps = [
     title: "環境復原",
     desc: "離開前請打掃乾淨與恢復原狀，並確認門窗、燈光、電扇及電源皆已關閉。",
   },
-  {
-    title: "上傳照片",
-    desc: (
-      <>
-        使用完畢後須拍攝空間現況並上傳。在
-        <strong className="font-bold text-gray-700">確保空間已完全復原</strong>的前提下，歡迎分享活動搞怪合照。
-      </>
-    ),
-  },
 ];
 
 type BadgeVariant = "warning" | "danger" | "neutral";
@@ -42,14 +33,9 @@ const rules: { badge: BadgeVariant; symbol: string; text: React.ReactNode }[] = 
     ),
   },
   {
-    badge: "danger",
-    symbol: "×",
-    text: "結案照片若涉及不雅或違反善良風俗，經舉報查證後取消後續借用資格。",
-  },
-  {
     badge: "warning",
     symbol: "!",
-    text: "預約空間後若臨時無法到場，仍須負起維護空間與上傳空間照片之責任。",
+    text: "預約空間後若臨時無法到場，仍須負起維護空間之責任。",
   },
   {
     badge: "neutral",

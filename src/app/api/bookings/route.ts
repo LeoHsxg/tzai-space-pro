@@ -78,8 +78,6 @@ export async function POST(request: NextRequest) {
         endTime,
         createdAt: Timestamp.now(),
         status: "active",
-        photoRequired: true,
-        photoUrl: null,
       });
     });
 

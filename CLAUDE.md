@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 專案概述
 
-**載物空間借用系統** — 空間預約與借用管理平台。技術棧：Next.js (App Router) + Firebase (Auth / Firestore / Storage / Hosting / Functions) + MUI + shadcn/ui + Tailwind CSS + TypeScript
+**載物空間借用系統** — 空間預約與借用管理平台。技術棧：Next.js (App Router) + Firebase (Auth / Firestore / Hosting / Functions) + MUI + shadcn/ui + Tailwind CSS + TypeScript
 
 ---
 
@@ -19,7 +19,7 @@ npm run lint     # ESLint 檢查
 ### Firebase
 
 ```bash
-firebase emulators:start          # 啟動本地模擬器（Functions:5001, Firestore:8080, Hosting:5000, Storage:9199）
+firebase emulators:start          # 啟動本地模擬器（Functions:5001, Firestore:8080, Hosting:5000）
 firebase deploy                   # 部署全部（Hosting + Functions + Firestore rules）
 firebase deploy --only hosting    # 只部署前端
 firebase deploy --only functions  # 只部署 Cloud Functions
@@ -60,7 +60,7 @@ src/
 │   ├── page.tsx            # 首頁 → Calendar view
 │   ├── apply/page.tsx      # 申請頁
 │   ├── rule/page.tsx       # 規則頁
-│   ├── profile/page.tsx    # 個人檔案（借用紀錄、照片上傳）
+│   ├── profile/page.tsx    # 個人檔案（借用紀錄）
 │   ├── console/page.tsx    # 管理員後台
 │   └── test/page.tsx       # 測試頁
 ├── views/                  # 各頁面主要 view
@@ -87,7 +87,7 @@ src/
 ├── hooks/
 │   └── useAuth.tsx         # useContext(AuthContext) 封裝
 ├── firebase/
-│   └── firebase.ts         # Firebase 初始化（auth, db, storage）、signInWithGoogle、getRegulationsData
+│   └── firebase.ts         # Firebase 初始化（auth, db）、signInWithGoogle、getRegulationsData
 ├── func/
 │   └── applyFunc.ts        # RequestBody 介面 + validateData 驗證邏輯
 ├── lib/
@@ -104,7 +104,6 @@ src/
 
 - **Project ID**: `tzai-space-pro`
 - **Auth**: Google Sign-In（`signInWithPopup`）
-- **Storage**: `firebase.ts` 匯出 `storage`，用於預約照片上傳
 
 ### Firestore Collections
 
@@ -129,8 +128,6 @@ type Booking = {
   endTime: Timestamp;
   createdAt: Timestamp;
   status: "active" | "cancelled";
-  photoRequired?: boolean; // true → 借用結束後需上傳照片
-  photoUrl?: string | null; // Firebase Storage 下載 URL
 };
 ```
 
