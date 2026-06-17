@@ -16,9 +16,6 @@ const NavLinks = () => {
       <div className="md:hidden flex w-full h-16 px-[8%] py-3 justify-between z-[100] bg-white shadow">
         <div className="w-full flex justify-between items-center gap-[30px]">
           <img src="/img/info_h.svg" alt="Info" className="icon_h" onClick={handleClick} />
-          <Link href="/wall">
-            <img src={currentPath === "/wall" ? "/img/wall_art_s.svg" : "/img/wall_art_h.svg"} alt="照片牆" className={currentPath === "/wall" ? "icon_s" : "icon_h"} />
-          </Link>
           <Link href="/">
             <img src={currentPath === "/" ? "/img/add_circle_s.svg" : "/img/add_circle_h.svg"} alt="Apply" className={currentPath === "/" ? "icon_s" : "icon_h"} />
           </Link>
@@ -37,9 +34,6 @@ const NavLinks = () => {
           </Link>
           <Link href="/apply">
             <div className="noto text-sm font-medium text-gray-600">申請</div>
-          </Link>
-          <Link href="/wall">
-            <div className="noto text-sm font-medium text-gray-600">照片牆</div>
           </Link>
           <Link href="/rule">
             <div className="noto text-sm font-medium text-gray-600">借用規章</div>
