@@ -13,6 +13,4 @@ export type Booking = {
   endTime: Timestamp;
   createdAt: Timestamp;
   status: "active" | "cancelled";
-  photoRequired?: boolean;         // true → 此筆借用需要上傳照片（舊資料無此欄位）
-  photoUrl?: string | null;        // Firebase Storage 下載 URL，上傳後寫入
 };

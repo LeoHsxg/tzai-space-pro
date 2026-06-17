@@ -1,7 +1,6 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
-import { getStorage } from "firebase-admin/storage";
 
 if (!getApps().length) {
   if (process.env.FIREBASE_ADMIN_PRIVATE_KEY) {
@@ -12,16 +11,12 @@ if (!getApps().length) {
         clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
         privateKey: process.env.FIREBASE_ADMIN_PRIVATE_KEY.replace(/\\n/g, "\n"),
       }),
-      storageBucket: "tzai-space-pro.firebasestorage.app",
     });
   } else {
     // Firebase App Hosting：使用 Application Default Credentials（無需額外設定）
-    initializeApp({
-      storageBucket: "tzai-space-pro.firebasestorage.app",
-    });
+    initializeApp();
   }
 }
 
 export const adminDb = getFirestore();
 export const adminAuth = getAuth();
-export const adminStorage = getStorage();
