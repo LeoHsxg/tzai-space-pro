@@ -2,7 +2,7 @@
 
 import React from "react";
 import { signInWithGoogle, auth } from "../firebase/firebase";
-import { signInWithRedirect, GoogleAuthProvider, signOut } from "firebase/auth";
+import { signOut } from "firebase/auth";
 import { useAuth } from "../hooks/useAuth"; // 假設這是你的 auth hook
 
 const SignBt: React.FC = () => {

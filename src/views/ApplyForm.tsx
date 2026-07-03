@@ -75,7 +75,6 @@ const ApplyForm: React.FC = () => {
     if (isSafari) {
       // showSnackbar("Safari 可能會有 Cookie 與跨站追蹤阻擋的問題，建議使用 Chrome", "info");
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
