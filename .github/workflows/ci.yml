@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  checks:
+    name: Lint / Typecheck / Test / Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      # Firestore emulator jar 快取,避免每次 CI 重新下載
+      - name: Cache Firebase emulators
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ runner.os }}
+
+      - name: Firestore security rules tests
+        run: npm run test:rules
+
+      - name: Build
+        run: npm run build
+        env:
+          # Firebase client API key 只在 runtime 驗證;build/prerender 階段
+          # 用 placeholder 即可通過,CI 不需要真實 key
+          NEXT_PUBLIC_API_KEY: AIzaSyDUMMY-ci-placeholder-key-000000000
