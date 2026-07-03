@@ -35,6 +35,10 @@ export default [
       ...reactHooks.configs.recommended.rules,
       ...typescript.configs.recommended.rules,
       "react/jsx-no-target-blank": "off",
+      // TypeScript 專案:props 型別由 TS 檢查,prop-types 規則多餘
+      "react/prop-types": "off",
+      // typescript-eslint 官方建議:未定義變數交給 tsc 檢查
+      "no-undef": "off",
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
       "@typescript-eslint/no-var-requires": "off",
       "@typescript-eslint/no-require-imports": "off",
