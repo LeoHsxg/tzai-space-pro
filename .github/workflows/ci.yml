@@ -33,6 +33,13 @@ jobs:
       - name: Unit tests
         run: npm test
 
+      # Firestore emulator 需要 Java 21+(ubuntu-latest 預裝版本不夠新)
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
       # Firestore emulator jar 快取,避免每次 CI 重新下載
       - name: Cache Firebase emulators
         uses: actions/cache@v4
