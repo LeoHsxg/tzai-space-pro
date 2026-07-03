@@ -36,3 +36,8 @@ service_account.json
 .next/
 .worktrees/
 .superpowers/
+
+# Firebase emulator logs
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
