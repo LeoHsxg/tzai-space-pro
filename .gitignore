@@ -37,6 +37,9 @@ service_account.json
 .worktrees/
 .superpowers/
 
+# Claude playbooks 的本地備份（歷史已在 git，見 .claude/playbooks/maintenance.md）
+.claude/backups/
+
 # Firebase emulator logs
 firebase-debug.log*
 firestore-debug.log*

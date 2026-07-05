@@ -1,188 +1,76 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+載物空間借用系統——大學宿舍（仁齋）空間預約平台。**這是 production，有真實使用者與真實資料。**
+技術棧：Next.js 15 App Router + Firebase（Auth / Firestore / App Hosting / Functions）+ TypeScript + Tailwind + shadcn/ui + Vitest。
 
-## 專案概述
+## 路由表：何時讀哪份檔（用到才讀，不要預載）
 
-**載物空間借用系統** — 空間預約與借用管理平台。技術棧：Next.js (App Router) + Firebase (Auth / Firestore / Hosting / Functions) + MUI + shadcn/ui + Tailwind CSS + TypeScript
+| 情境 | 先讀 |
+| --- | --- |
+| 新 session 接到第一個非瑣碎任務 | `.claude/playbooks/letter.md` |
+| 規劃「自己做 vs 派 subagent」、選 model | `.claude/playbooks/dispatch.md` |
+| 要寫派工 prompt | `.claude/playbooks/prompts.md` |
+| 卡住重試中／宣告完成前／想問使用者前／考慮升級模型 | `.claude/playbooks/judgment.md` |
+| 要修改本檔或 playbooks、踩坑後想記教訓 | `.claude/playbooks/maintenance.md` |
+| 動到 UI、視覺、文案 | `.impeccable.md`（設計品味準則，**必讀**） |
+| 想懂這套制度的由來 | `.claude/playbooks/diagnosis.md` |
 
----
-
-## 開發指令
+## 指令（驗證於 2026-07-04）
 
 ```bash
-npm run dev      # 啟動開發伺服器 (localhost:3000)
-npm run build    # 建置至 ./dist (distDir 設定)
-npm run lint     # ESLint 檢查
+npm run dev          # localhost:3000
+npm run build        # 輸出 .next/（next.config.ts 為空設定，沒有自訂 distDir）
+npm run lint
+npm test             # Vitest 單元測試
+npm run test:rules   # Firestore rules 測試；需本機 Java 21+，會自動起 emulator
+npx tsc --noEmit     # typecheck（CI 有跑，本地也要跑）
+firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Database:9000
 ```
 
-### Firebase
+程式碼變更宣告完成前的最低驗證（用 Bash tool 跑）：
+`npm run lint && npx tsc --noEmit && npm test`。CI（`.github/workflows/ci.yml`）跑同一套加 rules 測試與 build。
 
-```bash
-firebase emulators:start          # 啟動本地模擬器（Functions:5001, Firestore:8080, Hosting:5000）
-firebase deploy                   # 部署全部（Hosting + Functions + Firestore rules）
-firebase deploy --only hosting    # 只部署前端
-firebase deploy --only functions  # 只部署 Cloud Functions
-```
+## 高風險操作：先問使用者（判準見 judgment.md R3）
 
----
+- `firebase deploy`（任何形式）——直接打 production
+- 修改 `firestore.rules`（尤其放寬權限）、觸發 `/api/migrate` 資料遷移
+- `git push`、修改 CI workflow、新增執行期依賴
 
-## 架構說明
+## 架構速覽
 
-### Hosting & SSR
+- 頁面：`src/app/*/page.tsx` → 主要內容在 `src/views/*.tsx`；共用元件在 `src/Components/`
+- **寫入一律走 API Route + Admin SDK**（`src/firebase/admin.ts`）；client 只讀。
+  API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/migrate`
+- 權限的唯一事實來源是 `firestore.rules`。Collections：`bookings`（主資料）、
+  `regulations/current`、`announcements`、`admins/{email}`（doc 存在＝管理員，`src/lib/isAdmin.ts`）
+- Booking 型別與五個房間名單：`src/types/booking.ts`；申請驗證規則：`src/func/applyFunc.ts`
+  （以程式碼為準，本檔不複製內容）
+- `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −4 ～ +1 個月」的 active bookings
+- `functions/`（Node 22）是遺留的 Google Calendar 整合；`firebase.json` 的 `/api/add|getAll|get|delete` rewrites 指向它
+- 路徑別名 `@/` → `src/`；`cn()` 在 `src/lib/utils.ts`；互動元件要標 `'use client'`
 
-`next.config.ts` 已**移除** `output: 'export'`，改用 Firebase App Hosting（`apphosting.yaml`）。
+## 環境注意（Windows，血淚教訓見 diagnosis.md）
 
-- SSR / Server Components / API Routes **現在可用**
-- `distDir: './dist'` 仍保留（建置輸出目錄）
-- `firebase.json` 的 `hosting.predeploy` 會在部署前自動執行 `npm run build`
+- 建立/修改內容檔（程式碼、文件）一律用 Read/Write/Edit 工具，**禁止 shell 重導向產生**
+  （PowerShell 5.1 預設 UTF-16，會毀掉中文）。例外：用 Bash tool 把指令輸出導到暫存 log
+  （`npm run build > /tmp/build.log 2>&1`）再擷取重點，是建議做法
+- POSIX 語法（`&&`、`head`、`grep`）只在 Bash tool 有效；PowerShell 5.1 **沒有** `&&`
+- 不要 Read/Grep：`dist/`、`.next/`、`node_modules/`、`functions/node_modules/`、`.git/`
 
-### API 路由
+## 環境變數（驗證於 2026-07-04）
 
-前端 API 呼叫走兩條路徑：
+- Client：`NEXT_PUBLIC_API_KEY`（`src/firebase/firebase.ts`）
+- 本地跑 API Route 需要：`FIREBASE_ADMIN_PROJECT_ID` / `FIREBASE_ADMIN_CLIENT_EMAIL` / `FIREBASE_ADMIN_PRIVATE_KEY`
+  （`src/firebase/admin.ts`；App Hosting 上改用 ADC，不需設定）
+- 目前本機**沒有** `.env` / `.env.local`——需要時先問使用者拿 key，不要自己造假值（CI 的 placeholder 只夠過 build）
 
-| 路徑                                         | 說明                                               |
-| -------------------------------------------- | -------------------------------------------------- |
-| `POST /api/bookings`                         | 新增預約（Next.js API Route，由 `ApplyForm` 呼叫） |
-| `/api/add/**` → `addEventToCalendar`         | Cloud Function（遺留，Google Calendar 整合）       |
-| `/api/getAll/**` → `getAllEvents`            | Cloud Function（遺留）                             |
-| `/api/get` → `getEventsForMonth`             | Cloud Function（遺留）                             |
-| `/api/delete/**` → `deleteEventFromCalendar` | Cloud Function（遺留）                             |
+## 已知狀況（驗證於 2026-07-04）
 
-Cloud Functions 原始碼位於 `functions/` (Node.js 22)，主要邏輯在 `functions/src/handleEvent.js`。
-
-### App Router 結構
-
-```
-src/
-├── app/
-│   ├── layout.tsx          # 根 layout — 載入字型、Analytics、包 AppShell
-│   ├── page.tsx            # 首頁 → Calendar view
-│   ├── apply/page.tsx      # 申請頁
-│   ├── rule/page.tsx       # 規則頁
-│   ├── profile/page.tsx    # 個人檔案（借用紀錄）
-│   ├── console/page.tsx    # 管理員後台
-│   └── test/page.tsx       # 測試頁
-├── views/                  # 各頁面主要 view
-│   ├── Calendar.tsx
-│   ├── ApplyForm.tsx
-│   ├── Rule.tsx
-│   ├── Profile.tsx
-│   ├── Console.tsx
-│   └── Test.tsx
-├── Components/
-│   ├── AppShell.tsx        # 'use client' — 整合所有 Provider + 版型骨架
-│   ├── providers.tsx       # 'use client' — Provider 組合（與 AppShell 功能重疊）
-│   ├── BookingCalendar.tsx # 自製行事曆元件（取代 MUI DateCalendar）
-│   ├── Reserve.tsx         # 預約清單中單筆預約卡片
-│   ├── MyDialog.tsx        # 點擊預約卡片後的詳情 Dialog
-│   ├── GlobalUI.tsx        # 全域 Dialog（shadcn/ui），由 UIContext 驅動
-│   ├── NavBar.tsx / NavLinks.tsx / Footer.tsx
-│   ├── SignBt.tsx          # Google 登入按鈕
-│   ├── ConsentCheckbox.tsx
-│   └── ui/                 # shadcn/ui 元件（button, dialog, input, select, sonner）
-├── context/
-│   ├── AuthContext.tsx     # Google 登入狀態
-│   └── UIContext.tsx       # Dialog / Snackbar 狀態（toast 透過 sonner）
-├── hooks/
-│   └── useAuth.tsx         # useContext(AuthContext) 封裝
-├── firebase/
-│   └── firebase.ts         # Firebase 初始化（auth, db）、signInWithGoogle、getRegulationsData
-├── func/
-│   └── applyFunc.ts        # RequestBody 介面 + validateData 驗證邏輯
-├── lib/
-│   └── utils.ts            # cn() 工具函式
-├── types/
-│   ├── booking.ts          # Booking 型別（主要資料模型，見下方）
-│   └── event.tsx           # Event 型別（Google Calendar 遺留格式）
-└── styles/                 # 各元件獨立 CSS 檔
-```
-
----
-
-## Firebase 設定
-
-- **Project ID**: `tzai-space-pro`
-- **Auth**: Google Sign-In（`signInWithPopup`）
-
-### Firestore Collections
-
-| Collection    | 說明                                                                 |
-| ------------- | -------------------------------------------------------------------- |
-| `bookings`    | 主要預約資料（`status: "active" \| "cancelled"`）                    |
-| `regulations` | 借用規則；`current` 文件，欄位值為規則陣列（`Object.values` 取陣列） |
-
-### Booking 型別（`src/types/booking.ts`）
-
-```ts
-type Booking = {
-  id: string;
-  calendarEventId?: string | null; // 遷移資料才有
-  room: string; // "書房" | "橘廳" | "會議室" | "小導師室" | "貢丸室"
-  name: string;
-  email: string;
-  phone: string;
-  crowdSize: number;
-  description: string;
-  startTime: Timestamp;
-  endTime: Timestamp;
-  createdAt: Timestamp;
-  status: "active" | "cancelled";
-};
-```
-
-### Calendar 訂閱視窗
-
-`Calendar.tsx` 的 Firestore listener 訂閱 `±4 個月` 視窗（從當月往前 4 個月、往後 1 個月）的 active bookings。
-
-### 環境變數
-
-`.env.local`，必要 key：`NEXT_PUBLIC_API_KEY`
-
----
-
-## UI 元件庫
-
-| 用途                   | 套件                                                          |
-| ---------------------- | ------------------------------------------------------------- |
-| 日期選擇器（申請表單） | `@mui/x-date-pickers` (DateTimePicker) + `@emotion/react`     |
-| 月曆（首頁行事曆）     | `BookingCalendar`（自製，取代 MUI DateCalendar）              |
-| shadcn/ui 元件         | `src/Components/ui/`（Dialog、Button、Input、Select、Sonner） |
-| Toast 通知             | `sonner`（透過 `UIContext.showSnackbar` 或直接 `toast.*`）    |
-| 圖示                   | `lucide-react`                                                |
-| Markdown 渲染          | `marked`                                                      |
-| 日期處理               | `dayjs`                                                       |
-| 路徑別名               | `@/` → `src/`                                                 |
-
----
-
-## 編碼規範
-
-- 語言：TypeScript，React functional components
-- 樣式：Tailwind CSS 為主；各元件可有獨立 CSS 檔（`src/styles/`）
-- `cn()` 來自 `@/lib/utils`，用於合併 Tailwind class
-- 所有互動元件需標記 `'use client'`
-
----
-
-## 已知狀況
-
-- `AppShell` 與 `providers.tsx` 功能重疊（均包含 AuthProvider + UIProvider + LocalizationProvider）
-- `GlobalUI` 使用 shadcn/ui Dialog，不再使用 MUI Dialog
-- `UIContext.showSnackbar` 實際上呼叫 `sonner` 的 `toast`，`snackbar` state 本身已無實際作用
-- `firebase.ts` 的 `signInWithGoogle` 仍有 `console.log` 輸出 email
-- Safari 的 `signInWithPopup` 可能有相容性問題（見 `firebase.ts` 註解）
-- `layout.tsx` 內嵌 Google Analytics（G-J5G385BD56）與 Microsoft Clarity（qwd03n8te1）
-- `functions/src/service_account.json` 存在於 repo 中（Cloud Functions 用的 Service Account）
-
----
-
-## 申請驗證規則（`src/func/applyFunc.ts`）
-
-- 電話：純數字、長度 10
-- 人數：正整數
-- 姓名：最長 30 字
-- 活動描述：最長 100 字
-- 預訂時間：只能預訂未來 31 天內
-- 使用時長：最多 4 小時
-
+- `firebase.json` hosting 區塊（`public: dist` + predeploy build）與空的 `next.config.ts` 不一致；
+  classic `firebase deploy --only hosting` 視為不可用，正式部署走 App Hosting（`apphosting.yaml`）
+- `src/firebase/firebase.ts:35` 仍 console.log 使用者 email
+- `AppShell.tsx` 與 `providers.tsx` 功能重疊（都包 Provider）
+- `src/app/layout.tsx` 內嵌 GA（G-J5G385BD56）與 Microsoft Clarity（qwd03n8te1）
+- `docs/` 是歷史計劃與使用者速記（`docs/yuchenplans/` 是使用者本人的筆記），屬背景資料非現行規範；
+  `.github/copilot-instructions.md` 與 `.impeccable.md` 內容相同（改動時兩份要同步）
+- **文件與程式碼衝突時，以程式碼為準**，並依 maintenance.md 更新文件
