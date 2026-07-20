@@ -18,6 +18,13 @@ migrations_dir = "migrations"
 FIREBASE_PROJECT_ID = "tzai-space-pro"
 # 逗號分隔的管理員 email 清單（可刪任何人的留言）
 ADMIN_EMAILS = "leosimba9487@gmail.com"
-# 逗號分隔的允許來源；部署後把正式站網域加進來，例如
-# "http://localhost:3000,https://你的正式站網域"
-ALLOWED_ORIGINS = "http://localhost:3000"
+# 逗號分隔的允許來源（正式站網域 tzai-space.com 的 DNS 在 Cloudflare 上，
+# apex 與 www 都放進白名單；localhost 留著方便本地開發）
+ALLOWED_ORIGINS = "http://localhost:3000,https://tzai-space.com,https://www.tzai-space.com"
+
+# （建議）把 Worker 綁上自訂子網域，取代預設的 *.workers.dev 網址。
+# 前提：tzai-space.com 這個 zone 跟 Worker 在同一個 Cloudflare 帳號。
+# 部署時 wrangler 會自動建立 DNS 紀錄與憑證。要啟用就把下面的註解拿掉：
+# routes = [
+#   { pattern = "guestbook.tzai-space.com", custom_domain = true }
+# ]

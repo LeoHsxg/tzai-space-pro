@@ -40,9 +40,21 @@ D1 資料庫（SQLite）─ messages 表（migrations/0001_create_messages.sql�
 - `src/views/Guestbook.tsx` + `src/app/guestbook/page.tsx` — 前端頁面
 - `src/Components/NavLinks.tsx` — 桌面版導覽已加「留言板」；**手機版入口未加**（見未決事項）
 
+## 前提事實（2026-07-20 使用者補充）
+
+正式站網域 `tzai-space.com`（含 www）的 DNS 已託管在使用者的 Cloudflare 帳號上。
+這帶來三件事：
+- 不用另外註冊帳號，Worker **要部署在同一個帳號**（自訂網域才綁得起來）
+- `ALLOWED_ORIGINS` 已預先填好 apex + www + localhost（wrangler.toml）
+- Worker 可綁 `guestbook.tzai-space.com` 自訂子網域（見步驟 6b）。注意：
+  即使綁了自訂子網域，對 `www.tzai-space.com` 來說**仍是不同 origin**（origin 比對
+  是整個 scheme+host+port），所以 CORS 這套還是必要的，不會白學
+- 主站的 www/apex DNS 紀錄推測是 DNS-only（灰雲，指向 Firebase App Hosting，
+  由 Firebase 管憑證）——**不要**順手把它切成 Proxied（橘雲），可能弄壞 App Hosting 的憑證更新
+
 ## 使用者的部署步驟（照順序做）
 
-1. **註冊 Cloudflare 帳號**（免費方案即可）：https://dash.cloudflare.com/sign-up
+1. **用現有的 Cloudflare 帳號**（就是管 tzai-space.com DNS 的那個）
 2. **登入 wrangler**（wrangler 已在 devDependencies，不用全域安裝）：
    ```bash
    cd workers/guestbook
@@ -70,10 +82,14 @@ D1 資料庫（SQLite）─ messages 表（migrations/0001_create_messages.sql�
    npx wrangler deploy
    ```
    記下輸出的網址（形如 `https://tzai-guestbook.<你的subdomain>.workers.dev`）
-7. **開 CORS**：把正式站網域加進 `wrangler.toml` 的 `ALLOWED_ORIGINS`
-   （逗號分隔，保留 localhost 方便日後開發），再 `npx wrangler deploy` 一次
+   
+   **6b.（建議）綁自訂子網域**：把 `wrangler.toml` 裡 `routes` 那段的註解拿掉
+   （`guestbook.tzai-space.com`），再 `npx wrangler deploy` 一次——wrangler 會自動
+   建 DNS 紀錄與 TLS 憑證。之後 API 網址就用 `https://guestbook.tzai-space.com`
+7. **CORS 已預先設定**：`ALLOWED_ORIGINS` 已含 apex + www + localhost，不用再改；
+   若未來網域有變，改這個值後重新 deploy 即可
 8. **接上正式站**：在 `apphosting.yaml` 加環境變數
-   `NEXT_PUBLIC_GUESTBOOK_API_URL=<步驟 6 的網址>`，推上 main 讓 App Hosting 重新 build
+   `NEXT_PUBLIC_GUESTBOOK_API_URL=<步驟 6 或 6b 的網址>`，推上 main 讓 App Hosting 重新 build
 9. **驗收**：正式站登入 → /guestbook 留言、刪留言；用另一個帳號驗證刪不了別人的留言
 
 ## 學習清單（配合上面步驟讀）
@@ -90,7 +106,6 @@ D1 資料庫（SQLite）─ messages 表（migrations/0001_create_messages.sql�
 
 - **手機版導覽入口**：手機 NavBar 是四顆手工設計的 svg icon，沒有現成的留言板 icon；
   這是品味題，等使用者在 Figma 出圖後再加（目前手機要打網址 /guestbook 進入）
-- `ALLOWED_ORIGINS` 需要正式站網域（使用者提供）
 - D1 免費額度（5GB、每日讀寫額度）對本站規模綽綽有餘；備份策略（`wrangler d1 export`）之後再說
 
 ## 進度

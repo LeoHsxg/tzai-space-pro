@@ -68,7 +68,8 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 ## 已知狀況（驗證於 2026-07-04）
 
 - `firebase.json` hosting 區塊（`public: dist` + predeploy build）與空的 `next.config.ts` 不一致；
-  classic `firebase deploy --only hosting` 視為不可用，正式部署走 App Hosting（`apphosting.yaml`）
+  classic `firebase deploy --only hosting` 視為不可用，正式部署走 App Hosting（`apphosting.yaml`）；
+  正式站網域 `(www.)tzai-space.com`，DNS 託管於使用者的 Cloudflare 帳號
 - `src/firebase/firebase.ts:35` 仍 console.log 使用者 email
 - `AppShell.tsx` 與 `providers.tsx` 功能重疊（都包 Provider）
 - `src/app/layout.tsx` 內嵌 GA（G-J5G385BD56）與 Microsoft Clarity（qwd03n8te1）
