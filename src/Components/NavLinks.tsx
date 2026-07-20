@@ -38,6 +38,9 @@ const NavLinks = () => {
           <Link href="/rule">
             <div className="noto text-sm font-medium text-gray-600">借用規章</div>
           </Link>
+          <Link href="/guestbook">
+            <div className="noto text-sm font-medium text-gray-600">留言板</div>
+          </Link>
           <Link href="/profile">
             <div className="noto text-sm font-medium text-gray-600">個人檔案</div>
           </Link>

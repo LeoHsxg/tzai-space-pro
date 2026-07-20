@@ -47,6 +47,7 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
   （以程式碼為準，本檔不複製內容）
 - `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −4 ～ +1 個月」的 active bookings
 - `functions/`（Node 22）是遺留的 Google Calendar 整合；`firebase.json` 的 `/api/add|getAll|get|delete` rewrites 指向它
+- `workers/guestbook/` 是留言板 API（Cloudflare Workers + D1，獨立於 Firebase；有自己的 package.json 與 tsconfig，root 工具鏈不掃它）；規劃與部署見 `docs/guestbook-cloudflare-workers-plan.md`
 - 路徑別名 `@/` → `src/`；`cn()` 在 `src/lib/utils.ts`；互動元件要標 `'use client'`
 
 ## 環境注意（Windows，血淚教訓見 diagnosis.md）
@@ -59,7 +60,7 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 
 ## 環境變數（驗證於 2026-07-04）
 
-- Client：`NEXT_PUBLIC_API_KEY`（`src/firebase/firebase.ts`）
+- Client：`NEXT_PUBLIC_API_KEY`（`src/firebase/firebase.ts`）、`NEXT_PUBLIC_GUESTBOOK_API_URL`（留言板 Worker 網址，未設定時留言板頁顯示施工中）
 - 本地跑 API Route 需要：`FIREBASE_ADMIN_PROJECT_ID` / `FIREBASE_ADMIN_CLIENT_EMAIL` / `FIREBASE_ADMIN_PRIVATE_KEY`
   （`src/firebase/admin.ts`；App Hosting 上改用 ADC，不需設定）
 - 目前本機**沒有** `.env` / `.env.local`——需要時先問使用者拿 key，不要自己造假值（CI 的 placeholder 只夠過 build）

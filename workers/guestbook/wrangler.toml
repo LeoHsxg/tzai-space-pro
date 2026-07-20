@@ -1,0 +1,23 @@
+# Cloudflare Worker 設定檔——wrangler CLI 讀這份檔決定「部署什麼、綁定什麼資源」。
+# 部署步驟見 docs/guestbook-cloudflare-workers-plan.md
+
+name = "tzai-guestbook"
+main = "src/index.ts"
+compatibility_date = "2026-07-01"
+
+# D1 資料庫綁定：程式碼裡的 env.DB 就是這裡宣告的 binding。
+# database_id 要先執行 `wrangler d1 create tzai-guestbook`，把回傳的 id 貼進來。
+[[d1_databases]]
+binding = "DB"
+database_name = "tzai-guestbook"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+# 環境變數（非機密；機密要用 `wrangler secret put`，這裡三個都不是機密）
+[vars]
+FIREBASE_PROJECT_ID = "tzai-space-pro"
+# 逗號分隔的管理員 email 清單（可刪任何人的留言）
+ADMIN_EMAILS = "leosimba9487@gmail.com"
+# 逗號分隔的允許來源；部署後把正式站網域加進來，例如
+# "http://localhost:3000,https://你的正式站網域"
+ALLOWED_ORIGINS = "http://localhost:3000"
