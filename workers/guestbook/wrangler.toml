@@ -10,7 +10,7 @@ compatibility_date = "2026-07-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "tzai-guestbook"
-database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+database_id = "7c6265b6-8eb3-49d4-8978-c1bc4a40f63e"
 migrations_dir = "migrations"
 
 # 環境變數（非機密；機密要用 `wrangler secret put`，這裡三個都不是機密）
