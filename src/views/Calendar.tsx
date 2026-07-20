@@ -170,7 +170,7 @@ const Calendar: React.FC = () => {
         </div>
       </div>
 
-      {/* 預約詳情 — 不改動 */}
+      {/* 預約詳情 */}
       <div className="w-full py-4 px-[5%] flex flex-col items-center inline-flex md:pt-5 md:pb-0 md:px-0 md:grow">
         <div className="self-stretch px-2.5 justify-between items-center inline-flex">
           <div className="font">今日預約共 {filteredAmount} 筆</div>
