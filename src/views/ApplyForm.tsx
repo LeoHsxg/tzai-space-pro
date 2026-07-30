@@ -115,7 +115,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
     const pickerSlotProps = { popper: { container: popperContainer } };
 
     return (
-      <div ref={setPopperContainer} className="px-6 pt-3 pb-5">
+      <div ref={setPopperContainer} className="px-6 pb-5">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3.5">
           <div>
             <span className={label}>申請人姓名</span>
