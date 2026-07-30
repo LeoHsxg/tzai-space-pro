@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import { ProfileHeader } from "@/Components/desktop/ProfileHeader";
 import { UpcomingSection } from "@/Components/desktop/UpcomingSection";
 import { HistoryTable } from "@/Components/desktop/HistoryTable";
+import { PageEyebrow } from "@/Components/desktop/PageEyebrow";
 
 const SECTION_COLORS = {
   upcoming: "#4d8dc8", // 即將到來
@@ -136,10 +137,13 @@ const Profile: React.FC = () => {
     </div>
 
     {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-    <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col gap-5 px-10 py-9">
-      <ProfileHeader user={user} />
-      <UpcomingSection bookings={upcoming} />
-      <HistoryTable bookings={history} />
+    <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col px-10 py-9">
+      <PageEyebrow>個人檔案</PageEyebrow>
+      <div className="flex flex-col gap-5">
+        <ProfileHeader user={user} />
+        <UpcomingSection bookings={upcoming} />
+        <HistoryTable bookings={history} />
+      </div>
     </div>
     </>
   );

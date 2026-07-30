@@ -13,6 +13,7 @@ import ApplyForm from "./ApplyForm";
 import { Plus, X } from "lucide-react";
 import { MonthCalendar } from "@/Components/desktop/MonthCalendar";
 import { DayDetailPanel } from "@/Components/desktop/DayDetailPanel";
+import { PageEyebrow } from "@/Components/desktop/PageEyebrow";
 import { useApplyDialog } from "@/context/ApplyDialogContext";
 import "../styles/Calendar.css";
 
@@ -248,6 +249,7 @@ const Calendar: React.FC = () => {
 
     {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
     <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col px-10 py-9">
+      <PageEyebrow>借用日曆</PageEyebrow>
       {value && viewMonth ? (
         <div className="grid grid-cols-[1fr_340px] items-stretch gap-6 xl:grid-cols-[1fr_400px]">
           <MonthCalendar

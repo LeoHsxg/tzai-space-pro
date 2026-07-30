@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { RulesFlow } from "@/Components/desktop/RulesFlow";
 import { RulesList } from "@/Components/desktop/RulesList";
 import { SupplementaryCard } from "@/Components/desktop/SupplementaryCard";
+import { PageEyebrow } from "@/Components/desktop/PageEyebrow";
 
 const steps = [
   {
@@ -168,13 +169,16 @@ const Rule = () => {
       </div>
 
       {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-      <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col gap-5 px-10 py-9">
-        <RulesFlow steps={steps} />
-        <div className="grid grid-cols-[1.7fr_1fr] items-start gap-5">
-          <RulesList rules={rules} badgeClass={badgeClass} />
-          <SupplementaryCard items={supplements} />
+      <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col px-10 py-9">
+        <PageEyebrow>空間使用守則</PageEyebrow>
+        <div className="flex flex-col gap-5">
+          <RulesFlow steps={steps} />
+          <div className="grid grid-cols-[1.7fr_1fr] items-start gap-5">
+            <RulesList rules={rules} badgeClass={badgeClass} />
+            <SupplementaryCard items={supplements} />
+          </div>
+          <p className="mx-auto mt-1 max-w-[56ch] text-center text-xs leading-relaxed text-[#9AA0A6]">{DISCLAIMER}</p>
         </div>
-        <p className="mx-auto mt-1 max-w-[56ch] text-center text-xs leading-relaxed text-[#9AA0A6]">{DISCLAIMER}</p>
       </div>
     </>
   );
