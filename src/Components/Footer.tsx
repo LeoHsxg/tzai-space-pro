@@ -11,8 +11,8 @@ const Footer = () => {
       <div className="md:hidden w-full fixed bottom-0 left-0">
         <NavLinks />
       </div>
-      {/* 電腦版 footer 版權字樣 */}
-      <div className="hidden md:block my-4 text-xs text-gray-500 text-center">© 2025 Tzai-Space. All rights reserved.</div>
+      {/* 電腦版 footer 版權字樣（lg 起改用側欄版面，不顯示） */}
+      <div className="hidden md:block lg:hidden my-4 text-xs text-gray-500 text-center">© 2025 Tzai-Space. All rights reserved.</div>
     </div>
   );
 };

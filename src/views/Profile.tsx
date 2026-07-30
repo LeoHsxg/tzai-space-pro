@@ -7,6 +7,9 @@ import { useAuth } from "../hooks/useAuth";
 import { Booking } from "../types/booking";
 import { getBookingSection } from "../func/bookingUtils";
 import dayjs from "dayjs";
+import { ProfileHeader } from "@/Components/desktop/ProfileHeader";
+import { UpcomingSection } from "@/Components/desktop/UpcomingSection";
+import { HistoryTable } from "@/Components/desktop/HistoryTable";
 
 const SECTION_COLORS = {
   upcoming: "#4d8dc8", // 即將到來
@@ -35,14 +38,21 @@ const Profile: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="w-full pb-20 md:pb-0 px-[8%] md:max-w-[900px] md:m-auto flex items-center justify-center min-h-[40vh]">
-        <p className="noto text-sm text-black/50">請先登入以查看個人檔案</p>
-      </div>
+      <>
+        <div className="lg:hidden w-full pb-20 md:pb-0 px-[8%] md:max-w-[900px] md:m-auto flex items-center justify-center min-h-[40vh]">
+          <p className="noto text-sm text-black/50">請先登入以查看個人檔案</p>
+        </div>
+        <div className="hidden lg:flex min-h-[50vh] items-center justify-center font-[family-name:var(--font-noto-sans-tc)]">
+          <p className="text-sm text-[#9AA0A6]">請先登入以查看個人檔案</p>
+        </div>
+      </>
     );
   }
 
   return (
-    <div className="w-full pb-20 md:pb-0 md:mt-4">
+    <>
+    {/* ══ 行動版（lg 以下，維持原版面） ══════════════════════ */}
+    <div className="lg:hidden w-full pb-20 md:pb-0 md:mt-4">
       <div className="w-full md:max-w-[900px] m-auto">
         {/* Profile Header: floating avatar + name/email card */}
         <div className="mx-[5%] md:mx-4 mb-3 flex items-center gap-3">
@@ -124,6 +134,15 @@ const Profile: React.FC = () => {
         </div>
       </div>
     </div>
+
+    {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
+    <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col gap-5 px-10 py-8 font-[family-name:var(--font-noto-sans-tc)]">
+      <h1 className="text-[23px] font-bold text-[#1F2937]">個人檔案</h1>
+      <ProfileHeader user={user} />
+      <UpcomingSection bookings={upcoming} />
+      <HistoryTable bookings={history} />
+    </div>
+    </>
   );
 };
 

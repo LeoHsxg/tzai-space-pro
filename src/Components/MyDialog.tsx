@@ -2,19 +2,11 @@
 
 import React from "react";
 import { Dialog, DialogContent } from "@/Components/ui/dialog";
-import { Booking } from "../types/booking";
+import { Booking, ROOM_COLORS as ROOM_COLOR } from "../types/booking";
 import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
 import { useIsAdmin } from "../hooks/useIsAdmin";
 import dayjs from "dayjs";
-
-const ROOM_COLOR: Record<string, string> = {
-  書房: "#E44C4C",
-  橘廳: "#FF6F0D",
-  會議室: "#54A0F9",
-  小導師室: "#FFD81E",
-  貢丸室: "#9458E2",
-};
 
 interface MyDialogProps {
   open: boolean;

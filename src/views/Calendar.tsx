@@ -11,6 +11,10 @@ import MyDialog from "../Components/MyDialog";
 import { BookingCalendar } from "../Components/BookingCalendar";
 import ApplyForm from "./ApplyForm";
 import { Plus, X } from "lucide-react";
+import { RoomLegend } from "@/Components/desktop/RoomLegend";
+import { MonthCalendar } from "@/Components/desktop/MonthCalendar";
+import { DayDetailPanel } from "@/Components/desktop/DayDetailPanel";
+import { useApplyDialog } from "@/context/ApplyDialogContext";
 import "../styles/Calendar.css";
 
 const loadingSpinnerStyle: React.CSSProperties = {
@@ -29,8 +33,13 @@ const Calendar: React.FC = () => {
   const [dragOffset, setDragOffset] = useState(0);
   const dragStartY = useRef(0);
 
+  // 桌面版月曆目前顯示的月份（與選定日分開，翻月不換選定日）
+  const [viewMonth, setViewMonth] = useState<Dayjs | null>(null);
+  const { openApply } = useApplyDialog();
+
   useEffect(() => {
     setValue(dayjs());
+    setViewMonth(dayjs());
     setMounted(true);
   }, []);
 
@@ -161,8 +170,21 @@ const Calendar: React.FC = () => {
     </>
   );
 
+  const handleDesktopSelect = (date: Dayjs) => {
+    setValue(date);
+    if (viewMonth && !date.isSame(viewMonth, "month")) setViewMonth(date);
+  };
+
+  const handleToday = () => {
+    const now = dayjs();
+    setValue(now);
+    setViewMonth(now);
+  };
+
   return (
-    <div className="flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
+    <>
+    {/* ══ 行動版（lg 以下，維持原版面） ══════════════════════ */}
+    <div className="lg:hidden flex flex-col pb-16 md:flex-row md:gap-8 md:max-w-[900px] md:mx-auto md:px-8 md:pb-0">
       {/* 行事曆 */}
       <div className="px-[5%] md:pt-5 md:px-0 md:flex md:justify-end">
         <div style={{ minWidth: "320px" }}>
@@ -211,8 +233,6 @@ const Calendar: React.FC = () => {
               booking={b}
             />
           ))}
-
-          <MyDialog open={open} onClose={() => setOpen(false)} booking={selectedBooking} />
         </div>
       </div>
 
@@ -226,6 +246,45 @@ const Calendar: React.FC = () => {
       {/* Portal: backdrop + sheet rendered directly on document.body */}
       {mounted && createPortal(overlay, document.body)}
     </div>
+
+    {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
+    <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col gap-5 px-10 py-8 font-[family-name:var(--font-noto-sans-tc)]">
+      <div className="flex items-center justify-between">
+        <h1 className="text-[23px] font-bold text-[#1F2937]">借用日曆</h1>
+        <RoomLegend />
+      </div>
+      {value && viewMonth ? (
+        <div className="grid grid-cols-[1fr_400px] items-stretch gap-6">
+          <MonthCalendar
+            month={viewMonth}
+            value={value}
+            onSelect={handleDesktopSelect}
+            onMonthChange={setViewMonth}
+            onToday={handleToday}
+            bookingsByDate={bookingsByDate}
+          />
+          <DayDetailPanel
+            date={value}
+            spanning={spanningBookings}
+            today={todayBookings}
+            outOfWindow={isOutOfWindow}
+            onBookingClick={b => {
+              setSelectedBooking(b);
+              setOpen(true);
+            }}
+            onApply={d => openApply(d)}
+          />
+        </div>
+      ) : (
+        <div className="flex justify-center pt-16">
+          <div style={loadingSpinnerStyle} />
+        </div>
+      )}
+    </div>
+
+    {/* 預約詳情 dialog — 行動/桌面共用 */}
+    <MyDialog open={open} onClose={() => setOpen(false)} booking={selectedBooking} />
+    </>
   );
 };
 

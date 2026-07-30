@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { collection, getDocs, orderBy, query, limit } from "firebase/firestore";
+import { Bell } from "lucide-react";
 import { marked } from "marked";
 import { db } from "@/firebase/firebase";
 import type { AnnouncementData } from "@/types/announcement";
@@ -34,7 +35,15 @@ function formatDate(id: string) {
   return `${parseInt(parts[1])}月${parseInt(parts[2])}日`;
 }
 
-export function NotificationBell() {
+interface NotificationBellProps {
+  /**
+   * navbar（預設）＝頂欄鈴鐺 icon，面板向下展開；
+   * sidebar＝桌面側欄底部的「鈴鐺＋通知」文字按鈕，面板向上展開
+   */
+  variant?: "navbar" | "sidebar";
+}
+
+export function NotificationBell({ variant = "navbar" }: NotificationBellProps) {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<AnnouncementData[]>([]);
   const [readIds, setReadIds] = useState<string[]>([]);
@@ -98,22 +107,42 @@ export function NotificationBell() {
   return (
     <>
       <div ref={ref} className="relative">
-        {/* Bell button */}
-        <button
-          onClick={() => setOpen(v => !v)}
-          aria-label="通知"
-          className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors translate-y-0.5">
-          <img src="/img/notifications.svg" className="w-7 h-7" alt="" />
-          {unreadCount > 0 && (
-            <span className="absolute top-0.5 right-0.5 min-w-[14px] h-[14px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
-              {unreadCount > 9 ? "9+" : unreadCount}
-            </span>
-          )}
-        </button>
+        {/* Trigger */}
+        {variant === "sidebar" ? (
+          <button
+            onClick={() => setOpen(v => !v)}
+            aria-label="通知"
+            className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-[#6B7280] transition-colors hover:bg-gray-50 hover:text-[#374151]">
+            <Bell className="h-4 w-4" />
+            通知
+            {unreadCount > 0 && (
+              <span className="flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </button>
+        ) : (
+          <button
+            onClick={() => setOpen(v => !v)}
+            aria-label="通知"
+            className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors translate-y-0.5">
+            <img src="/img/notifications.svg" className="w-7 h-7" alt="" />
+            {unreadCount > 0 && (
+              <span className="absolute top-0.5 right-0.5 min-w-[14px] h-[14px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </button>
+        )}
 
         {/* Dropdown panel */}
         {open && (
-          <div className="fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80 bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-gray-100 z-50 overflow-hidden">
+          <div
+            className={`${
+              variant === "sidebar"
+                ? "absolute left-0 bottom-full mb-2 w-80"
+                : "fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80"
+            } bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-gray-100 z-50 overflow-hidden`}>
             {/* Panel header */}
             <div className="flex items-center justify-between px-4 py-3">
               <span className="noto text-sm font-bold text-gray-800">系統通知</span>

@@ -107,6 +107,34 @@ button.ipt[data-placeholder] {
     border-radius: 12px; /* 強化圓角 */
 }
 
+/* ── 桌面 Dialog 版 MUI picker（外部 label、含邊框、44px 高） ── */
+.dipt .MuiInputBase-root,
+.dipt .MuiPickersInputBase-root {
+  height: 44px;
+  border-radius: 10px !important;
+  background: #fff;
+  font-size: 14px !important;
+}
+
+.dipt .MuiOutlinedInput-notchedOutline,
+.dipt .MuiPickersOutlinedInput-notchedOutline {
+  border: 1px solid #d9dee4 !important;
+  border-radius: 10px;
+}
+
+.dipt .Mui-focused .MuiOutlinedInput-notchedOutline,
+.dipt .Mui-focused .MuiPickersOutlinedInput-notchedOutline {
+  border-color: #5991c4 !important;
+}
+
+.dipt .MuiInputBase-input,
+.dipt .MuiPickersSectionList-root {
+  padding: 10px 0 10px 14px;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.75) !important;
+}
+
 .myBtn {
     height: 3.2em !important;
     margin-top: 5px !important;

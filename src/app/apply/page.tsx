@@ -1,2 +1,5 @@
 import ApplyForm from '../../views/ApplyForm'
-export default ApplyForm
+
+export default function ApplyPage() {
+  return <ApplyForm />
+}

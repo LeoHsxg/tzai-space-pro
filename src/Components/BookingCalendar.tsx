@@ -6,14 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Calendar } from "@/Components/ui/calendar";
 import type { DayButtonProps } from "react-day-picker";
 import { cn } from "@/lib/utils";
-
-const ROOM_COLORS: Record<string, string> = {
-  書房: "#E44C4C",
-  橘廳: "#FF6F0D",
-  會議室: "#54A0F9",
-  小導師室: "#FFD81E",
-  貢丸室: "#9458E2",
-};
+import { ROOM_COLORS } from "@/types/booking";
 
 interface BookingCalendarProps {
   value: Dayjs | null;
