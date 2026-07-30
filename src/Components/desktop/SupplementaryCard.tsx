@@ -24,7 +24,8 @@ export function SupplementaryCard({ items }: SupplementaryCardProps) {
         className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
         style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}>
         <div className="min-h-0 overflow-hidden">
-          <div className="flex flex-col gap-3 pt-3.5">
+          {/* 分隔線放在展開內容裡，與隔壁「使用守則」卡對齊；收合時不留懸空的線 */}
+          <div className="mt-4 flex flex-col gap-3 border-t border-[#E8E8E8] pt-[18px]">
             {items.map((item, i) => (
               <p key={i} className={`text-sm leading-[1.85] ${item.faint ? "text-gray-300" : "text-[#4B5563]"}`}>
                 {item.text}
