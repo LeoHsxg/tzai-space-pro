@@ -31,9 +31,9 @@ export function AppShell({ children, announcement }: AppShellProps) {
               <GlobalUI />
               <AnnouncementModal announcement={announcement} />
               <NavBar />
-              {/* 桌面版常駐側欄（lg 以上），主內容讓出 240px */}
+              {/* 桌面版常駐側欄（lg 以上），主內容讓出側欄寬度 w-64 */}
               <Sidebar />
-              <main className="flex-grow lg:pl-60">{children}</main>
+              <main className="flex-grow lg:pl-64">{children}</main>
               <Footer />
               {/* 桌面版申請借用 Dialog（側欄按鈕／當日面板共用） */}
               <ApplyDialog />

@@ -137,7 +137,7 @@ const Profile: React.FC = () => {
     </div>
 
     {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-    <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col px-10 py-9">
+    <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col px-10 py-9">
       <PageEyebrow>個人檔案</PageEyebrow>
       <div className="flex flex-col gap-5">
         <ProfileHeader user={user} />

@@ -24,8 +24,8 @@ export function Sidebar() {
   const onProfile = pathname === "/profile";
 
   return (
-    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-[#ECECEC] bg-white px-4 pt-7 pb-5">
-      <Link href="/" className="px-2">
+    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-64 flex-col border-r border-[#ECECEC] bg-white px-4 pt-6 pb-5">
+      <Link href="/" className="px-3">
         <img src="/img/LOGO_9x3.svg" alt="tzai" className="h-6 w-auto" />
       </Link>
 
@@ -36,7 +36,7 @@ export function Sidebar() {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-2.5 rounded-[10px] px-3 py-2.5 text-sm transition-colors ${
+              className={`flex items-center gap-2.5 rounded-[10px] px-3 py-3 text-sm transition-colors ${
                 active ? "bg-[#EAF1F8] font-semibold text-[#3E6B92]" : "text-[#5B6572] hover:bg-gray-50"
               }`}>
               <Icon className={`h-[18px] w-[18px] shrink-0 ${active ? "text-[#5991C4]" : "text-[#8B97A3]"}`} />
@@ -46,9 +46,10 @@ export function Sidebar() {
         })}
       </nav>
 
+      {/* pr-2：加號比文字視覺輕，幾何置中會偏右，右側留白把內容往左推 4px */}
       <button
         onClick={() => openApply()}
-        className="mt-5 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-[#5991C4] text-sm font-semibold text-white transition-colors hover:bg-[#4880B0]">
+        className="mt-5 flex h-11 w-full items-center justify-center gap-1.5 rounded-xl bg-[#5991C4] pr-2 text-sm font-semibold text-white transition-colors hover:bg-[#4880B0]">
         <Plus className="h-4 w-4" />
         申請借用
       </button>
@@ -69,7 +70,7 @@ export function Sidebar() {
             )}
             <span className="min-w-0">
               <span className="block truncate text-[13px] font-semibold leading-tight text-[#1F2937]">{user.displayName || "使用者"}</span>
-              <span className="mt-1 block truncate text-[11px] leading-tight text-[#9AA0A6]">{user.email}</span>
+              <span className="block truncate text-[11px] leading-tight text-[#9AA0A6]">{user.email}</span>
             </span>
           </Link>
         ) : (

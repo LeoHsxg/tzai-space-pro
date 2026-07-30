@@ -24,7 +24,7 @@ function BookingRow({ booking, onClick }: { booking: Booking; onClick: () => voi
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 py-3 text-left transition-colors hover:bg-[#EEF1F4]">
+      className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 pl-[18px] py-3.5 text-left transition-colors hover:bg-[#EEF1F4]">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ROOM_COLORS[booking.room] ?? "#ccc" }} />
       <span className="font-roboto text-sm tabular-nums text-[#1F2937]">
         {st.format("HH:mm")} → {ed.format("HH:mm")}
@@ -100,7 +100,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
           )}
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-2 overflow-y-auto px-4 py-3.5">
+        <div className="flex flex-1 flex-col gap-2.5 overflow-y-auto px-4 py-4">
           {filteredSpanning.map(b => (
             <BookingRow key={b.id} booking={b} onClick={() => onBookingClick(b)} />
           ))}
@@ -117,7 +117,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
       <div className="border-t border-[#F1F1F1] p-4">
         <button
           onClick={() => onApply(date)}
-          className="w-full rounded-xl border-[1.5px] border-dashed border-[#5991C4] py-2.5 text-sm font-semibold text-[#5991C4] transition-colors hover:bg-[#EAF1F8]/60">
+          className="w-full rounded-xl border-[1.5px] border-dashed border-[#5991C4] py-3 text-sm font-semibold text-[#5991C4] transition-colors hover:bg-[#EAF1F8]/60">
           ＋ 於 {date.format("M/D")} 申請借用
         </button>
       </div>

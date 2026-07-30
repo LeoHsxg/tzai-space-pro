@@ -169,7 +169,7 @@ const Rule = () => {
       </div>
 
       {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-      <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col px-10 py-9">
+      <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col px-10 py-9">
         <PageEyebrow>空間使用守則</PageEyebrow>
         <div className="flex flex-col gap-5">
           <RulesFlow steps={steps} />

@@ -31,7 +31,8 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
     <div className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex items-center justify-between">
-        <span className="font-roboto text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
+        {/* pl-2 對齊日格內縮的日期數字（日格 p-2），讓標題與「1」同一條垂直線 */}
+        <span className="font-roboto pl-2 text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
         <div className="flex items-center gap-2">
           <button
             onClick={onToday}
