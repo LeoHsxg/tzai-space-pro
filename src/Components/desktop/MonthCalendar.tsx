@@ -31,8 +31,8 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
     <div className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex items-center justify-between">
-        {/* pl-2 對齊日格內縮的日期數字（日格 p-2），讓標題與「1」同一條垂直線 */}
-        <span className="font-roboto pl-2 text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
+        {/* pl-1：日格內的日期數字有 p-2 內縮，標題補一點左距做光學對齊 */}
+        <span className="font-roboto pl-1 text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
         <div className="flex items-center gap-2">
           <button
             onClick={onToday}
@@ -102,7 +102,7 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
       </div>
 
       {/* room legend */}
-      <div className="border-t border-[#F5F6F8] pt-3.5">
+      <div className="border-t border-[#F5F6F8] pt-3.5 pl-0.5">
         <RoomLegend />
       </div>
     </div>

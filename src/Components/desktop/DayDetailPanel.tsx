@@ -24,7 +24,7 @@ function BookingRow({ booking, onClick }: { booking: Booking; onClick: () => voi
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 pl-[18px] py-3.5 text-left transition-colors hover:bg-[#EEF1F4]">
+      className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 pl-[18px] py-[15px] text-left transition-colors hover:bg-[#EEF1F4]">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ROOM_COLORS[booking.room] ?? "#ccc" }} />
       <span className="font-roboto text-sm tabular-nums text-[#1F2937]">
         {st.format("HH:mm")} → {ed.format("HH:mm")}
@@ -65,11 +65,17 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
     <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex flex-col px-5 pt-5 pb-4">
-        <div className="flex items-baseline gap-2">
+        <div className="flex items-center gap-2">
           <span className="font-roboto text-base font-bold text-[#1F2937]">
             {date.format("M 月 D 日")}（{WEEKDAYS[date.day()]}）
           </span>
-          {isToday && <span className="text-[13px] font-semibold text-[#5991C4]">· 今日</span>}
+          {/* 用實體圓點取代「·」字元——字元會坐在基線上、看起來偏低且過細 */}
+          {isToday && (
+            <span className="flex items-center gap-1.5 text-[13px] font-semibold text-[#5991C4]">
+              <span className="h-1 w-1 rounded-full bg-current" />
+              今日
+            </span>
+          )}
         </div>
         <span className="font-roboto pt-1 text-xs text-[#9AA0A6]">共 {total} 筆預約</span>
         {dayRooms.length > 0 && (
