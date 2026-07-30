@@ -14,7 +14,7 @@ export function RulesFlow({ steps }: RulesFlowProps) {
       <div className="grid grid-cols-3">
         {steps.map((step, i) => (
           <div key={i} className={`flex flex-col gap-2 px-5 first:pl-0 last:pr-0 ${i < steps.length - 1 ? "border-r border-[#F1F1F1]" : ""}`}>
-            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#EAF1F8] font-inter text-[13px] font-bold text-[#5991C4]">
+            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#EAF1F8] font-roboto text-[13px] font-bold text-[#5991C4]">
               {i + 1}
             </span>
             <p className="text-sm font-bold text-[#374151]">{step.title}</p>

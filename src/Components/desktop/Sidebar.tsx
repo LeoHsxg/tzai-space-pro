@@ -26,7 +26,7 @@ export function Sidebar() {
   return (
     <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-[#ECECEC] bg-white px-4 pt-7 pb-5">
       <Link href="/" className="px-2">
-        <img src="/img/LOGO_9x3.svg" alt="tzai" className="h-9 w-auto" />
+        <img src="/img/LOGO_9x3.svg" alt="tzai" className="h-6 w-auto" />
       </Link>
 
       <nav className="mt-8 flex flex-col gap-1">
@@ -68,8 +68,8 @@ export function Sidebar() {
               </span>
             )}
             <span className="min-w-0">
-              <span className="block truncate text-[13px] font-semibold text-[#1F2937]">{user.displayName || "使用者"}</span>
-              <span className="block truncate text-[11px] text-[#9AA0A6]">{user.email}</span>
+              <span className="block truncate text-[13px] font-semibold leading-tight text-[#1F2937]">{user.displayName || "使用者"}</span>
+              <span className="mt-1 block truncate text-[11px] leading-tight text-[#9AA0A6]">{user.email}</span>
             </span>
           </Link>
         ) : (

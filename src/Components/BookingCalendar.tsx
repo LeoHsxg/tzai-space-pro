@@ -32,7 +32,7 @@ export const BookingCalendar: React.FC<BookingCalendarProps> = ({ value, onChang
       onSelect={date => date && onChange(dayjs(date))}
       weekStartsOn={0}
       showOutsideDays
-      style={{ fontFamily: "var(--font-inter), Inter, 'Roboto', 'Helvetica', 'Arial', sans-serif" }}
+      style={{ fontFamily: "var(--font-roboto), Roboto, 'Helvetica', 'Arial', sans-serif" }}
       className="w-full bg-white rounded-[14px] p-5"
       classNames={{
         // lift nav above month_caption

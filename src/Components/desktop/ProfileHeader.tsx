@@ -16,8 +16,8 @@ export function ProfileHeader({ user }: { user: User }) {
         </span>
       )}
       <div className="min-w-0">
-        <p className="truncate text-lg font-bold text-[#1F2937]">{user.displayName || "使用者"}</p>
-        <p className="truncate text-[13px] text-[#6B7280]">{user.email}</p>
+        <p className="truncate text-lg font-bold leading-tight text-[#1F2937]">{user.displayName || "使用者"}</p>
+        <p className="mt-1.5 truncate text-[13px] leading-tight text-[#6B7280]">{user.email}</p>
       </div>
     </div>
   );

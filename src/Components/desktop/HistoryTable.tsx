@@ -35,7 +35,7 @@ export function HistoryTable({ bookings }: { bookings: Booking[] }) {
       <div className="flex items-center gap-2">
         <span className="h-[9px] w-[9px] rounded-full bg-[#9CA3AF]" />
         <span className="text-sm font-semibold text-[#374151]">歷史紀錄</span>
-        <span className="font-inter text-[13px] font-bold text-[#9CA3AF]">{bookings.length}</span>
+        <span className="font-roboto text-[13px] font-bold text-[#9CA3AF]">{bookings.length}</span>
         {presentRooms.length > 1 && (
           <div className="ml-auto flex flex-wrap gap-1.5">
             <button onClick={() => selectRoom(null)} className={chipClass(roomFilter === null)}>
@@ -67,7 +67,7 @@ export function HistoryTable({ bookings }: { bookings: Booking[] }) {
               {shown.map(b => (
                 <tr key={b.id} className="border-b border-[#F5F5F5] last:border-0">
                   <td className="py-3.5 text-sm font-semibold text-[#374151]">{b.room}</td>
-                  <td className="py-3.5 font-inter text-sm tabular-nums text-[#6B7280]">
+                  <td className="py-3.5 font-roboto text-sm tabular-nums text-[#6B7280]">
                     {dayjs(b.startTime.toDate()).format("MM/DD HH:mm")} – {dayjs(b.endTime.toDate()).format("HH:mm")}
                   </td>
                   <td className="py-3.5 text-right">

@@ -82,7 +82,7 @@ const Profile: React.FC = () => {
               <span className="noto text-sm font-semibold shrink-0" style={{ color: SECTION_COLORS.upcoming }}>
                 即將到來
               </span>
-              <span className="font-inter font-bold text-sm shrink-0" style={{ color: SECTION_COLORS.upcoming }}>
+              <span className="font-roboto font-bold text-sm shrink-0" style={{ color: SECTION_COLORS.upcoming }}>
                 {upcoming.length}
               </span>
               <div className="flex-1 h-px bg-gray-200" />
@@ -111,7 +111,7 @@ const Profile: React.FC = () => {
             <div className="flex items-center gap-2 mb-2 pl-1">
               <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: SECTION_COLORS.history }} />
               <span className="noto text-sm font-semibold text-black/40 shrink-0">歷史紀錄</span>
-              <span className="font-inter font-bold text-sm text-black/40 shrink-0">{history.length}</span>
+              <span className="font-roboto font-bold text-sm text-black/40 shrink-0">{history.length}</span>
               <div className="flex-1 h-px bg-gray-200" />
             </div>
             {history.length === 0 ? (

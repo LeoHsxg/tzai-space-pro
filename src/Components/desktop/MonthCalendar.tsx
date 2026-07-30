@@ -31,7 +31,7 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
     <div className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex items-center justify-between">
-        <span className="font-inter text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
+        <span className="font-roboto text-xl font-bold text-[#1F2937]">{month.format("MMMM YYYY")}</span>
         <div className="flex items-center gap-2">
           <button
             onClick={onToday}
@@ -79,7 +79,7 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
                 isSelected ? "bg-[#EAF1F8] ring-[1.5px] ring-inset ring-[#5991C4]" : "bg-[#F6F8FA] hover:bg-[#EEF2F5]"
               }`}>
               <span
-                className={`font-inter text-sm leading-none ${
+                className={`font-roboto text-sm leading-none ${
                   isSelected
                     ? "font-bold text-[#5991C4]"
                     : isToday

@@ -51,7 +51,8 @@ export default {
         // 拉丁字元／數字一律 Inter；中文 fallback 到 Noto Sans TC（next/font 載入的 webfont）
         sans: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
         inter: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
-        roboto: ["var(--font-roboto)", "Roboto", "sans-serif"],
+        // 日期／時間／數字用；中文 fallback 讓「4 月 27 日」這類混排也正常
+        roboto: ["var(--font-roboto)", "Roboto", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
         noto: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
       },
       keyframes: {

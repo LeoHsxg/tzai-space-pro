@@ -26,7 +26,7 @@ function BookingRow({ booking, onClick }: { booking: Booking; onClick: () => voi
       onClick={onClick}
       className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 py-3 text-left transition-colors hover:bg-[#EEF1F4]">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ROOM_COLORS[booking.room] ?? "#ccc" }} />
-      <span className="font-inter text-sm tabular-nums text-[#1F2937]">
+      <span className="font-roboto text-sm tabular-nums text-[#1F2937]">
         {st.format("HH:mm")} → {ed.format("HH:mm")}
       </span>
       <span className="ml-auto text-[13px] text-[#6B7280]">{booking.room}</span>
@@ -66,12 +66,12 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
       {/* header */}
       <div className="flex flex-col px-5 pt-5 pb-4">
         <div className="flex items-baseline gap-2">
-          <span className="text-base font-bold text-[#1F2937]">
+          <span className="font-roboto text-base font-bold text-[#1F2937]">
             {date.format("M 月 D 日")}（{WEEKDAYS[date.day()]}）
           </span>
           {isToday && <span className="text-[13px] font-semibold text-[#5991C4]">· 今日</span>}
         </div>
-        <span className="pt-1 text-xs text-[#9AA0A6]">共 {total} 筆預約</span>
+        <span className="font-roboto pt-1 text-xs text-[#9AA0A6]">共 {total} 筆預約</span>
         {dayRooms.length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-2.5">
             <button onClick={() => setRoomFilter(null)} className={chipClass(roomFilter === null)}>
