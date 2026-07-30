@@ -24,7 +24,7 @@ export function Sidebar() {
   const onProfile = pathname === "/profile";
 
   return (
-    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-[#ECECEC] bg-white px-4 pt-7 pb-5 font-[family-name:var(--font-noto-sans-tc)]">
+    <aside className="hidden lg:flex fixed inset-y-0 left-0 z-40 w-60 flex-col border-r border-[#ECECEC] bg-white px-4 pt-7 pb-5">
       <Link href="/" className="px-2">
         <img src="/img/LOGO_9x3.svg" alt="tzai" className="h-9 w-auto" />
       </Link>

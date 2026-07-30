@@ -1,7 +1,7 @@
 import React from 'react'
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import { Noto_Sans_TC, Roboto } from 'next/font/google'
+import { Inter, Noto_Sans_TC, Roboto } from 'next/font/google'
 import { unstable_cache } from 'next/cache'
 import { AppShell } from '@/Components/AppShell'
 import { adminDb } from '@/firebase/admin'
@@ -48,6 +48,13 @@ const roboto = Roboto({
   variable: '--font-roboto',
 })
 
+// 純英文／數字的統一字體（Inter 只含拉丁字元，中文自動 fallback 到 Noto Sans TC）
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
+})
+
 export const metadata: Metadata = {
   title: '載物空間借用系統',
   description: '啦啦啦',
@@ -60,8 +67,8 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const announcement = await getAnnouncement();
   return (
-    <html lang="zh-Hant" className={cn(notoSans.variable, roboto.variable)}>
-      <body className={`${notoSans.variable} ${roboto.variable}`}>
+    <html lang="zh-Hant" className={cn(notoSans.variable, roboto.variable, inter.variable)}>
+      <body className={`${notoSans.variable} ${roboto.variable} ${inter.variable}`}>
         <AppShell announcement={announcement}>{children}</AppShell>
         {/* Google Analytics */}
         <Script async src="https://www.googletagmanager.com/gtag/js?id=G-J5G385BD56" />

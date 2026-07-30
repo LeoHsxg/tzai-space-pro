@@ -11,7 +11,6 @@ import MyDialog from "../Components/MyDialog";
 import { BookingCalendar } from "../Components/BookingCalendar";
 import ApplyForm from "./ApplyForm";
 import { Plus, X } from "lucide-react";
-import { RoomLegend } from "@/Components/desktop/RoomLegend";
 import { MonthCalendar } from "@/Components/desktop/MonthCalendar";
 import { DayDetailPanel } from "@/Components/desktop/DayDetailPanel";
 import { useApplyDialog } from "@/context/ApplyDialogContext";
@@ -248,13 +247,9 @@ const Calendar: React.FC = () => {
     </div>
 
     {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-    <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col gap-5 px-10 py-8 font-[family-name:var(--font-noto-sans-tc)]">
-      <div className="flex items-center justify-between">
-        <h1 className="text-[23px] font-bold text-[#1F2937]">借用日曆</h1>
-        <RoomLegend />
-      </div>
+    <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col px-10 py-9">
       {value && viewMonth ? (
-        <div className="grid grid-cols-[1fr_400px] items-stretch gap-6">
+        <div className="grid grid-cols-[1fr_340px] items-stretch gap-6 xl:grid-cols-[1fr_400px]">
           <MonthCalendar
             month={viewMonth}
             value={value}
@@ -263,17 +258,20 @@ const Calendar: React.FC = () => {
             onToday={handleToday}
             bookingsByDate={bookingsByDate}
           />
-          <DayDetailPanel
-            date={value}
-            spanning={spanningBookings}
-            today={todayBookings}
-            outOfWindow={isOutOfWindow}
-            onBookingClick={b => {
-              setSelectedBooking(b);
-              setOpen(true);
-            }}
-            onApply={d => openApply(d)}
-          />
+          {/* h-0 + min-h-full：右欄不參與撐高，行高由月曆卡決定，面板內部自行捲動 */}
+          <div className="h-0 min-h-full">
+            <DayDetailPanel
+              date={value}
+              spanning={spanningBookings}
+              today={todayBookings}
+              outOfWindow={isOutOfWindow}
+              onBookingClick={b => {
+                setSelectedBooking(b);
+                setOpen(true);
+              }}
+              onApply={d => openApply(d)}
+            />
+          </div>
         </div>
       ) : (
         <div className="flex justify-center pt-16">

@@ -21,7 +21,7 @@ export function ApplyDialog() {
         overlayClassName="bg-[#0A0F14]/50 supports-backdrop-filter:backdrop-blur-none"
         className="hidden w-[640px] max-w-[calc(100vw-4rem)] gap-0 rounded-[18px] bg-white p-0 shadow-[0_24px_60px_rgba(0,0,0,0.4)] sm:max-w-[640px] lg:block">
         <div className="flex items-center justify-between border-b border-[#F1F1F1] px-6 py-4">
-          <DialogTitle className="font-[family-name:var(--font-noto-sans-tc)] text-[17px] font-bold text-[#1F2937]">申請借用</DialogTitle>
+          <DialogTitle className="font-sans text-[17px] font-bold text-[#1F2937]">申請借用</DialogTitle>
           <DialogClose
             aria-label="關閉"
             className="flex h-8 w-8 items-center justify-center rounded-full border border-[#ECECEC] text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-600">

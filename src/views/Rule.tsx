@@ -168,8 +168,7 @@ const Rule = () => {
       </div>
 
       {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
-      <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col gap-5 px-10 py-8 font-[family-name:var(--font-noto-sans-tc)]">
-        <h1 className="text-[23px] font-bold text-[#1F2937]">空間使用守則</h1>
+      <div className="hidden lg:flex mx-auto w-full max-w-[1200px] flex-col gap-5 px-10 py-9">
         <RulesFlow steps={steps} />
         <div className="grid grid-cols-[1.7fr_1fr] items-start gap-5">
           <RulesList rules={rules} badgeClass={badgeClass} />

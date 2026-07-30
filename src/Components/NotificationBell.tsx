@@ -115,11 +115,6 @@ export function NotificationBell({ variant = "navbar" }: NotificationBellProps) 
             className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-[13px] text-[#6B7280] transition-colors hover:bg-gray-50 hover:text-[#374151]">
             <Bell className="h-4 w-4" />
             通知
-            {unreadCount > 0 && (
-              <span className="flex h-[15px] min-w-[15px] items-center justify-center rounded-full bg-red-500 px-1 text-[9px] font-bold text-white">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
           </button>
         ) : (
           <button

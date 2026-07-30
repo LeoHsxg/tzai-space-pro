@@ -26,7 +26,7 @@ function BookingRow({ booking, onClick }: { booking: Booking; onClick: () => voi
       onClick={onClick}
       className="flex w-full items-center gap-3 rounded-xl bg-[#F5F6F8] px-4 py-3 text-left transition-colors hover:bg-[#EEF1F4]">
       <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: ROOM_COLORS[booking.room] ?? "#ccc" }} />
-      <span className="font-roboto text-sm tabular-nums text-[#1F2937]">
+      <span className="font-inter text-sm tabular-nums text-[#1F2937]">
         {st.format("HH:mm")} → {ed.format("HH:mm")}
       </span>
       <span className="ml-auto text-[13px] text-[#6B7280]">{booking.room}</span>
@@ -62,7 +62,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
   const isEmpty = filteredSpanning.length === 0 && filteredToday.length === 0;
 
   return (
-    <div className="flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex flex-col px-5 pt-5 pb-4">
         <div className="flex items-baseline gap-2">

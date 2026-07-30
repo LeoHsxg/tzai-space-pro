@@ -48,9 +48,11 @@ export default {
         md: ["0 2px 4px rgb(0 0 0 / 0.07)", "0 1px 3px rgb(0 0 0 / 0.06)"],
       },
       fontFamily: {
-        sans: ["var(--font-roboto)", "Roboto", "sans-serif"],
+        // 拉丁字元／數字一律 Inter；中文 fallback 到 Noto Sans TC（next/font 載入的 webfont）
+        sans: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
+        inter: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
         roboto: ["var(--font-roboto)", "Roboto", "sans-serif"],
-        noto: ["var(--font-roboto)", "Roboto", '"Noto Sans TC"', "sans-serif"],
+        noto: ["var(--font-inter)", "var(--font-noto-sans-tc)", '"Noto Sans TC"', "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
