@@ -71,7 +71,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
           </span>
           {/* 用實體圓點取代「·」字元——字元會坐在基線上、看起來偏低且過細 */}
           {isToday && (
-            <span className="flex items-center gap-1.5 text-[13px] font-semibold text-[#5991C4]">
+            <span className="flex items-center gap-1 text-[13px] font-semibold text-[#5991C4]">
               <span className="h-1 w-1 rounded-full bg-current" />
               今日
             </span>

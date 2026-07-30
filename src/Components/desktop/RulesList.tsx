@@ -12,11 +12,11 @@ interface RulesListProps {
 export function RulesList({ rules, badgeClass }: RulesListProps) {
   return (
     <div className="rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
-      <p className="border-b border-[#F1F1F1] pb-3 text-[15px] font-bold text-[#374151]">使用守則</p>
+      <p className="border-b border-[#F1F1F1] pb-3 text-base font-bold text-[#1F2937]">使用守則</p>
       {rules.map((rule, i) => (
         <div key={i} className={`flex items-start gap-3 py-4 ${i < rules.length - 1 ? "border-b border-[#F1F1F1]" : "pb-1.5"}`}>
-          <span className={`mt-1 h-3 w-3 shrink-0 rounded-full ${badgeClass[rule.badge] ?? "bg-gray-300"}`} />
-          <p className="min-w-0 flex-1 text-[13.5px] leading-relaxed text-[#4B5563]">{rule.text}</p>
+          <span className={`mt-1.5 h-3 w-3 shrink-0 rounded-full ${badgeClass[rule.badge] ?? "bg-gray-300"}`} />
+          <p className="min-w-0 flex-1 text-sm leading-[1.85] text-[#374151]">{rule.text}</p>
         </div>
       ))}
     </div>

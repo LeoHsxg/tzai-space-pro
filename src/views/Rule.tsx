@@ -177,7 +177,7 @@ const Rule = () => {
             <RulesList rules={rules} badgeClass={badgeClass} />
             <SupplementaryCard items={supplements} />
           </div>
-          <p className="mx-auto mt-1 max-w-[56ch] text-center text-xs leading-relaxed text-[#9AA0A6]">{DISCLAIMER}</p>
+          <p className="mx-auto mt-1 max-w-[56ch] text-center text-[13px] leading-relaxed text-[#9AA0A6]">{DISCLAIMER}</p>
         </div>
       </div>
     </>

@@ -115,7 +115,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
     const pickerSlotProps = { popper: { container: popperContainer } };
 
     return (
-      <div ref={setPopperContainer} className="px-6 pt-4 pb-5">
+      <div ref={setPopperContainer} className="px-6 pt-3 pb-5">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3.5">
           <div>
             <span className={label}>申請人姓名</span>
@@ -132,7 +132,8 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
           <div>
             <span className={label}>借用地點</span>
             <Select value={location || undefined} onValueChange={value => setLocation(value as string)}>
-              <SelectTrigger className="h-11 w-full rounded-[10px] border border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700">
+              {/* 要用 data-[size=default] 覆寫，基礎樣式的 h-8 帶 data 選擇器，純 h-11 蓋不掉 */}
+              <SelectTrigger className="w-full rounded-[10px] border border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700 data-[size=default]:h-11">
                 <SelectValue placeholder="選擇空間" />
               </SelectTrigger>
               <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0px_4px_24px_rgba(0,0,0,0.10)]">
