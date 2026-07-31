@@ -18,7 +18,11 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
     margin: 0;
     padding: 0;
-    border: 0;
+    /* 只歸零寬度，不要用 border 簡寫。簡寫會連帶把 border-style 設成 none，
+       蓋掉 Tailwind preflight 的 `border: 0 solid`；而 border-t / border-b 這類
+       utility 只設 width 不設 style，於是邊框永遠不會畫出來（要另外加 border-solid
+       才有效）。這條規則在 utilities 之後、且元素選擇器特異性高於 preflight 的 *。 */
+    border-width: 0;
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
