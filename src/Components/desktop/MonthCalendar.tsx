@@ -102,7 +102,7 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
       </div>
 
       {/* room legend */}
-      <div className="border-t border-[#F5F6F8] pt-3.5 pl-0.5">
+      <div className="border-t border-[#E8E8E8] pt-3.5 pl-0.5">
         <RoomLegend />
       </div>
     </div>

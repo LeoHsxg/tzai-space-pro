@@ -115,7 +115,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
     const pickerSlotProps = { popper: { container: popperContainer } };
 
     return (
-      <div ref={setPopperContainer} className="px-6 pb-5">
+      <div ref={setPopperContainer} className="px-6 pt-5 pb-5">
         <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3.5">
           <div>
             <span className={label}>申請人姓名</span>
@@ -165,7 +165,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
             <span className={label}>活動簡述</span>
             <Input className={textInput} placeholder="活動簡述（請認真寫！）" value={description} onChange={e => setDescription(e.target.value)} />
           </div>
-          <div className="col-span-2 -mx-6 mt-2 flex items-center justify-between gap-4 border-t border-[#F1F1F1] px-6 pt-4">
+          <div className="col-span-2 -mx-6 mt-2.5 flex items-center justify-between gap-4 border-t border-[#E8E8E8] px-6 pt-4">
             <ConsentCheckbox checked={consent} onChange={handleConsentChange} />
             <div className="flex shrink-0 items-center gap-2.5">
               <button

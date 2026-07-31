@@ -13,7 +13,7 @@ export function RulesFlow({ steps }: RulesFlowProps) {
       <p className="pb-5 text-base font-bold text-[#1F2937]">借用流程</p>
       <div className="grid grid-cols-3">
         {steps.map((step, i) => (
-          <div key={i} className={`flex flex-col px-6 first:pl-0 last:pr-0 ${i < steps.length - 1 ? "border-r border-[#F1F1F1]" : ""}`}>
+          <div key={i} className={`flex flex-col px-6 first:pl-0 last:pr-0 ${i < steps.length - 1 ? "border-r border-[#E8E8E8]" : ""}`}>
             <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#EAF1F8] font-roboto text-[13px] font-bold text-[#5991C4]">
               {i + 1}
             </span>

@@ -92,7 +92,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
           </div>
         )}
       </div>
-      <div className="h-px bg-[#F1F1F1]" />
+      <div className="h-px bg-[#E8E8E8]" />
 
       {/* booking list */}
       {isEmpty ? (
@@ -120,7 +120,7 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
       )}
 
       {/* apply on this day */}
-      <div className="border-t border-[#F1F1F1] p-4">
+      <div className="border-t border-[#E8E8E8] p-4">
         <button
           onClick={() => onApply(date)}
           className="w-full rounded-xl border-[1.5px] border-dashed border-[#5991C4] py-3 text-sm font-semibold text-[#5991C4] transition-colors hover:bg-[#EAF1F8]/60">
