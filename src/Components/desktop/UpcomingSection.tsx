@@ -7,7 +7,7 @@ import { Booking, ROOM_COLORS } from "@/types/booking";
 /** 即將到來 — 已核准、尚未開始的借用（桌面版） */
 export function UpcomingSection({ bookings }: { bookings: Booking[] }) {
   return (
-    <div className="rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-6 py-5">
       <div className="flex items-center gap-2">
         <span className="h-[9px] w-[9px] rounded-full bg-[#5991C4]" />
         <span className="text-sm font-semibold text-[#374151]">即將到來</span>

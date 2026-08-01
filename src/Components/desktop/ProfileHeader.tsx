@@ -7,7 +7,7 @@ import { avatarChar } from "./avatar";
 /** 個人檔案頭像卡（桌面版） */
 export function ProfileHeader({ user }: { user: User }) {
   return (
-    <div className="flex items-center gap-4 rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="flex items-center gap-4 rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-6 py-5">
       {user.photoURL ? (
         <img src={user.photoURL} alt="頭像" className="h-14 w-14 shrink-0 rounded-full object-cover" />
       ) : (

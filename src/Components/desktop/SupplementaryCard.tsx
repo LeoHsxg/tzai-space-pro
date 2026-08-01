@@ -12,7 +12,7 @@ export function SupplementaryCard({ items }: SupplementaryCardProps) {
   const [expanded, setExpanded] = useState(true);
 
   return (
-    <div className="rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-6 py-5">
       <button onClick={() => setExpanded(v => !v)} aria-expanded={expanded} className="flex w-full cursor-pointer items-center justify-between">
         {/* 刻意比「使用守則」弱一級：補充內容不該跟主守則搶視線（與行動版一致） */}
         <span className="text-[15px] font-medium text-[#6B7280]">其他補充事項</span>

@@ -11,7 +11,7 @@ interface RulesListProps {
 /** 使用守則 — 桌面左欄（色點＋條文，標題下與列間皆有分隔線） */
 export function RulesList({ rules, badgeClass }: RulesListProps) {
   return (
-    <div className="rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-6 py-5">
       <p className="pb-4 text-base font-bold text-[#1F2937]">使用守則</p>
       <div className="border-t border-[#E8E8E8]">
         {rules.map((rule, i) => (

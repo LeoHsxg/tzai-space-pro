@@ -62,12 +62,12 @@ export function DayDetailPanel({ date, spanning, today, outOfWindow = false, onB
   const isEmpty = filteredSpanning.length === 0 && filteredToday.length === 0;
 
   return (
-    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="flex h-full min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)]">
       {/* header */}
       <div className="flex flex-col px-5 pt-5 pb-4">
         <div className="flex items-center gap-1">
           <span className="font-roboto text-base font-bold text-[#1F2937]">
-            {date.format("M 月 D 日")}（{WEEKDAYS[date.day()]}）
+            {date.format("M月D日")}（{WEEKDAYS[date.day()]}）
           </span>
           {/* 用實體圓點取代「·」字元——字元會坐在基線上、看起來偏低且過細 */}
           {isToday && (

@@ -28,7 +28,7 @@ export function MonthCalendar({ month, value, onSelect, onMonthChange, onToday, 
   const today = dayjs();
 
   return (
-    <div className="flex flex-col gap-4 rounded-2xl bg-white p-6 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="flex flex-col gap-4 rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] p-6">
       {/* header */}
       <div className="flex items-center justify-between">
         {/* pl-1：日格內的日期數字有 p-2 內縮，標題補一點左距做光學對齊 */}

@@ -19,7 +19,7 @@ export function ApplyDialog() {
       <DialogContent
         showCloseButton={false}
         overlayClassName="bg-[#0A0F14]/50 supports-backdrop-filter:backdrop-blur-none"
-        className="hidden w-[640px] max-w-[calc(100vw-4rem)] gap-0 rounded-[18px] bg-white p-0 shadow-[0_24px_60px_rgba(0,0,0,0.4)] sm:max-w-[640px] lg:block">
+        className="hidden w-[640px] max-w-[calc(100vw-4rem)] gap-0 rounded-[18px] bg-white p-0 shadow-[0_12px_32px_rgba(0,0,0,0.14)] sm:max-w-[640px] lg:block">
         <div className="flex items-center justify-between border-b border-[#E8E8E8] px-6 py-4 pb-3.5">
           <DialogTitle className="font-sans text-[17px] font-bold text-[#1F2937]">申請借用</DialogTitle>
           <DialogClose

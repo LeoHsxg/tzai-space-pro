@@ -171,7 +171,7 @@ const Rule = () => {
       {/* ══ 桌面版（lg 以上）═════════════════════════════════ */}
       <div className="hidden lg:flex mx-auto w-full max-w-[1280px] flex-col px-10 py-9">
         <PageEyebrow>空間使用守則</PageEyebrow>
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-[18px]">
           <RulesFlow steps={steps} />
           <div className="grid grid-cols-[1.7fr_1fr] items-start gap-5">
             <RulesList rules={rules} badgeClass={badgeClass} />

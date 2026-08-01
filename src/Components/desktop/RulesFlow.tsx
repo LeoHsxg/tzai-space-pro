@@ -9,7 +9,7 @@ interface RulesFlowProps {
 /** 借用流程 — 桌面橫向三步（步間細直線分隔） */
 export function RulesFlow({ steps }: RulesFlowProps) {
   return (
-    <div className="rounded-2xl bg-white px-6 py-5 shadow-[0_2px_10px_rgba(0,0,0,0.04)]">
+    <div className="rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,0.04)] px-6 py-5">
       <p className="pb-5 text-base font-bold text-[#1F2937]">借用流程</p>
       <div className="grid grid-cols-3">
         {steps.map((step, i) => (
