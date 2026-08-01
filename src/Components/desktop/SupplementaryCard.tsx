@@ -25,9 +25,9 @@ export function SupplementaryCard({ items }: SupplementaryCardProps) {
         className="grid transition-[grid-template-rows] duration-300 ease-[cubic-bezier(0.65,0,0.35,1)]"
         style={{ gridTemplateRows: expanded ? "1fr" : "0fr" }}>
         <div className="min-h-0 overflow-hidden">
-          <div className="flex flex-col gap-3 pt-4">
+          <div className="flex flex-col gap-2.5 pt-4">
             {items.map((item, i) => (
-              <p key={i} className={`text-sm leading-[1.85] ${item.faint ? "text-gray-300" : "text-[#4B5563]"}`}>
+              <p key={i} className={`text-[13.5px] leading-[1.6] ${item.faint ? "text-gray-300" : "text-[#6B7280]"}`}>
                 {item.text}
               </p>
             ))}

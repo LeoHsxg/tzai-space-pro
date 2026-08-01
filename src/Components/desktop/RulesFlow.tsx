@@ -19,7 +19,7 @@ export function RulesFlow({ steps }: RulesFlowProps) {
             </span>
             {/* 序號與「標題＋描述」是兩個群組，組間 14px、組內 6px 才有層次 */}
             <p className="mt-3.5 text-[15px] font-bold text-[#1F2937]">{step.title}</p>
-            <p className="mt-1.5 text-sm leading-[1.75] text-[#4B5563]">{step.desc}</p>
+            <p className="mt-1.5 text-sm leading-[1.6] text-[#4B5563]">{step.desc}</p>
           </div>
         ))}
       </div>

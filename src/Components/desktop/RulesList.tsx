@@ -15,9 +15,10 @@ export function RulesList({ rules, badgeClass }: RulesListProps) {
       <p className="pb-4 text-base font-bold text-[#1F2937]">使用守則</p>
       <div className="border-t border-[#E8E8E8]">
         {rules.map((rule, i) => (
-          <div key={i} className={`flex items-start gap-3.5 py-[18px] ${i < rules.length - 1 ? "border-b border-[#E8E8E8]" : "pb-1"}`}>
-            <span className={`mt-[7px] h-3 w-3 shrink-0 rounded-full ${badgeClass[rule.badge] ?? "bg-gray-300"}`} />
-            <p className="min-w-0 flex-1 text-sm leading-[1.85] text-[#374151]">{rule.text}</p>
+          <div key={i} className={`flex items-start gap-3.5 py-[16px] ${i < rules.length - 1 ? "border-b border-[#E8E8E8]" : "pb-1"}`}>
+            {/* mt 對齊第一行文字的視覺中心：(14px × 1.6 ÷ 2) − 半個點高 ≈ 5px */}
+            <span className={`mt-[5px] h-3 w-3 shrink-0 rounded-full ${badgeClass[rule.badge] ?? "bg-gray-300"}`} />
+            <p className="min-w-0 flex-1 text-sm leading-[1.6] text-[#374151]">{rule.text}</p>
           </div>
         ))}
       </div>
