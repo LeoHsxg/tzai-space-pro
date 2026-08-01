@@ -20,7 +20,7 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
           </svg>
         )}
       </label>
-      <span className="text-black/60 text-xs font-normal font-['Inter']">
+      <span className="text-black/60 text-xs font-normal font-inter">
         本人已詳閱、瞭解並願意遵守
         <Link href="/rule">
           <span className="underline">空間借用條例</span>

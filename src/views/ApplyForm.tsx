@@ -13,18 +13,42 @@ import { useUI } from "../context/UIContext";
 import ConsentCheckbox from "../Components/ConsentCheckbox";
 import "../styles/ApplyForm.css";
 
-const ApplyForm: React.FC = () => {
+const ROOM_OPTIONS = ["小導師室", "書房", "橘廳", "會議室", "貢丸室"];
+
+interface ApplyFormProps {
+  /** desktop＝桌面 Dialog 雙欄版；預設 mobile 維持既有版面 */
+  variant?: "mobile" | "desktop";
+  /** 「於此日申請」帶入的日期（時間取當下，結束＋1 小時） */
+  defaultDate?: Dayjs | null;
+  /** 送出成功後回呼（桌面版用來關閉 Dialog） */
+  onSubmitted?: () => void;
+  /** 桌面版取消按鈕 */
+  onCancel?: () => void;
+}
+
+const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate = null, onSubmitted, onCancel }) => {
   const user = useAuth();
   const { showSnackbar, showDialog, hideDialog } = useUI();
 
-  const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
-  const [endDate, setEndDate] = useState<Dayjs | null>(dayjs());
+  const [startDate, setStartDate] = useState<Dayjs | null>(() => {
+    if (!defaultDate) return dayjs();
+    const now = dayjs();
+    return defaultDate.hour(now.hour()).minute(now.minute()).second(0);
+  });
+  const [endDate, setEndDate] = useState<Dayjs | null>(() => {
+    if (!defaultDate) return dayjs();
+    const now = dayjs();
+    return defaultDate.hour(now.hour()).minute(now.minute()).second(0).add(1, "hour");
+  });
   const [applicantName, setApplicantName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [crowdSize, setCrowdSize] = useState<string>("");
   const [location, setLocation] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [consent, setConsent] = useState<boolean>(false);
+
+  // MUI picker 的 popper 要釘在 dialog 內，否則 base-ui Dialog 會把它當 outside click 關掉
+  const [popperContainer, setPopperContainer] = useState<HTMLElement | null>(null);
 
   const handleConsentChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConsent(event.target.checked);
@@ -63,6 +87,7 @@ const ApplyForm: React.FC = () => {
         throw new Error(errorData.message || "Unknown error");
       }
       showSnackbar("預約成功。", "success");
+      onSubmitted?.();
     } catch (err: unknown) {
       showSnackbar((err as Error).message || "請求失敗，請稍後再試。", "error");
     } finally {
@@ -76,6 +101,88 @@ const ApplyForm: React.FC = () => {
       // showSnackbar("Safari 可能會有 Cookie 與跨站追蹤阻擋的問題，建議使用 Chrome", "info");
     }
   }, []);
+
+  const roomSelectItems = ROOM_OPTIONS.map(room => (
+    <SelectItem key={room} className="text-base pt-2.5 pb-3.5 pl-4" value={room}>
+      {room}
+    </SelectItem>
+  ));
+
+  if (variant === "desktop") {
+    const label = "mb-1.5 block text-xs text-[#9AA0A6]";
+    const textInput =
+      "h-11 rounded-[10px] border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700 placeholder:text-gray-300 focus-visible:border-[#5991C4] focus-visible:ring-0";
+    const pickerSlotProps = { popper: { container: popperContainer } };
+
+    return (
+      <div ref={setPopperContainer} className="px-6 pt-5 pb-5">
+        <form onSubmit={handleSubmit} className="grid grid-cols-2 gap-x-4 gap-y-3.5">
+          <div>
+            <span className={label}>申請人姓名</span>
+            <Input className={textInput} placeholder="王小明" value={applicantName} onChange={e => setApplicantName(e.target.value)} />
+          </div>
+          <div>
+            <span className={label}>手機號碼</span>
+            <Input className={textInput} placeholder="09xx-xxx-xxx" value={phone} onChange={e => setPhone(e.target.value)} />
+          </div>
+          <div>
+            <span className={label}>人數</span>
+            <Input className={textInput} placeholder="4" value={crowdSize} onChange={e => setCrowdSize(e.target.value)} />
+          </div>
+          <div>
+            <span className={label}>借用地點</span>
+            <Select value={location || undefined} onValueChange={value => setLocation(value as string)}>
+              {/* 要用 data-[size=default] 覆寫，基礎樣式的 h-8 帶 data 選擇器，純 h-11 蓋不掉 */}
+              <SelectTrigger className="w-full rounded-[10px] border border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700 data-[size=default]:h-11">
+                <SelectValue placeholder="選擇空間" />
+              </SelectTrigger>
+              <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
+                {roomSelectItems}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <span className={label}>開始時間</span>
+            <DateTimePicker
+              className="dipt w-full"
+              value={startDate}
+              views={["month", "day", "hours", "minutes"]}
+              onChange={newValue => setStartDate(newValue)}
+              slotProps={pickerSlotProps}
+            />
+          </div>
+          <div>
+            <span className={label}>結束時間</span>
+            <DateTimePicker
+              className="dipt w-full"
+              value={endDate}
+              views={["month", "day", "hours", "minutes"]}
+              onChange={newValue => setEndDate(newValue)}
+              slotProps={pickerSlotProps}
+            />
+          </div>
+          <div className="col-span-2">
+            <span className={label}>活動簡述</span>
+            <Input className={textInput} placeholder="活動簡述（請認真寫！）" value={description} onChange={e => setDescription(e.target.value)} />
+          </div>
+          <div className="col-span-2 -mx-6 mt-2.5 flex items-center justify-between gap-4 border-t border-[#E8E8E8] px-6 pt-4">
+            <ConsentCheckbox checked={consent} onChange={handleConsentChange} />
+            <div className="flex shrink-0 items-center gap-2.5">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="rounded-[9px] border border-[#D9DEE4] px-5 py-2 text-sm text-[#5B6572] transition-colors hover:bg-gray-50">
+                取消
+              </button>
+              <button type="submit" className="rounded-[9px] bg-[#5991C4] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#4880B0]">
+                確認送出
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-[5px] md:my-5 px-[5%] pb-20 md:pb-0 max-w-[640px] mx-auto">
@@ -92,22 +199,8 @@ const ApplyForm: React.FC = () => {
             <SelectTrigger className="ipt flex-1 border-0 pl-4">
               <SelectValue placeholder="借用地點" />
             </SelectTrigger>
-            <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0px_4px_24px_rgba(0,0,0,0.10)]">
-              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="小導師室">
-                小導師室
-              </SelectItem>
-              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="書房">
-                書房
-              </SelectItem>
-              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="橘廳">
-                橘廳
-              </SelectItem>
-              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="會議室">
-                會議室
-              </SelectItem>
-              <SelectItem className="text-base pt-2.5 pb-3.5 pl-4" value="貢丸室">
-                貢丸室
-              </SelectItem>
+            <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
+              {roomSelectItems}
             </SelectContent>
           </Select>
         </div>

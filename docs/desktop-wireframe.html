@@ -1,0 +1,470 @@
+<title>桌面版線框 · 載物空間借用系統</title>
+<style>
+  :root{
+    --paper:#e9ecf0; --board:#ffffff; --ink:#1e2732; --muted:#586675; --faint:#8b97a3;
+    --line:#ced5dd; --line-strong:#b6bfc9; --fill:#e6eaef; --fill-2:#eff2f5;
+    --accent:#5b7f9e; --accent-soft:#dde8ef; --note:#b0703c; --note-soft:#f0e2d3;
+    --r-shu:#c26b6b; --r-orange:#cf8a4e; --r-meet:#6b93c2; --r-tutor:#cbb85a; --r-gong:#9a78c2;
+    --sans:ui-sans-serif,system-ui,-apple-system,"Noto Sans TC","PingFang TC",sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{
+      --paper:#141a20; --board:#1d242d; --ink:#e6ecf2; --muted:#9aa7b4; --faint:#6f7d8b;
+      --line:#333d47; --line-strong:#45525e; --fill:#28313b; --fill-2:#222a33;
+      --accent:#7ba0be; --accent-soft:#2a3a47; --note:#cd9059; --note-soft:#3a2f24;
+      --r-shu:#c87e7e; --r-orange:#d59d68; --r-meet:#7fa4cf; --r-tutor:#d4c374; --r-gong:#ac8fd0;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#141a20; --board:#1d242d; --ink:#e6ecf2; --muted:#9aa7b4; --faint:#6f7d8b;
+    --line:#333d47; --line-strong:#45525e; --fill:#28313b; --fill-2:#222a33;
+    --accent:#7ba0be; --accent-soft:#2a3a47; --note:#cd9059; --note-soft:#3a2f24;
+    --r-shu:#c87e7e; --r-orange:#d59d68; --r-meet:#7fa4cf; --r-tutor:#d4c374; --r-gong:#ac8fd0;
+  }
+  :root[data-theme="light"]{
+    --paper:#e9ecf0; --board:#ffffff; --ink:#1e2732; --muted:#586675; --faint:#8b97a3;
+    --line:#ced5dd; --line-strong:#b6bfc9; --fill:#e6eaef; --fill-2:#eff2f5;
+    --accent:#5b7f9e; --accent-soft:#dde8ef; --note:#b0703c; --note-soft:#f0e2d3;
+    --r-shu:#c26b6b; --r-orange:#cf8a4e; --r-meet:#6b93c2; --r-tutor:#cbb85a; --r-gong:#9a78c2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.5;
+       -webkit-font-smoothing:antialiased;padding:48px 24px 96px}
+  .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+
+  /* ---- page header ---- */
+  .masthead{display:flex;flex-direction:column;gap:14px;border-bottom:1px solid var(--line);padding-bottom:24px}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
+  h1{margin:0;font-size:30px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+  .lede{margin:0;max-width:60ch;color:var(--muted);font-size:15px}
+  .conventions{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:6px;font-family:var(--mono);font-size:11.5px;color:var(--faint)}
+  .conventions span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:22px;height:12px;border-radius:2px;display:inline-block}
+  .sw.dash{border:1px dashed var(--line-strong);background:transparent}
+  .sw.solid{background:var(--fill)}
+  .sw.acc{background:var(--accent)}
+  .sw.pin{width:14px;height:14px;border-radius:50%;background:var(--note);color:#fff;font-size:9px;
+          display:inline-flex;align-items:center;justify-content:center;font-weight:700}
+
+  /* ---- screen block ---- */
+  .screen{display:flex;flex-direction:column;gap:18px}
+  .screen-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .idx{font-family:var(--mono);font-size:13px;color:var(--accent);font-weight:600}
+  .screen-head h2{margin:0;font-size:20px;font-weight:650}
+  .screen-head .sub{color:var(--muted);font-size:13.5px}
+
+  /* ---- artboard ---- */
+  .board{background:var(--board);border:1px solid var(--line);border-radius:12px;
+         box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 32px -18px rgba(0,0,0,.25);
+         overflow:hidden;position:relative}
+  .frame-tag{position:absolute;top:10px;right:14px;font-family:var(--mono);font-size:10.5px;
+             color:var(--faint);letter-spacing:.05em;z-index:5}
+  .app{display:grid;grid-template-columns:210px 1fr;min-height:560px}
+
+  /* sidebar */
+  .side{border-right:1px solid var(--line);padding:22px 16px;display:flex;flex-direction:column;gap:22px;background:var(--fill-2)}
+  .logo{font-weight:800;font-size:22px;letter-spacing:-.02em;color:var(--ink);padding:2px 6px}
+  .logo b:nth-child(1){color:var(--r-meet)} .logo b:nth-child(2){color:var(--r-tutor)}
+  .logo b:nth-child(3){color:var(--r-shu)} .logo b:nth-child(4){color:var(--r-orange)}
+  .nav{display:flex;flex-direction:column;gap:4px}
+  .nav a{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:8px;color:var(--muted);
+         font-size:14px;text-decoration:none}
+  .nav a .ic{width:17px;height:17px;border:1.5px solid currentColor;border-radius:4px;opacity:.7}
+  .nav a.on{background:var(--accent-soft);color:var(--ink);font-weight:600}
+  .nav a.on .ic{opacity:1;border-color:var(--accent)}
+  .cta{margin-top:2px;display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;
+       background:var(--accent);color:#fff;border-radius:9px;font-size:14px;font-weight:650}
+  .side-foot{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+  .userchip{display:flex;align-items:center;gap:10px;padding:8px;border:1px solid var(--line);border-radius:10px}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--fill);flex:0 0 auto}
+  .userchip .u1{font-size:13px;font-weight:600} .userchip .u2{font-size:11px;color:var(--faint)}
+  .ghost{font-family:var(--mono);font-size:11px;color:var(--faint);text-align:center;padding:6px;border:1px dashed var(--line);border-radius:8px}
+
+  /* main */
+  .main{padding:24px 28px;display:flex;flex-direction:column;gap:18px;min-width:0}
+  .main-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .page-title{font-size:19px;font-weight:700}
+  .legend{display:flex;gap:13px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+
+  .cal-grid{display:grid;grid-template-columns:1.85fr 1fr;gap:20px;min-height:0}
+  .card{border:1px solid var(--line);border-radius:11px;padding:16px;background:var(--board);display:flex;flex-direction:column;gap:12px;min-width:0}
+  .cal-head{display:flex;align-items:center;justify-content:space-between}
+  .cal-head .m{font-size:16px;font-weight:700;font-variant-numeric:tabular-nums}
+  .cal-nav{display:flex;align-items:center;gap:8px}
+  .btn-s{border:1px solid var(--line-strong);border-radius:7px;width:28px;height:28px;display:inline-flex;
+         align-items:center;justify-content:center;color:var(--muted);font-size:13px}
+  .btn-today{border:1px solid var(--line-strong);border-radius:7px;padding:5px 12px;font-size:12.5px;color:var(--muted)}
+  .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+  .wk div{text-align:center;font-family:var(--mono);font-size:10.5px;color:var(--faint);padding-bottom:2px}
+  .month{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:1fr;gap:6px}
+  .cell{border:1px solid transparent;border-radius:8px;min-height:58px;padding:7px 6px 6px;display:flex;
+        flex-direction:column;gap:5px;background:var(--fill-2)}
+  .cell .n{font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .cell.out{background:transparent} .cell.out .n{color:var(--faint)}
+  .cell.sel{background:var(--accent-soft);border-color:var(--accent)}
+  .cell.sel .n{font-weight:700;color:var(--accent)}
+  .cdots{display:flex;gap:3px;flex-wrap:wrap}
+  .cdots i{width:6px;height:6px;border-radius:50%}
+
+  /* day panel */
+  .panel{border:1px solid var(--line);border-radius:11px;background:var(--fill-2);display:flex;flex-direction:column;overflow:hidden}
+  .panel-head{padding:15px 16px 12px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
+  .panel-head .d{font-size:15px;font-weight:700}
+  .panel-head .c{font-size:12px;color:var(--muted)}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11px;padding:3px 9px;border:1px solid var(--line-strong);border-radius:999px;color:var(--muted);display:inline-flex;align-items:center;gap:5px}
+  .chip.on{background:var(--board);border-color:var(--accent);color:var(--ink)}
+  .plist{padding:12px;display:flex;flex-direction:column;gap:9px;flex:1}
+  .prow{display:flex;align-items:center;gap:11px;background:var(--board);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+  .prow .pd{width:12px;height:12px;border-radius:50%;flex:0 0 auto}
+  .prow .pt{font-family:var(--mono);font-size:12.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+  .prow .pr{margin-left:auto;font-size:13px;color:var(--muted)}
+  .panel-foot{padding:12px;border-top:1px solid var(--line)}
+  .add-day{width:100%;border:1px dashed var(--accent);color:var(--accent);border-radius:9px;padding:10px;text-align:center;font-size:13px;font-weight:600}
+
+  /* ---- modal artboard ---- */
+  .stage{position:relative;background:var(--fill-2);min-height:520px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .stage .behind{position:absolute;inset:0;opacity:.35;filter:grayscale(.3);pointer-events:none}
+  .stage .behind .app{min-height:520px}
+  .scrim{position:absolute;inset:0;background:rgba(10,14,20,.42)}
+  .modal{position:relative;width:600px;max-width:calc(100% - 48px);background:var(--board);border:1px solid var(--line);
+         border-radius:14px;box-shadow:0 30px 80px -30px rgba(0,0,0,.6);overflow:hidden;z-index:2}
+  .modal-head{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line)}
+  .modal-head .t{font-size:17px;font-weight:700}
+  .x{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);display:inline-flex;align-items:center;justify-content:center;color:var(--muted)}
+  .form{padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .fld{display:flex;flex-direction:column;gap:6px}
+  .fld.full{grid-column:1 / -1}
+  .fld label{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint)}
+  .inp{border:1px solid var(--line-strong);border-radius:9px;height:42px;background:var(--fill-2);display:flex;align-items:center;padding:0 13px;color:var(--faint);font-size:13px}
+  .inp.area{height:64px;align-items:flex-start;padding-top:11px}
+  .modal-foot{padding:16px 22px;border-top:1px solid var(--line);display:flex;align-items:center;gap:14px}
+  .consent{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .consent .ck{width:15px;height:15px;border-radius:50%;border:1.5px solid var(--line-strong)}
+  .foot-btns{margin-left:auto;display:flex;gap:10px}
+  .b-ghost{border:1px solid var(--line-strong);color:var(--muted);border-radius:9px;padding:9px 18px;font-size:13.5px}
+  .b-fill{background:var(--accent);color:#fff;border-radius:9px;padding:9px 22px;font-size:13.5px;font-weight:650}
+
+  /* ---- rules artboard ---- */
+  .rules-main{padding:26px 30px;display:flex;flex-direction:column;gap:20px}
+  .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+  .step{position:relative;padding:0 20px;display:flex;flex-direction:column;gap:6px}
+  .step:not(:last-child){border-right:1px solid var(--line)}
+  .step .snum{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
+              display:inline-flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700}
+  .step .st{font-size:14px;font-weight:650;margin-top:2px}
+  .step .sd{font-size:12.5px;color:var(--muted);line-height:1.55}
+  .rules-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;align-items:start}
+  .rrow{display:flex;gap:12px;padding:13px 2px;align-items:flex-start}
+  .rrow+.rrow{border-top:1px solid var(--line)}
+  .rrow .rd{width:12px;height:12px;border-radius:50%;flex:0 0 auto;margin-top:3px}
+  .rrow p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.6}
+  .rrow p b{color:var(--ink)}
+  .acc-title{display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600;color:var(--muted)}
+  .acc-body{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+  .acc-body p{margin:0;font-size:13px;color:var(--muted);line-height:1.6}
+  .disclaimer{text-align:center;font-size:12px;color:var(--faint);max-width:56ch;margin:4px auto 0}
+  .card-h{font-size:15px;font-weight:700;padding-bottom:12px;border-bottom:1px solid var(--line);margin-bottom:4px}
+
+  /* ---- profile artboard ---- */
+  .prof-main{padding:24px 30px;display:flex;flex-direction:column;gap:18px}
+  .prof-head{display:flex;align-items:center;gap:18px;padding:20px 22px}
+  .prof-head .pav{width:56px;height:56px;border-radius:50%;background:#46586b;flex:0 0 auto;display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;font-weight:700}
+  .prof-head .pn{font-size:18px;font-weight:700} .prof-head .pe{font-size:13px;color:var(--muted)}
+  .userchip.on{border-color:var(--accent);background:var(--accent-soft)}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start}
+  .sec-head{display:flex;align-items:center;gap:9px;margin-bottom:10px}
+  .sec-head .sd{width:9px;height:9px;border-radius:50%}
+  .sec-head .sl{font-size:14px;font-weight:650} .sec-head .sc{font-family:var(--mono);font-size:12px;color:var(--muted)}
+  .empty{font-size:13px;color:var(--faint);padding:6px 2px}
+  .ptable{width:100%;border-collapse:collapse;font-size:13.5px}
+  .ptable th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);font-weight:600;padding:0 10px 10px;border-bottom:1px solid var(--line)}
+  .ptable td{padding:12px 10px;border-bottom:1px solid var(--line);color:var(--muted)}
+  .ptable td.rm{color:var(--ink);font-weight:600} .ptable td.tm{font-family:var(--mono);font-variant-numeric:tabular-nums}
+  .st-pill{font-size:11.5px;padding:2px 9px;border-radius:999px;border:1px solid var(--line-strong);color:var(--faint)}
+  .link{color:var(--accent);font-size:13px;font-weight:600} .link.mute{color:var(--faint)}
+  .tbl-foot{display:flex;justify-content:center;padding-top:14px}
+  .tbl-foot span{font-size:12.5px;color:var(--muted);border:1px solid var(--line-strong);border-radius:8px;padding:7px 16px}
+
+  /* ---- annotations ---- */
+  .pin{position:absolute;width:20px;height:20px;border-radius:50%;background:var(--note);color:#fff;
+       font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;z-index:6;
+       box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .notes{display:flex;flex-direction:column;gap:9px;background:var(--note-soft);border:1px solid color-mix(in srgb,var(--note) 40%,transparent);
+         border-radius:11px;padding:16px 18px}
+  .notes h3{margin:0 0 4px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--note)}
+  .note-item{display:flex;gap:10px;font-size:13.5px;color:var(--ink)}
+  .note-item .np{flex:0 0 auto;width:19px;height:19px;border-radius:50%;background:var(--note);color:#fff;
+                 font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+  .note-item b{font-weight:650}
+  .note-item span{color:var(--muted)}
+
+  .footer-q{border-top:1px solid var(--line);padding-top:24px;display:flex;flex-direction:column;gap:10px}
+  .footer-q h3{margin:0;font-size:15px}
+  .footer-q ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px;display:flex;flex-direction:column;gap:6px}
+  .footer-q b{color:var(--ink)}
+
+  @media (max-width:820px){
+    .app{grid-template-columns:1fr} .side{display:none}
+    .cal-grid{grid-template-columns:1fr} .rules-cols{grid-template-columns:1fr} .form{grid-template-columns:1fr}
+    .flow{grid-template-columns:1fr;gap:14px} .step{border-right:none!important;padding:0}
+    .two-col{grid-template-columns:1fr}
+  }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="kicker">桌面網頁版 · 低保真線框 v1</div>
+    <h1>載物空間借用系統 — 桌面版架構雛形</h1>
+    <p class="lede">純結構討論用，灰階、不上品牌色、不填最終文案。目的是先把「側欄怎麼放、日曆與詳情怎麼並排、申請流程長怎樣」定下來，定案後再進 Figma 做高保真。房間色點只是示意，實際顏色與字級留到 Figma 決定。</p>
+    <div class="conventions">
+      <span><i class="sw dash"></i>佔位／空區</span>
+      <span><i class="sw solid"></i>元件區塊</span>
+      <span><i class="sw acc"></i>主要操作（品牌色之後套）</span>
+      <span><i class="sw pin">1</i>結構註解</span>
+    </div>
+  </header>
+
+  <!-- ============ SCREEN 1 ============ -->
+  <section class="screen">
+    <div class="screen-head"><span class="idx">01</span><h2>日曆首頁</h2><span class="sub">側欄 · 月曆 · 右側當日詳情</span></div>
+    <div class="board">
+      <span class="frame-tag">≈ 1440 × 900 · Desktop</span>
+      <div class="pin" style="top:70px;left:14px">1</div>
+      <div class="pin" style="top:250px;left:14px">2</div>
+      <div class="pin" style="top:96px;left:640px">3</div>
+      <div class="pin" style="top:96px;left:838px">4</div>
+      <div class="app">
+        <aside class="side">
+          <div class="logo"><b>t</b><b>z</b><b>a</b><b>i</b></div>
+          <nav class="nav">
+            <a class="on"><span class="ic"></span>借用日曆</a>
+            <a><span class="ic"></span>空間守則</a>
+          </nav>
+          <div class="cta">＋ 申請借用</div>
+          <div class="side-foot">
+            <div class="userchip"><span class="avatar"></span><div><div class="u1">陳宇</div><div class="u2">leosimba9487@…</div></div></div>
+            <div class="ghost">通知鈴鐺 · 登出</div>
+          </div>
+        </aside>
+        <div class="main">
+          <div class="main-top">
+            <div class="page-title">借用日曆</div>
+            <div class="legend">
+              <span><i class="dot" style="background:var(--r-shu)"></i>書房</span>
+              <span><i class="dot" style="background:var(--r-orange)"></i>橘廳</span>
+              <span><i class="dot" style="background:var(--r-meet)"></i>會議室</span>
+              <span><i class="dot" style="background:var(--r-tutor)"></i>小導師室</span>
+              <span><i class="dot" style="background:var(--r-gong)"></i>貢丸室</span>
+            </div>
+          </div>
+          <div class="cal-grid">
+            <div class="card">
+              <div class="cal-head">
+                <span class="m">March 2026</span>
+                <div class="cal-nav"><span class="btn-today">今天</span><span class="btn-s">‹</span><span class="btn-s">›</span></div>
+              </div>
+              <div class="wk"><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>
+              <div class="month" id="month1"></div>
+            </div>
+            <div class="panel">
+              <div class="panel-head">
+                <div class="d">3 月 29 日（六）· 今日</div>
+                <div class="c">共 20 筆預約</div>
+                <div class="chips"><span class="chip on">全部</span><span class="chip"><i class="dot" style="background:var(--r-shu)"></i>書房</span><span class="chip"><i class="dot" style="background:var(--r-orange)"></i>橘廳</span></div>
+              </div>
+              <div class="plist">
+                <div class="prow"><span class="pd" style="background:var(--r-shu)"></span><span class="pt">20:00 → 00:00</span><span class="pr">書房</span></div>
+                <div class="prow"><span class="pd" style="background:var(--r-orange)"></span><span class="pt">21:00 → 00:00</span><span class="pr">橘廳</span></div>
+                <div class="prow"><span class="pd" style="background:var(--r-shu)"></span><span class="pt">00:00 → 02:00</span><span class="pr">書房</span></div>
+                <div class="prow"><span class="pd" style="background:var(--r-tutor)"></span><span class="pt">07:30 → 10:30</span><span class="pr">小導師室</span></div>
+              </div>
+              <div class="panel-foot"><div class="add-day">＋ 於 3/29 申請借用</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>結構決策</h3>
+      <div class="note-item"><span class="np">1</span><div><b>左側常駐側欄</b> — 取代手機底部列。導覽只留「日曆／守則」兩項，因為「申請」是動作不是頁面，獨立成藍色主按鈕。<span> 使用者與登出收在側欄底部。</span></div></div>
+      <div class="note-item"><span class="np">2</span><div><b>申請＝主要動作</b><span> —「＋ 申請借用」用品牌色突顯，桌面隨時可點；不再是手機那顆浮動 FAB。</span></div></div>
+      <div class="note-item"><span class="np">3</span><div><b>放大的月曆</b><span> — 桌面一眼看整月，日格夠大能放房間色點；右上放房間色圖例，讓顏色可讀。</span></div></div>
+      <div class="note-item"><span class="np">4</span><div><b>右側當日詳情面板</b><span> — 取代手機下方清單。點日曆某天，右欄即時換成當天預約，可依房間篩選，底部直接申請當天。日曆與清單並排＝桌面最大優勢。</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2 ============ -->
+  <section class="screen">
+    <div class="screen-head"><span class="idx">02</span><h2>申請借用</h2><span class="sub">置中 modal，蓋在變暗日曆上</span></div>
+    <div class="board">
+      <span class="frame-tag">Modal over 日曆</span>
+      <div class="pin" style="top:40px;left:640px">5</div>
+      <div class="pin" style="top:250px;left:410px">6</div>
+      <div class="stage">
+        <div class="behind">
+          <div class="app">
+            <aside class="side"><div class="logo"><b>t</b><b>z</b><b>a</b><b>i</b></div><nav class="nav"><a class="on"><span class="ic"></span>借用日曆</a><a><span class="ic"></span>空間守則</a></nav><div class="cta">＋ 申請借用</div></aside>
+            <div class="main"><div class="page-title">借用日曆</div><div class="card"><div class="cal-head"><span class="m">March 2026</span></div><div class="month" id="month2"></div></div></div>
+          </div>
+        </div>
+        <div class="scrim"></div>
+        <div class="modal">
+          <div class="modal-head"><span class="t">申請借用</span><span class="x">✕</span></div>
+          <div class="form">
+            <div class="fld"><label>申請人姓名</label><div class="inp">王小明</div></div>
+            <div class="fld"><label>手機號碼</label><div class="inp">09xx-xxx-xxx</div></div>
+            <div class="fld"><label>人數</label><div class="inp">4</div></div>
+            <div class="fld"><label>借用地點</label><div class="inp">小導師室　⌄</div></div>
+            <div class="fld"><label>開始時間</label><div class="inp">Mar 29　20:00</div></div>
+            <div class="fld"><label>結束時間</label><div class="inp">Mar 30　00:00</div></div>
+            <div class="fld full"><label>活動簡述</label><div class="inp area">週會＋桌遊之夜</div></div>
+          </div>
+          <div class="modal-foot">
+            <div class="consent"><span class="ck"></span>已閱讀並同意空間借用條例</div>
+            <div class="foot-btns"><span class="b-ghost">取消</span><span class="b-fill">確認送出</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>結構決策</h3>
+      <div class="note-item"><span class="np">5</span><div><b>置中 modal 取代手機的底部彈出 sheet</b><span> — 桌面不需要從下方滑出，置中對話框更自然；背景日曆變暗保留脈絡。</span></div></div>
+      <div class="note-item"><span class="np">6</span><div><b>表單雙欄化</b><span> — 短欄位（姓名／手機、人數／地點、開始／結束）左右並排，垂直高度縮短一半，不用捲動；活動簡述獨佔整列。從側欄按鈕或右側面板「於此日申請」都開這個 modal，並自動帶入日期。</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3 ============ -->
+  <section class="screen">
+    <div class="screen-head"><span class="idx">03</span><h2>空間使用守則</h2><span class="sub">橫向流程 + 守則／補充雙欄</span></div>
+    <div class="board">
+      <span class="frame-tag">≈ 1440 × 900 · Desktop</span>
+      <div class="pin" style="top:96px;left:360px">7</div>
+      <div class="pin" style="top:300px;left:360px">8</div>
+      <div class="app">
+        <aside class="side">
+          <div class="logo"><b>t</b><b>z</b><b>a</b><b>i</b></div>
+          <nav class="nav"><a><span class="ic"></span>借用日曆</a><a class="on"><span class="ic"></span>空間守則</a></nav>
+          <div class="cta">＋ 申請借用</div>
+          <div class="side-foot"><div class="userchip"><span class="avatar"></span><div><div class="u1">陳宇</div><div class="u2">leosimba9487@…</div></div></div><div class="ghost">通知鈴鐺 · 登出</div></div>
+        </aside>
+        <div class="rules-main">
+          <div class="page-title">空間使用守則</div>
+          <div class="card">
+            <div class="flow">
+              <div class="step"><span class="snum">1</span><span class="st">預約申請</span><span class="sd">最多提前 30 天，每組每週限 3 次、每次上限 4 小時。</span></div>
+              <div class="step"><span class="snum">2</span><span class="st">準時到達</span><span class="sd">逾時 30 分鐘未使用視為自動取消，開放他人入內。</span></div>
+              <div class="step"><span class="snum">3</span><span class="st">環境復原</span><span class="sd">離開前打掃恢復原狀，關好門窗、燈光、電源。</span></div>
+            </div>
+          </div>
+          <div class="rules-cols">
+            <div class="card">
+              <div class="card-h">使用守則</div>
+              <div class="rrow"><span class="rd" style="background:var(--r-shu)"></span><p>小導師室入內請脫鞋，外層玻璃門可自由開關，但<b>內層防火門任何情況下不能關閉</b>，違者立即取消本次及後續借用資格。</p></div>
+              <div class="rrow"><span class="rd" style="background:var(--r-orange)"></span><p>預約空間後若臨時無法到場，仍須負起維護空間之責任。</p></div>
+              <div class="rrow"><span class="rd" style="background:var(--r-meet)"></span><p>若有任何疑問或爭議，請聯絡現任齋長，齋長擁有調解與最終裁決權。</p></div>
+            </div>
+            <div class="card">
+              <div class="acc-title">其他補充事項<span style="color:var(--faint)">⌄</span></div>
+              <div class="acc-body">
+                <p>仁齋齋團隊保有對條例的修改與解釋權，並有權刪除任何預約與封禁帳號。</p>
+                <p>若齋長需取得後台管理權限，請聯繫管理員信箱。</p>
+                <p>系統或使用問題也歡迎回報管理員。</p>
+              </div>
+            </div>
+          </div>
+          <p class="disclaimer">借用或使用任何仁齋公共空間，視為您已閱讀、了解並同意本條例之全部內容。</p>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>結構決策</h3>
+      <div class="note-item"><span class="np">7</span><div><b>借用流程改成橫向三步</b><span> — 桌面寬度足夠，手機的垂直 timeline 拉成一排步驟，一眼看完整個流程。</span></div></div>
+      <div class="note-item"><span class="np">8</span><div><b>守則／補充雙欄並排</b><span> — 主守則（較長）放左較寬欄，補充事項放右窄欄，不再是手機那樣一路往下捲。內容不寬，整體置於側欄右方、限制閱讀寬度。</span></div></div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 4 ============ -->
+  <section class="screen">
+    <div class="screen-head"><span class="idx">04</span><h2>個人檔案</h2><span class="sub">由側欄底部的使用者進入 · 歷史用表格呈現</span></div>
+    <div class="board">
+      <span class="frame-tag">≈ 1440 × 900 · Desktop</span>
+      <div class="pin" style="top:430px;left:14px">9</div>
+      <div class="pin" style="top:330px;left:360px">10</div>
+      <div class="app">
+        <aside class="side">
+          <div class="logo"><b>t</b><b>z</b><b>a</b><b>i</b></div>
+          <nav class="nav"><a><span class="ic"></span>借用日曆</a><a><span class="ic"></span>空間守則</a></nav>
+          <div class="cta">＋ 申請借用</div>
+          <div class="side-foot"><div class="userchip on"><span class="avatar"></span><div><div class="u1">陳宇</div><div class="u2">leosimba9487@…</div></div></div><div class="ghost">通知鈴鐺 · 登出</div></div>
+        </aside>
+        <div class="prof-main">
+          <div class="page-title">個人檔案</div>
+          <div class="card prof-head">
+            <span class="pav">宇</span>
+            <div><div class="pn">陳宇</div><div class="pe">leosimba9487@gmail.com</div></div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><span class="sd" style="background:var(--accent)"></span><span class="sl">即將到來</span><span class="sc">0</span></div>
+            <div class="empty">目前沒有即將到來的借用 — 已核准、尚未開始的借用會出現在這。</div>
+          </div>
+          <div class="card">
+            <div class="sec-head"><span class="sd" style="background:var(--faint)"></span><span class="sl">歷史紀錄</span><span class="sc">101</span>
+              <div class="chips" style="margin-left:auto"><span class="chip on">全部空間</span><span class="chip"><i class="dot" style="background:var(--r-gong)"></i>貢丸室</span><span class="chip"><i class="dot" style="background:var(--r-tutor)"></i>小導師室</span></div>
+            </div>
+            <table class="ptable">
+              <thead><tr><th>空間</th><th>借用時間</th><th style="text-align:right">狀態</th></tr></thead>
+              <tbody>
+                <tr><td class="rm">貢丸室</td><td class="tm">04/09 16:22 – 17:25</td><td style="text-align:right"><span class="st-pill">已完成</span></td></tr>
+                <tr><td class="rm">貢丸室</td><td class="tm">04/08 18:51 – 19:35</td><td style="text-align:right"><span class="st-pill">已取消</span></td></tr>
+                <tr><td class="rm">小導師室</td><td class="tm">04/08 18:51 – 19:35</td><td style="text-align:right"><span class="st-pill">已取消</span></td></tr>
+                <tr><td class="rm">貢丸室</td><td class="tm">04/08 12:00 – 12:30</td><td style="text-align:right"><span class="st-pill">已取消</span></td></tr>
+                <tr><td class="rm">貢丸室</td><td class="tm">04/08 12:00 – 13:53</td><td style="text-align:right"><span class="st-pill">已取消</span></td></tr>
+                <tr><td class="rm">貢丸室</td><td class="tm">04/07 17:35 – 17:37</td><td style="text-align:right"><span class="st-pill">已取消</span></td></tr>
+              </tbody>
+            </table>
+            <div class="tbl-foot"><span>載入更多 · 共 101 筆</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="notes">
+      <h3>結構決策</h3>
+      <div class="note-item"><span class="np">9</span><div><b>入口在側欄底部的使用者卡</b><span> — 個人檔案不佔一個導覽項；點側欄下方「陳宇」即進入，符合桌面工具慣例。因照片牆／上傳功能已移除，「待完成」欄位一併拿掉，只留「即將到來」與「歷史紀錄」。</span></div></div>
+      <div class="note-item"><span class="np">10</span><div><b>歷史紀錄改成表格</b><span> — 101 筆用手機那種卡片一路捲很痛苦。表格（空間／時間／狀態）可掃描、可依空間篩選、可分頁或載入更多。已移除照片相關欄位。</span></div></div>
+    </div>
+  </section>
+
+  <footer class="footer-q">
+    <h3>接下來，看你要往哪走</h3>
+    <ul>
+      <li><b>四個畫面：</b>日曆首頁、申請借用、空間守則、個人檔案，架構若都認同，我就進 Figma 做高保真。</li>
+      <li><b>已排入之後做（不在這輪 Figma）：</b>月曆週檢視切換、右側面板拖曳建立預約（需先有週檢視）、房間快速篩選。這些已另存成 backlog 文檔推上 Git。</li>
+      <li><b>顏色與字級</b>都留到 Figma；這裡的灰階與示意色點不代表最終視覺。</li>
+    </ul>
+  </footer>
+</div>
+
+<script>
+  const ROOMS=['--r-shu','--r-orange','--r-meet','--r-tutor','--r-gong'];
+  function buildMonth(id,opts={}){
+    const el=document.getElementById(id); if(!el) return;
+    const counts=[3,2,4,4,4,3,3,3,4,4,2,3,4,2,4,4,3,4,3,4,4,3,3,4,3,3,4,4,4,3,4,2,3,4,4];
+    for(let i=0;i<35;i++){
+      const date=i+1, out=i>=31, sel=(!out&&date===29);
+      const c=document.createElement('div');
+      c.className='cell'+(out?' out':'')+(sel?' sel':'');
+      const n=document.createElement('div'); n.className='n'; n.textContent=out?(i-30):date; c.appendChild(n);
+      if(!opts.mini){
+        const d=document.createElement('div'); d.className='cdots';
+        const k=counts[i]; for(let j=0;j<k;j++){const s=document.createElement('i');s.style.background='var('+ROOMS[(i+j)%5]+')';d.appendChild(s);} c.appendChild(d);
+      }
+      el.appendChild(c);
+    }
+  }
+  buildMonth('month1');
+  buildMonth('month2',{mini:true});
+</script>
