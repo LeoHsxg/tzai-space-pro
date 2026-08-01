@@ -136,7 +136,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
               <SelectTrigger className="w-full rounded-[10px] border border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700 data-[size=default]:h-11">
                 <SelectValue placeholder="選擇空間" />
               </SelectTrigger>
-              <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0px_4px_24px_rgba(0,0,0,0.10)]">
+              <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
                 {roomSelectItems}
               </SelectContent>
             </Select>
@@ -199,7 +199,7 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
             <SelectTrigger className="ipt flex-1 border-0 pl-4">
               <SelectValue placeholder="借用地點" />
             </SelectTrigger>
-            <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0px_4px_24px_rgba(0,0,0,0.10)]">
+            <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
               {roomSelectItems}
             </SelectContent>
           </Select>

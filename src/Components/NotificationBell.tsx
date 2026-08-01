@@ -137,7 +137,7 @@ export function NotificationBell({ variant = "navbar" }: NotificationBellProps) 
               variant === "sidebar"
                 ? "absolute left-0 bottom-full mb-2 w-80"
                 : "fixed inset-x-3 top-16 sm:absolute sm:inset-x-auto sm:right-0 sm:top-full sm:mt-2 sm:w-80"
-            } bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.08)] border border-gray-100 z-50 overflow-hidden`}>
+            } bg-white rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.10)] border border-gray-100 z-50 overflow-hidden`}>
             {/* Panel header */}
             <div className="flex items-center justify-between px-4 py-3">
               <span className="noto text-sm font-bold text-gray-800">系統通知</span>
