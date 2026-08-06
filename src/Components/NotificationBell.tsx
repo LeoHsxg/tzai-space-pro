@@ -122,11 +122,6 @@ export function NotificationBell({ variant = "navbar" }: NotificationBellProps) 
             aria-label="通知"
             className="relative flex items-center justify-center w-8 h-8 rounded-full hover:bg-black/5 transition-colors translate-y-0.5">
             <img src="/img/notifications.svg" className="w-7 h-7" alt="" />
-            {unreadCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 min-w-[14px] h-[14px] rounded-full bg-red-500 text-white text-[9px] font-bold flex items-center justify-center px-0.5">
-                {unreadCount > 9 ? "9+" : unreadCount}
-              </span>
-            )}
           </button>
         )}
 

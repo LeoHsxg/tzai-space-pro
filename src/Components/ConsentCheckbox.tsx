@@ -21,9 +21,12 @@ const ConsentCheckbox: React.FC<ConsentCheckboxProps> = ({ checked, onChange }) 
         )}
       </label>
       <span className="text-black/60 text-xs font-normal font-inter">
-        本人已詳閱、瞭解並願意遵守
-        <Link href="/rule">
-          <span className="underline">空間借用條例</span>
+        {/* 文字本身也是 label，點哪裡都能勾；條例連結另開分頁，不會把填到一半的表單弄丟 */}
+        <label htmlFor="consent" className="cursor-pointer">
+          本人已詳閱、瞭解並願意遵守
+        </label>
+        <Link href="/rule" target="_blank" rel="noopener noreferrer" className="underline">
+          空間借用條例
         </Link>
       </span>
     </div>
