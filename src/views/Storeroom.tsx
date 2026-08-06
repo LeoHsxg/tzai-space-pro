@@ -190,8 +190,8 @@ const Storeroom = () => {
       ">
       {/* ── 午餐晚餐亂數器 ──────────────────────────────── */}
       <section className="bg-white rounded-2xl overflow-hidden">
-        <div className="px-5 pt-4 pb-3 flex items-center justify-between">
-          <p className="font-bold text-base text-gray-700">午餐晚餐亂數器</p>
+        <div className="px-5 pt-3.5 pb-3 flex items-center justify-between">
+          <p className="font-bold text-base text-gray-600">午餐晚餐亂數器</p>
           <button
             onClick={() => setFiltersOpen(v => !v)}
             aria-expanded={filtersOpen}
@@ -266,8 +266,8 @@ const Storeroom = () => {
 
       {/* ── 意見箱 ─────────────────────────────────────── */}
       <section className="bg-white rounded-2xl overflow-hidden">
-        <div className="px-5 pt-4 pb-3">
-          <p className="font-bold text-base text-gray-700">意見箱</p>
+        <div className="px-5 pt-3.5 pb-3">
+          <p className="font-bold text-base text-gray-600">意見箱</p>
         </div>
         <div className="h-px bg-gray-100" />
         <div className="px-5 pt-3.5 pb-5">
@@ -314,7 +314,7 @@ const Storeroom = () => {
                       {/* value 恆為受控（空值用 null），undefined 會讓元件在受控/非受控間切換 */}
                       <Select value={jia || null} onValueChange={value => setJia((value as string | null) ?? "")}>
                         {/* h-8 帶 data 選擇器，要用 data-[size=default] 才蓋得掉（同 ApplyForm desktop 的做法）*/}
-                        <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:text-gray-400 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
+                        <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:text-black/25 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
                           <SelectValue placeholder="幾家" />
                         </SelectTrigger>
                         <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 max-h-72 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
@@ -333,7 +333,7 @@ const Storeroom = () => {
                         onChange={e => setName(e.target.value)}
                         placeholder="你的名字"
                         maxLength={30}
-                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                       />
                     </label>
                   </div>
@@ -350,7 +350,7 @@ const Storeroom = () => {
                     }}
                     placeholder="想說的話⋯"
                     rows={4}
-                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                   />
 
                   <div className="mt-1 flex items-center justify-between min-h-[16px]">
