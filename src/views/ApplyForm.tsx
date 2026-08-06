@@ -131,7 +131,8 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
           </div>
           <div>
             <span className={label}>借用地點</span>
-            <Select value={location || undefined} onValueChange={value => setLocation(value as string)}>
+            {/* value 恆為受控（空值用 null），undefined 會讓元件在受控/非受控間切換而觸發 React 警告 */}
+            <Select value={location || null} onValueChange={value => setLocation((value as string | null) ?? "")}>
               {/* 要用 data-[size=default] 覆寫，基礎樣式的 h-8 帶 data 選擇器，純 h-11 蓋不掉 */}
               <SelectTrigger className="w-full rounded-[10px] border border-[#D9DEE4] bg-white px-3.5 text-sm font-medium text-gray-700 data-[size=default]:h-11">
                 <SelectValue placeholder="選擇空間" />

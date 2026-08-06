@@ -311,12 +311,13 @@ const Storeroom = () => {
                   <div className="mt-4 grid grid-cols-[8rem_1fr] gap-3">
                     <label className="flex flex-col gap-1.5">
                       <span className="text-xs text-gray-400">載物</span>
-                      <Select value={jia || undefined} onValueChange={value => setJia(value as string)}>
+                      {/* value 恆為受控（空值用 null），undefined 會讓元件在受控/非受控間切換 */}
+                      <Select value={jia || null} onValueChange={value => setJia((value as string | null) ?? "")}>
                         {/* h-8 帶 data 選擇器，要用 data-[size=default] 才蓋得掉（同 ApplyForm desktop 的做法）*/}
-                        <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:font-normal data-[placeholder]:text-gray-400 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
+                        <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:text-gray-400 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
                           <SelectValue placeholder="幾家" />
                         </SelectTrigger>
-                        <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
+                        <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 max-h-72 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
                           {JIA_OPTIONS.map(j => (
                             <SelectItem key={j} className="text-base pt-2.5 pb-3.5 pl-4" value={j}>
                               {j}
@@ -332,7 +333,7 @@ const Storeroom = () => {
                         onChange={e => setName(e.target.value)}
                         placeholder="你的名字"
                         maxLength={30}
-                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:font-normal placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                       />
                     </label>
                   </div>
@@ -349,7 +350,7 @@ const Storeroom = () => {
                     }}
                     placeholder="想說的話⋯"
                     rows={4}
-                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:font-normal placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                   />
 
                   <div className="mt-1 flex items-center justify-between min-h-[16px]">
