@@ -59,9 +59,29 @@ export default {
         spin: {
           to: { transform: "rotate(360deg)" },
         },
+        // 雜物間：篩選守門的輕抖
+        shake: {
+          "0%, 100%": { transform: "translateX(0)" },
+          "25%": { transform: "translateX(-4px)" },
+          "75%": { transform: "translateX(4px)" },
+        },
+        // 雜物間：結果槽落定的彈跳
+        pop: {
+          "0%": { transform: "scale(0.9)" },
+          "55%": { transform: "scale(1.06)" },
+          "100%": { transform: "scale(1)" },
+        },
+        // 雜物間：送出成功的淡入上浮
+        fadeUp: {
+          from: { opacity: "0", transform: "translateY(6px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
       },
       animation: {
         spin: "spin 1s linear infinite",
+        shake: "shake 0.3s ease-in-out",
+        pop: "pop 0.35s cubic-bezier(0.34,1.56,0.64,1)",
+        fadeUp: "fadeUp 0.3s ease-out both",
       },
     },
   },

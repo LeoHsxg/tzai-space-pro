@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "firebase/auth";
-import { CalendarDays, FileText, LogOut, Plus } from "lucide-react";
+import { Boxes, CalendarDays, FileText, LogOut, Plus } from "lucide-react";
 import { auth, signInWithGoogle } from "@/firebase/firebase";
 import { useAuth } from "@/hooks/useAuth";
 import { useApplyDialog } from "@/context/ApplyDialogContext";
@@ -14,6 +14,7 @@ import { avatarChar } from "./avatar";
 const NAV_ITEMS = [
   { href: "/", label: "借用日曆", Icon: CalendarDays },
   { href: "/rule", label: "空間守則", Icon: FileText },
+  { href: "/storeroom", label: "雜物間", Icon: Boxes },
 ];
 
 export function Sidebar() {

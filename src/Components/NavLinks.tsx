@@ -3,19 +3,19 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { toast } from "sonner";
 import "../styles/Footer.css";
 
 const NavLinks = () => {
   const currentPath = usePathname();
 
-  const handleClick = () => toast.info("此功能還在施工啦啦啦 🚧");
-
   return (
     <div className="w-full flex">
       <div className="md:hidden flex w-full h-16 px-[8%] py-3 justify-between z-[100] bg-white shadow">
         <div className="w-full flex justify-between items-center gap-[30px]">
-          <img src="/img/info_h.svg" alt="Info" className="icon_h" onClick={handleClick} />
+          {/* 雜物間 icon 暫用 info，之後由使用者自訂 */}
+          <Link href="/storeroom">
+            <img src={currentPath === "/storeroom" ? "/img/info_s.svg" : "/img/info_h.svg"} alt="Storeroom" className={currentPath === "/storeroom" ? "icon_s" : "icon_h"} />
+          </Link>
           <Link href="/">
             <img src={currentPath === "/" ? "/img/add_circle_s.svg" : "/img/add_circle_h.svg"} alt="Apply" className={currentPath === "/" ? "icon_s" : "icon_h"} />
           </Link>
@@ -37,6 +37,9 @@ const NavLinks = () => {
           </Link>
           <Link href="/rule">
             <div className="noto text-sm font-medium text-gray-600">借用規章</div>
+          </Link>
+          <Link href="/storeroom">
+            <div className="noto text-sm font-medium text-gray-600">雜物間</div>
           </Link>
           <Link href="/profile">
             <div className="noto text-sm font-medium text-gray-600">個人檔案</div>
