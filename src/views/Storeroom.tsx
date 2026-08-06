@@ -241,7 +241,8 @@ const Storeroom = () => {
             {DIMENSIONS.map(d => {
               const s = slots[d.key];
               return (
-                <div key={d.key} className="flex-1 min-h-[92px] rounded-xl bg-gray-100 flex flex-col items-center justify-center gap-1">
+                // pb-1：盒子仍是 92px，多 4px 下內距讓 justify-center 的內容往上帶 2px（CJK 視覺補償）
+                <div key={d.key} className="flex-1 min-h-[92px] rounded-xl bg-gray-100 flex flex-col items-center justify-center gap-1 pb-1">
                   <span className="text-[11px] text-gray-400">{d.label}</span>
                   {s.settled ? (
                     // key 讓落定時重新掛載，pop 動畫每次都會重跑
