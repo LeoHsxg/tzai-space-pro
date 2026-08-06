@@ -15,6 +15,15 @@ import "../styles/ApplyForm.css";
 
 const ROOM_OPTIONS = ["小導師室", "書房", "橘廳", "會議室", "貢丸室"];
 
+// 手機版表單活在 Calendar 的底部抽屜（z-[9999]，portal 到 body）裡，MUI 浮層同樣 portal 到 body
+// 但預設只有 1300，會整個被抽屜蓋住、點擊還會被 z-[9998] 的遮罩吃掉。
+// popper＝指標裝置走的桌面型選擇器，dialog＝觸控裝置走的行動型選擇器，兩種都要拉高。
+const MOBILE_PICKER_SLOT_PROPS = {
+  textField: { sx: { "& .MuiPickersOutlinedInput-notchedOutline": { border: "none" } } },
+  popper: { sx: { zIndex: 10000 } },
+  dialog: { sx: { zIndex: 10000 } },
+};
+
 interface ApplyFormProps {
   /** desktop＝桌面 Dialog 雙欄版；預設 mobile 維持既有版面 */
   variant?: "mobile" | "desktop";
@@ -207,11 +216,11 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
         </div>
         <div className="w-full">
           <DateTimePicker className="ipt w-full" label="開始日期" value={startDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setStartDate(newValue)}
-            slotProps={{ textField: { sx: { "& .MuiPickersOutlinedInput-notchedOutline": { border: "none" } } } }} />
+            slotProps={MOBILE_PICKER_SLOT_PROPS} />
         </div>
         <div className="flex justify-between w-full">
           <DateTimePicker className="ipt w-full" label="結束日期" value={endDate} views={["month", "day", "hours", "minutes"]} onChange={newValue => setEndDate(newValue)}
-            slotProps={{ textField: { sx: { "& .MuiPickersOutlinedInput-notchedOutline": { border: "none" } } } }} />
+            slotProps={MOBILE_PICKER_SLOT_PROPS} />
         </div>
         <div className="w-full">
           <Input className="ipt" placeholder="活動簡述（請認真寫！）" onChange={e => setDescription(e.target.value)} />

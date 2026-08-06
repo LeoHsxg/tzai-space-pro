@@ -72,13 +72,14 @@ function SelectContent({
   >) {
   return (
     <SelectPrimitive.Portal>
+      {/* z 要高於手機版申請抽屜的 z-[9999]（Calendar.tsx），否則清單 portal 到 body 後會被抽屜蓋住且點不到 */}
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}
         align={align}
         alignOffset={alignOffset}
         alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate z-50"
+        className="isolate z-[10000]"
       >
         <SelectPrimitive.Popup
           data-slot="select-content"
