@@ -150,7 +150,7 @@ const Storeroom = () => {
       return;
     }
     if (!category) {
-      setHint("順手選個類型吧");
+      setHint("幫我選個類型啦");
       return;
     }
     setSending(true);
@@ -163,7 +163,7 @@ const Storeroom = () => {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error((data as { message?: string }).message || "送出失敗，再試一次");
+        throw new Error((data as { message?: string }).message || "送出失敗，請再試一次");
       }
       setSent(true);
       setHint("");
@@ -273,8 +273,8 @@ const Storeroom = () => {
         <div className="px-5 pt-3.5 pb-5">
           {sent ? (
             <div className="py-8 flex flex-col items-center gap-1.5 text-center animate-fadeUp motion-reduce:animate-none">
-              <p className="text-base font-bold text-gray-700">收到了，謝謝你花時間 🙌</p>
-              <p className="text-sm text-gray-500">我會看到的</p>
+              <p className="text-base font-bold text-gray-700">感謝你的填寫 🙌</p>
+              <p className="text-sm text-gray-500">魯啦啦魯啦啦</p>
               <button onClick={writeAnother} className="mt-3 text-xs text-gray-400 hover:text-gray-500 transition-colors">
                 再寫一則
               </button>
@@ -315,7 +315,8 @@ const Storeroom = () => {
                       <Select value={jia || null} onValueChange={value => setJia((value as string | null) ?? "")}>
                         {/* h-8 帶 data 選擇器，要用 data-[size=default] 才蓋得掉（同 ApplyForm desktop 的做法）*/}
                         <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:text-black/25 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
-                          <SelectValue placeholder="幾家" />
+                          {/* 只推文字不推箭頭：CJK 在固定高度容器裡視覺偏低，箭頭本身幾何置中才對 */}
+                          <SelectValue className="-translate-y-px" placeholder="幾家" />
                         </SelectTrigger>
                         <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 max-h-72 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
                           {JIA_OPTIONS.map(j => (
@@ -328,17 +329,19 @@ const Storeroom = () => {
                     </label>
                     <label className="flex flex-col gap-1.5">
                       <span className="text-xs text-gray-400">姓名</span>
+                      {/* pb-0.5：高度由 h-12 固定，多 2px 下內距把文字往上帶 1px（同 ApplyForm.css 的 CJK descent 補償）*/}
                       <input
                         value={name}
                         onChange={e => setName(e.target.value)}
                         placeholder="你的名字"
                         maxLength={30}
-                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                        className="h-12 w-full rounded-xl bg-gray-100 px-4 pb-0.5 text-sm font-semibold text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                       />
                     </label>
                   </div>
 
                   <p className="mt-4 text-xs text-gray-400">想說的話</p>
+                  {/* pt/pb 相加維持 24px，autoGrow 量到的 scrollHeight 不受影響 */}
                   <textarea
                     ref={messageRef}
                     value={message}
@@ -350,7 +353,7 @@ const Storeroom = () => {
                     }}
                     placeholder="想說的話⋯"
                     rows={4}
-                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 pt-[11px] pb-[13px] text-sm font-semibold leading-relaxed text-gray-700 placeholder:text-black/25 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                   />
 
                   <div className="mt-1 flex items-center justify-between min-h-[16px]">
