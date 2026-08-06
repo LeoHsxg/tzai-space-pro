@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 載物空間借用系統——大學宿舍（仁齋）空間預約平台。**這是 production，有真實使用者與真實資料。**
-技術棧：Next.js 15 App Router + Firebase（Auth / Firestore / App Hosting / Functions）+ TypeScript + Tailwind + shadcn/ui + Vitest。
+技術棧：Next.js 15 App Router + Firebase（Auth / Firestore / App Hosting）+ TypeScript + Tailwind + shadcn/ui + Vitest。
 
 ## 路由表：何時讀哪份檔（用到才讀，不要預載）
 
@@ -24,7 +24,7 @@ npm run lint
 npm test             # Vitest 單元測試
 npm run test:rules   # Firestore rules 測試；需本機 Java 21+，會自動起 emulator
 npx tsc --noEmit     # typecheck（CI 有跑，本地也要跑）
-firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Database:9000
+firebase emulators:start   # Firestore:8080, Hosting:5000, Database:9000（見 firebase.json）
 ```
 
 程式碼變更宣告完成前的最低驗證（用 Bash tool 跑）：
@@ -33,21 +33,20 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 ## 高風險操作：先問使用者（判準見 judgment.md R3）
 
 - `firebase deploy`（任何形式）——直接打 production
-- 修改 `firestore.rules`（尤其放寬權限）、觸發 `/api/migrate` 資料遷移
+- 修改 `firestore.rules`（尤其放寬權限）
 - `git push`、修改 CI workflow、新增執行期依賴
 
 ## 架構速覽
 
 - 頁面：`src/app/*/page.tsx` → 主要內容在 `src/views/*.tsx`；共用元件在 `src/Components/`
 - **寫入一律走 API Route + Admin SDK**（`src/firebase/admin.ts`）；client 只讀。
-  API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/feedback`、`/api/migrate`
+  API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/feedback`
 - 權限的唯一事實來源是 `firestore.rules`。Collections：`bookings`（主資料）、
   `regulations/current`、`announcements`、`admins/{email}`（doc 存在＝管理員，`src/lib/isAdmin.ts`）、
   `feedback`（意見箱，client 禁讀寫，管理員於 console 讀；見 `docs/storeroom-plan.md`）
 - Booking 型別與五個房間名單：`src/types/booking.ts`；申請驗證規則：`src/func/applyFunc.ts`
   （以程式碼為準，本檔不複製內容）
 - `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −4 ～ +1 個月」的 active bookings
-- `functions/`（Node 22）是遺留的 Google Calendar 整合；`firebase.json` 的 `/api/add|getAll|get|delete` rewrites 指向它
 - 路徑別名 `@/` → `src/`；`cn()` 在 `src/lib/utils.ts`；互動元件要標 `'use client'`
 
 ## 環境注意（Windows，血淚教訓見 diagnosis.md）
@@ -56,7 +55,7 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
   （PowerShell 5.1 預設 UTF-16，會毀掉中文）。例外：用 Bash tool 把指令輸出導到暫存 log
   （`npm run build > /tmp/build.log 2>&1`）再擷取重點，是建議做法
 - POSIX 語法（`&&`、`head`、`grep`）只在 Bash tool 有效；PowerShell 5.1 **沒有** `&&`
-- 不要 Read/Grep：`dist/`、`.next/`、`node_modules/`、`functions/node_modules/`、`.git/`
+- 不要 Read/Grep：`dist/`、`.next/`、`node_modules/`、`.git/`
 
 ## 環境變數（驗證於 2026-08-06）
 
