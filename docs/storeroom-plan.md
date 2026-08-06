@@ -77,5 +77,17 @@
 - [x] 實作（commit 5ee5b15 頁面與導覽、543ddf5 API）
 - [x] 驗證與 verifier 驗收（2026-08-06，lint/tsc/test 全過；verifier 10/10 PASS，
       401 分支 curl 實測，400 分支與成功寫入為避免污染 production 僅程式碼審閱）
-- [ ] 使用者本機 `npm run dev` 目視確認（拉霸節奏、三色淡底、shake 手感），視感覺微調
-- [ ] 手機導覽 icon 由使用者自訂替換（現為 info 佔位）
+- [x] 使用者本機目視確認與多輪微調（2026-08-06）：結果槽改回灰底、欄位順序改為
+      類型在前、載物下拉改用 `ui/select`、textarea 隨內容長高、placeholder 統一
+      `black/25`、CJK 視覺置中補償（欄位 1px、結果槽 2px）
+- [ ] 手機導覽 icon 由使用者自訂替換（現為 `info_h/info_s.svg` 佔位；
+      建議 Material Symbols 的 `home_storage`，outline 存 `storeroom_h.svg`、
+      filled 存 `storeroom_s.svg`，改 `NavLinks.tsx` 的路徑即可）
+
+## 順帶修掉的既有 bug（同一 PR）
+
+手機版申請抽屜（`Calendar.tsx` 的 `z-[9999]`／遮罩 `z-[9998]`，portal 到 body）
+會蓋住同樣 portal 到 body 的彈出層：`ui/select` 定位層原為 `z-50`、MUI 浮層預設 1300，
+導致日期與地點選單被蓋住且點擊被遮罩吃掉。兩者拉到 `z-10000`；MUI 同時指定
+`popper`（指標裝置）與 `dialog`（觸控裝置）兩種 slot。桌面版不受影響——它的 dialog
+只有 `z-50`，且早已用 `popper.container` 把浮層塞進 dialog 內部。
