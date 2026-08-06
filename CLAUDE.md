@@ -58,12 +58,13 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 - POSIX 語法（`&&`、`head`、`grep`）只在 Bash tool 有效；PowerShell 5.1 **沒有** `&&`
 - 不要 Read/Grep：`dist/`、`.next/`、`node_modules/`、`functions/node_modules/`、`.git/`
 
-## 環境變數（驗證於 2026-07-04）
+## 環境變數（驗證於 2026-08-06）
 
 - Client：`NEXT_PUBLIC_API_KEY`（`src/firebase/firebase.ts`）
 - 本地跑 API Route 需要：`FIREBASE_ADMIN_PROJECT_ID` / `FIREBASE_ADMIN_CLIENT_EMAIL` / `FIREBASE_ADMIN_PRIVATE_KEY`
   （`src/firebase/admin.ts`；App Hosting 上改用 ADC，不需設定）
-- 目前本機**沒有** `.env` / `.env.local`——需要時先問使用者拿 key，不要自己造假值（CI 的 placeholder 只夠過 build）
+- 本機已有 `.env.local`（含 Admin SDK 憑證，gitignored）——`npm run dev` 可完整跑 API Route；
+  **永不**把其內容貼進對話或 commit；缺 key 時問使用者拿，不要自己造假值
 
 ## 已知狀況（驗證於 2026-07-04）
 

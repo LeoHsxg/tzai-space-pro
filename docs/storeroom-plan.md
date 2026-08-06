@@ -73,5 +73,8 @@
 ## 狀態
 
 - [x] 設計方向拍板（2026-08-06）
-- [ ] 實作
-- [ ] 驗證與 verifier 驗收
+- [x] 實作（commit 5ee5b15 頁面與導覽、543ddf5 API）
+- [x] 驗證與 verifier 驗收（2026-08-06，lint/tsc/test 全過；verifier 10/10 PASS，
+      401 分支 curl 實測，400 分支與成功寫入為避免污染 production 僅程式碼審閱）
+- [ ] 使用者本機 `npm run dev` 目視確認（拉霸節奏、三色淡底、shake 手感），視感覺微調
+- [ ] 手機導覽 icon 由使用者自訂替換（現為 info 佔位）
