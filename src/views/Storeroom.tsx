@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/Components/ui/select";
 import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
 
@@ -131,6 +132,14 @@ const Storeroom = () => {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  // 想說的話隨內容自動長高（在欄位內捲動太反直覺）
+  const autoGrow = () => {
+    const el = messageRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight}px`;
+  };
 
   const submit = async () => {
     if (sending || !user) return;
@@ -281,38 +290,6 @@ const Storeroom = () => {
                 <div className="mt-4 rounded-xl bg-gray-100 py-6 text-center text-sm text-gray-400">請先登入，才能送出意見</div>
               ) : (
                 <>
-                  <div className="mt-4 grid grid-cols-[8rem_1fr] gap-3">
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-xs text-gray-400">載物</span>
-                      <span className="relative">
-                        <select
-                          value={jia}
-                          onChange={e => setJia(e.target.value)}
-                          className={`w-full appearance-none rounded-xl bg-gray-100 py-3.5 pl-4 pr-8 text-sm outline-none focus:ring-2 focus:ring-[#5991C4]/25 ${
-                            jia ? "text-gray-700" : "text-gray-400"
-                          }`}>
-                          <option value="">幾家</option>
-                          {JIA_OPTIONS.map(j => (
-                            <option key={j} value={j}>
-                              {j}
-                            </option>
-                          ))}
-                        </select>
-                        <ChevronDown size={14} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                      </span>
-                    </label>
-                    <label className="flex flex-col gap-1.5">
-                      <span className="text-xs text-gray-400">姓名</span>
-                      <input
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        placeholder="你的名字"
-                        maxLength={30}
-                        className="w-full rounded-xl bg-gray-100 px-4 py-3.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
-                      />
-                    </label>
-                  </div>
-
                   <p className="mt-4 text-xs text-gray-400">類型</p>
                   <div className="mt-1.5 flex flex-wrap gap-2">
                     {CATEGORIES.map(c => (
@@ -331,6 +308,35 @@ const Storeroom = () => {
                     ))}
                   </div>
 
+                  <div className="mt-4 grid grid-cols-[8rem_1fr] gap-3">
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-xs text-gray-400">載物</span>
+                      <Select value={jia || undefined} onValueChange={value => setJia(value as string)}>
+                        {/* h-8 帶 data 選擇器，要用 data-[size=default] 才蓋得掉（同 ApplyForm desktop 的做法）*/}
+                        <SelectTrigger className="w-full rounded-xl border-0 bg-gray-100 px-4 text-sm font-semibold text-gray-700 data-[size=default]:h-12 data-[placeholder]:font-normal data-[placeholder]:text-gray-400 focus-visible:ring-2 focus-visible:ring-[#5991C4]/25">
+                          <SelectValue placeholder="幾家" />
+                        </SelectTrigger>
+                        <SelectContent align="start" alignItemWithTrigger={true} className="ring-0 outline-none py-2 shadow-[0_4px_24px_rgba(0,0,0,0.10)]">
+                          {JIA_OPTIONS.map(j => (
+                            <SelectItem key={j} className="text-base pt-2.5 pb-3.5 pl-4" value={j}>
+                              {j}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </label>
+                    <label className="flex flex-col gap-1.5">
+                      <span className="text-xs text-gray-400">姓名</span>
+                      <input
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        placeholder="你的名字"
+                        maxLength={30}
+                        className="h-12 w-full rounded-xl bg-gray-100 px-4 text-sm font-semibold text-gray-700 placeholder:font-normal placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                      />
+                    </label>
+                  </div>
+
                   <p className="mt-4 text-xs text-gray-400">想說的話</p>
                   <textarea
                     ref={messageRef}
@@ -338,11 +344,12 @@ const Storeroom = () => {
                     maxLength={MAX_MESSAGE_LENGTH}
                     onChange={e => {
                       setMessage(e.target.value);
+                      autoGrow();
                       if (hint) setHint("");
                     }}
                     placeholder="想說的話⋯"
                     rows={4}
-                    className="mt-1.5 w-full resize-none rounded-xl bg-gray-100 px-4 py-3 text-sm leading-relaxed text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                    className="mt-1.5 w-full resize-none overflow-hidden rounded-xl bg-gray-100 px-4 py-3 text-sm font-semibold leading-relaxed text-gray-700 placeholder:font-normal placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                   />
 
                   <div className="mt-1 flex items-center justify-between min-h-[16px]">
