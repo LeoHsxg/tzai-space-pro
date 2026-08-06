@@ -1,15 +1,15 @@
 "use client"
 
-import { useTheme } from "next-themes"
 import { Toaster as Sonner, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme()
-
+  // 這裡原本是 shadcn 樣板的 useTheme()，預設值 "system" 會讓 toast 跟著
+  // 手機的系統深色模式走，在深色手機上整塊變成深灰。專案目前只做淺色
+  // （見 .impeccable.md「深色模式：暫緩」），所以固定為 light。
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="light"
       className="toaster group"
       icons={{
         success: (

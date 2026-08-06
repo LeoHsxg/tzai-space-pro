@@ -26,7 +26,8 @@ export function AppShell({ children, announcement }: AppShellProps) {
       <UIProvider>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <ApplyDialogProvider>
-            <Toaster position="top-center" richColors />
+            {/* 不用 richColors——四種類型的配色全部手工定義在 App.css */}
+            <Toaster position="top-center" />
             <div className="bg-[#F3F3F3] gap-2 min-h-screen flex flex-col relative">
               <GlobalUI />
               <AnnouncementModal announcement={announcement} />
