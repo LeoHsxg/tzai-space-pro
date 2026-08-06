@@ -7,15 +7,14 @@ import { useAuth } from "../hooks/useAuth";
 import { useUI } from "../context/UIContext";
 
 /* ══ 午餐晚餐亂數器 ═══════════════════════════════════════════
-   三維度順序固定；均勻亂數、永不加權、不檢查組合合理性。
-   三色＝三維度（風格藍／蛋白橘／主食黃）：淡色底只在落定時亮起。 */
+   三維度順序固定；均勻亂數、永不加權、不檢查組合合理性。 */
 
 type DimKey = "style" | "protein" | "staple";
 
-const DIMENSIONS: { key: DimKey; label: string; tint: string; options: string[] }[] = [
-  { key: "style", label: "風格", tint: "#EEF4FB", options: ["台式", "日式", "韓式", "美式"] },
-  { key: "protein", label: "蛋白", tint: "#F8EEE6", options: ["牛", "豬", "雞", "羊鵝鴨", "素食"] },
-  { key: "staple", label: "主食", tint: "#FBF8E9", options: ["麵", "飯", "速食", "小吃"] },
+const DIMENSIONS: { key: DimKey; label: string; options: string[] }[] = [
+  { key: "style", label: "風格", options: ["台式", "日式", "韓式", "美式"] },
+  { key: "protein", label: "蛋白", options: ["牛", "豬", "雞", "羊鵝鴨", "素食"] },
+  { key: "staple", label: "主食", options: ["麵", "飯", "速食", "小吃"] },
 ];
 
 const ROLL_TICK_MS = 55; // 跑動換字間隔
@@ -227,16 +226,13 @@ const Storeroom = () => {
           </div>
         </div>
 
-        {/* 三格結果槽：顏色是抽出來的 */}
+        {/* 三格結果槽（安靜灰底，動的只有文字）*/}
         <div className="px-5 pt-4 pb-5">
           <div className="flex gap-2.5">
             {DIMENSIONS.map(d => {
               const s = slots[d.key];
               return (
-                <div
-                  key={d.key}
-                  className="flex-1 min-h-[92px] rounded-xl flex flex-col items-center justify-center gap-1 transition-colors duration-500 motion-reduce:transition-none"
-                  style={{ backgroundColor: s.settled ? d.tint : "#F3F4F6" }}>
+                <div key={d.key} className="flex-1 min-h-[92px] rounded-xl bg-gray-100 flex flex-col items-center justify-center gap-1">
                   <span className="text-[11px] text-gray-400">{d.label}</span>
                   {s.settled ? (
                     // key 讓落定時重新掛載，pop 動畫每次都會重跑
@@ -287,15 +283,15 @@ const Storeroom = () => {
                 <>
                   <div className="mt-4 grid grid-cols-[8rem_1fr] gap-3">
                     <label className="flex flex-col gap-1.5">
-                      <span className="text-xs text-gray-400">載物幾家</span>
+                      <span className="text-xs text-gray-400">載物</span>
                       <span className="relative">
                         <select
                           value={jia}
                           onChange={e => setJia(e.target.value)}
-                          className={`w-full appearance-none rounded-xl bg-gray-100 py-2.5 pl-4 pr-8 text-sm outline-none focus:ring-2 focus:ring-[#5991C4]/25 ${
+                          className={`w-full appearance-none rounded-xl bg-gray-100 py-3.5 pl-4 pr-8 text-sm outline-none focus:ring-2 focus:ring-[#5991C4]/25 ${
                             jia ? "text-gray-700" : "text-gray-400"
                           }`}>
-                          <option value="">未填</option>
+                          <option value="">幾家</option>
                           {JIA_OPTIONS.map(j => (
                             <option key={j} value={j}>
                               {j}
@@ -312,7 +308,7 @@ const Storeroom = () => {
                         onChange={e => setName(e.target.value)}
                         placeholder="你的名字"
                         maxLength={30}
-                        className="w-full rounded-xl bg-gray-100 px-4 py-2.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
+                        className="w-full rounded-xl bg-gray-100 px-4 py-3.5 text-sm text-gray-700 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#5991C4]/25"
                       />
                     </label>
                   </div>
