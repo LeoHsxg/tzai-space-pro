@@ -40,9 +40,10 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 
 - 頁面：`src/app/*/page.tsx` → 主要內容在 `src/views/*.tsx`；共用元件在 `src/Components/`
 - **寫入一律走 API Route + Admin SDK**（`src/firebase/admin.ts`）；client 只讀。
-  API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/migrate`
+  API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/feedback`、`/api/migrate`
 - 權限的唯一事實來源是 `firestore.rules`。Collections：`bookings`（主資料）、
-  `regulations/current`、`announcements`、`admins/{email}`（doc 存在＝管理員，`src/lib/isAdmin.ts`）
+  `regulations/current`、`announcements`、`admins/{email}`（doc 存在＝管理員，`src/lib/isAdmin.ts`）、
+  `feedback`（意見箱，client 禁讀寫，管理員於 console 讀；見 `docs/storeroom-plan.md`）
 - Booking 型別與五個房間名單：`src/types/booking.ts`；申請驗證規則：`src/func/applyFunc.ts`
   （以程式碼為準，本檔不複製內容）
 - `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −4 ～ +1 個月」的 active bookings
@@ -57,12 +58,13 @@ firebase emulators:start   # Functions:5001, Firestore:8080, Hosting:5000, Datab
 - POSIX 語法（`&&`、`head`、`grep`）只在 Bash tool 有效；PowerShell 5.1 **沒有** `&&`
 - 不要 Read/Grep：`dist/`、`.next/`、`node_modules/`、`functions/node_modules/`、`.git/`
 
-## 環境變數（驗證於 2026-07-04）
+## 環境變數（驗證於 2026-08-06）
 
 - Client：`NEXT_PUBLIC_API_KEY`（`src/firebase/firebase.ts`）
 - 本地跑 API Route 需要：`FIREBASE_ADMIN_PROJECT_ID` / `FIREBASE_ADMIN_CLIENT_EMAIL` / `FIREBASE_ADMIN_PRIVATE_KEY`
   （`src/firebase/admin.ts`；App Hosting 上改用 ADC，不需設定）
-- 目前本機**沒有** `.env` / `.env.local`——需要時先問使用者拿 key，不要自己造假值（CI 的 placeholder 只夠過 build）
+- 本機已有 `.env.local`（含 Admin SDK 憑證，gitignored）——`npm run dev` 可完整跑 API Route；
+  **永不**把其內容貼進對話或 commit；缺 key 時問使用者拿，不要自己造假值
 
 ## 已知狀況（驗證於 2026-07-04）
 
