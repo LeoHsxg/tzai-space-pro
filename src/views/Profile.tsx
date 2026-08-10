@@ -6,6 +6,7 @@ import { db } from "../firebase/firebase";
 import { useAuth } from "../hooks/useAuth";
 import { Booking } from "../types/booking";
 import { getBookingSection } from "../func/bookingUtils";
+import MyDialog from "../Components/MyDialog";
 import dayjs from "dayjs";
 import { ProfileHeader } from "@/Components/desktop/ProfileHeader";
 import { UpcomingSection } from "@/Components/desktop/UpcomingSection";
@@ -20,6 +21,8 @@ const SECTION_COLORS = {
 const Profile: React.FC = () => {
   const user = useAuth();
   const [bookings, setBookings] = useState<Booking[]>([]);
+  // 點歷史紀錄任一筆開啟詳情，複用日曆頁那顆 MyDialog
+  const [detail, setDetail] = useState<Booking | null>(null);
 
   useEffect(() => {
     if (!user?.email) return;
@@ -119,7 +122,11 @@ const Profile: React.FC = () => {
             ) : (
               <div className="flex flex-col gap-2">
                 {history.map(b => (
-                  <div key={b.id} className="bg-white rounded-xl p-4 border border-gray-100">
+                  <button
+                    key={b.id}
+                    type="button"
+                    onClick={() => setDetail(b)}
+                    className="w-full text-left bg-white rounded-xl p-4 border border-gray-100 transition-colors active:bg-gray-50">
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="noto font-semibold text-sm text-black/60">{b.room}</p>
@@ -127,7 +134,7 @@ const Profile: React.FC = () => {
                       </div>
                       {b.status === "cancelled" && <span className="text-xs text-black/30 noto">已取消</span>}
                     </div>
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -142,9 +149,12 @@ const Profile: React.FC = () => {
       <div className="flex flex-col gap-4">
         <ProfileHeader user={user} />
         <UpcomingSection bookings={upcoming} />
-        <HistoryTable bookings={history} />
+        <HistoryTable bookings={history} onRowClick={setDetail} />
       </div>
     </div>
+
+    {/* 歷史紀錄詳情（行動版與桌面版共用） */}
+    <MyDialog open={!!detail} onClose={() => setDetail(null)} booking={detail} />
     </>
   );
 };

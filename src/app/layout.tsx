@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import Script from 'next/script'
 import { Inter, Noto_Sans_TC, Roboto } from 'next/font/google'
 import { unstable_cache } from 'next/cache'
@@ -54,6 +54,14 @@ const inter = Inter({
   weight: ['400', '500', '600', '700'],
   variable: '--font-inter',
 })
+
+// viewportFit: "cover" 讓頁面延伸到系統列底下，env(safe-area-inset-*) 才會回傳真實數值；
+// 手機版 footer 靠它把白色補到螢幕最底（見 Components/Footer.tsx）
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
 
 export const metadata: Metadata = {
   title: '載物空間借用系統',

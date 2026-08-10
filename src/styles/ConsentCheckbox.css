@@ -13,8 +13,8 @@
 }
 
 .checkbox-label.checked {
-  background-color: #3b82f6; /* 勾選後背景色 */
-  border-color: #3b82f6; /* 勾選後邊框色 */
+  background-color: #5991c4; /* 勾選後背景色——主藍，原本是 Tailwind 預設的 #3b82f6 */
+  border-color: #5991c4; /* 勾選後邊框色 */
 }
 
 .small-circle {

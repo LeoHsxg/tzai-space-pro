@@ -79,16 +79,40 @@ table {
   font-weight: 700 !important;
 }
 
-/* Info toast - solid blue style */
-[data-sonner-toast][data-type="info"] {
-  background-color: #5991C4 !important;
+/* 四種 toast 統一為實心色塊＋白字，延續原本 info 的作法。
+   顏色取自專案既有的語意色（NotificationBell 的 TYPE_CONFIG），
+   不使用 sonner richColors 的預設綠／紅。
+   候選配色可在 /test 的「Toast 配色」區塊比對。 */
+[data-sonner-toast][data-type="success"],
+[data-sonner-toast][data-type="info"],
+[data-sonner-toast][data-type="warning"],
+[data-sonner-toast][data-type="error"] {
   color: #ffffff !important;
   border-color: transparent !important;
   border-radius: 12px !important;
 }
 
-[data-sonner-toast][data-type="info"] svg {
+[data-sonner-toast][data-type="success"] svg,
+[data-sonner-toast][data-type="info"] svg,
+[data-sonner-toast][data-type="warning"] svg,
+[data-sonner-toast][data-type="error"] svg {
   color: #ffffff !important;
+}
+
+[data-sonner-toast][data-type="success"] {
+  background-color: #6E9B76 !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background-color: #5991C4 !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background-color: #D9A72E !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: #B85858 !important;
 }
 
 @layer base {

@@ -39,16 +39,22 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
   const user = useAuth();
   const { showSnackbar, showDialog, hideDialog } = useUI();
 
-  const [startDate, setStartDate] = useState<Dayjs | null>(() => {
-    if (!defaultDate) return dayjs();
+  // 初始值一律 null，掛載後才填入「現在」。/apply 這頁沒有 mounted 守衛會被 SSR，
+  // 若在 useState 初始化時就呼叫 dayjs()，伺服器與瀏覽器會各算一次、差幾秒，
+  // DateTimePicker 渲染出的字串對不起來就是 hydration mismatch。
+  const [startDate, setStartDate] = useState<Dayjs | null>(null);
+  const [endDate, setEndDate] = useState<Dayjs | null>(null);
+
+  useEffect(() => {
     const now = dayjs();
-    return defaultDate.hour(now.hour()).minute(now.minute()).second(0);
-  });
-  const [endDate, setEndDate] = useState<Dayjs | null>(() => {
-    if (!defaultDate) return dayjs();
-    const now = dayjs();
-    return defaultDate.hour(now.hour()).minute(now.minute()).second(0).add(1, "hour");
-  });
+    // 有帶入日期就用那天的今日時分，否則就是「現在」；結束時間一律 +1 小時。
+    // applyFunc 的 st >= ed 會擋下零長度的區間，預設值本身必須是可送出的。
+    const base = defaultDate ? defaultDate.hour(now.hour()).minute(now.minute()).second(0) : now;
+    setStartDate(base);
+    setEndDate(base.add(1, "hour"));
+    // defaultDate 變動時整個表單會被 ApplyDialog 用 key 重掛，這裡只需在掛載時跑一次
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [applicantName, setApplicantName] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [crowdSize, setCrowdSize] = useState<string>("");

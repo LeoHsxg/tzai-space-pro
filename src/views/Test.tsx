@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { signInWithRedirect, GoogleAuthProvider } from "firebase/auth";
+import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon } from "lucide-react";
 import { auth } from "../firebase/firebase";
 import { Button } from "@/Components/ui/button";
 import { useUI } from "../context/UIContext";
@@ -14,6 +15,65 @@ const spinnerStyle: React.CSSProperties = {
   borderRadius: "50%",
   animation: "spin 1s linear infinite",
 };
+
+type ToastType = "success" | "info" | "warning" | "error";
+
+const TOAST_TYPES: ToastType[] = ["success", "info", "warning", "error"];
+
+const TOAST_ICONS: Record<ToastType, React.ComponentType<{ className?: string }>> = {
+  success: CircleCheckIcon,
+  info: InfoIcon,
+  warning: TriangleAlertIcon,
+  error: OctagonXIcon,
+};
+
+const TOAST_MESSAGES: Record<ToastType, string> = {
+  success: "預約成功。",
+  info: "這是一般訊息",
+  warning: "請填寫所有必填欄位",
+  error: "發生錯誤！",
+};
+
+/**
+ * Toast 配色候選。A 組是目前實際套用的值（見 App.css）；
+ * B、C 只是這一頁的靜態預覽，選定後才寫進 App.css。
+ */
+const TOAST_PALETTES: {
+  name: string;
+  note: string;
+  styles: Record<ToastType, React.CSSProperties>;
+}[] = [
+  {
+    name: "A｜實心色塊（目前套用）",
+    note: "延續原本 info 的作法，四種都是實心底＋白字。存在感最強，遠看就知道成敗。",
+    styles: {
+      success: { backgroundColor: "#6E9B76", color: "#ffffff" },
+      info: { backgroundColor: "#5991C4", color: "#ffffff" },
+      warning: { backgroundColor: "#D9A72E", color: "#ffffff" },
+      error: { backgroundColor: "#B85858", color: "#ffffff" },
+    },
+  },
+  {
+    name: "B｜淺底深字",
+    note: "沿用通知面板 TYPE_CONFIG 的淺底＋同色文字。最輕，不打斷閱讀。",
+    styles: {
+      success: { backgroundColor: "#F0F5F1", color: "#4F7A57" },
+      info: { backgroundColor: "#EEF4FB", color: "#5991C4" },
+      warning: { backgroundColor: "#FBF8E9", color: "#A8830F" },
+      error: { backgroundColor: "#F7EDED", color: "#B85858" },
+    },
+  },
+  {
+    name: "C｜白底＋左色條",
+    note: "最克制，接近 Threads 的通知樣式。顏色只當標記，不當背景。",
+    styles: {
+      success: { backgroundColor: "#ffffff", color: "#1F2937", borderLeft: "3px solid #6E9B76" },
+      info: { backgroundColor: "#ffffff", color: "#1F2937", borderLeft: "3px solid #5991C4" },
+      warning: { backgroundColor: "#ffffff", color: "#1F2937", borderLeft: "3px solid #D9A72E" },
+      error: { backgroundColor: "#ffffff", color: "#1F2937", borderLeft: "3px solid #B85858" },
+    },
+  },
+];
 
 const Test: React.FC = () => {
   const { showDialog, hideDialog, showSnackbar } = useUI();
@@ -117,13 +177,45 @@ const Test: React.FC = () => {
         </div>
 
         {/* Snackbar 測試按鈕 */}
-        <div>
+        <div className="mb-8">
           <h2 className="text-xl font-semibold mb-4">Snackbar 測試</h2>
-          <div className="flex gap-2">
+          <p className="text-sm text-gray-500 mb-3">實際觸發，看的是目前套用的配色（A 組）</p>
+          <div className="flex gap-2 flex-wrap">
             <Button onClick={() => handleTestSnackbar("success")}>成功訊息</Button>
             <Button onClick={() => handleTestSnackbar("error")}>錯誤訊息</Button>
             <Button onClick={() => handleTestSnackbar("info")}>一般訊息</Button>
             <Button onClick={() => handleTestSnackbar("warning")}>警告訊息</Button>
+          </div>
+        </div>
+
+        {/* Toast 配色候選比對 */}
+        <div>
+          <h2 className="text-xl font-semibold mb-1">Toast 配色</h2>
+          <p className="text-sm text-gray-500 mb-4">
+            三組候選並排比對。選定後把該組顏色寫進 <code className="rounded bg-gray-100 px-1 py-0.5 text-xs">App.css</code> 的{" "}
+            <code className="rounded bg-gray-100 px-1 py-0.5 text-xs">[data-sonner-toast]</code> 區塊即可。
+          </p>
+          <div className="flex flex-col gap-6">
+            {TOAST_PALETTES.map(palette => (
+              <div key={palette.name} className="rounded-xl bg-[#F3F3F3] p-5">
+                <p className="text-sm font-bold text-gray-800">{palette.name}</p>
+                <p className="mt-0.5 mb-3.5 text-xs text-gray-500">{palette.note}</p>
+                <div className="flex flex-wrap gap-2.5">
+                  {TOAST_TYPES.map(type => {
+                    const Icon = TOAST_ICONS[type];
+                    return (
+                      <div
+                        key={type}
+                        style={palette.styles[type]}
+                        className="flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-bold shadow-[0_4px_12px_rgba(0,0,0,0.08)]">
+                        <Icon className="size-4 shrink-0" />
+                        {TOAST_MESSAGES[type]}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>

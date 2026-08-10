@@ -7,8 +7,14 @@ import { Booking, ROOMS, ROOM_COLORS } from "@/types/booking";
 const PAGE_SIZE = 10;
 const PAGE_STEP = 20;
 
+interface HistoryTableProps {
+  bookings: Booking[];
+  /** 點整列開啟詳情；未傳則整列不可點 */
+  onRowClick?: (booking: Booking) => void;
+}
+
 /** 歷史紀錄 — 桌面表格（空間／借用時間／狀態），可依空間篩選、載入更多 */
-export function HistoryTable({ bookings }: { bookings: Booking[] }) {
+export function HistoryTable({ bookings, onRowClick }: HistoryTableProps) {
   const [roomFilter, setRoomFilter] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
@@ -65,7 +71,12 @@ export function HistoryTable({ bookings }: { bookings: Booking[] }) {
             </thead>
             <tbody>
               {shown.map(b => (
-                <tr key={b.id} className="border-b border-[#F5F5F5] last:border-0">
+                <tr
+                  key={b.id}
+                  onClick={onRowClick ? () => onRowClick(b) : undefined}
+                  className={`border-b border-[#F5F5F5] last:border-0 ${
+                    onRowClick ? "cursor-pointer transition-colors hover:bg-[#FAFBFC]" : ""
+                  }`}>
                   <td className="py-3.5 text-sm font-semibold text-[#374151]">{b.room}</td>
                   <td className="py-3.5 font-roboto text-sm tabular-nums text-[#6B7280]">
                     {dayjs(b.startTime.toDate()).format("MM/DD HH:mm")} – {dayjs(b.endTime.toDate()).format("HH:mm")}
