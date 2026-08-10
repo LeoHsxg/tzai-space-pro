@@ -47,15 +47,11 @@ const ApplyForm: React.FC<ApplyFormProps> = ({ variant = "mobile", defaultDate =
 
   useEffect(() => {
     const now = dayjs();
-    if (defaultDate) {
-      const base = defaultDate.hour(now.hour()).minute(now.minute()).second(0);
-      setStartDate(base);
-      setEndDate(base.add(1, "hour"));
-    } else {
-      // 沿用原本行為：沒帶入日期時起訖都是「現在」，不自動加一小時
-      setStartDate(now);
-      setEndDate(now);
-    }
+    // 有帶入日期就用那天的今日時分，否則就是「現在」；結束時間一律 +1 小時。
+    // applyFunc 的 st >= ed 會擋下零長度的區間，預設值本身必須是可送出的。
+    const base = defaultDate ? defaultDate.hour(now.hour()).minute(now.minute()).second(0) : now;
+    setStartDate(base);
+    setEndDate(base.add(1, "hour"));
     // defaultDate 變動時整個表單會被 ApplyDialog 用 key 重掛，這裡只需在掛載時跑一次
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
