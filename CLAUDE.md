@@ -46,7 +46,8 @@ firebase emulators:start   # Firestore:8080, Hosting:5000, Database:9000（見 f
   `feedback`（意見箱，client 禁讀寫，管理員於 console 讀；見 `docs/storeroom-plan.md`）
 - Booking 型別與五個房間名單：`src/types/booking.ts`；申請驗證規則：`src/func/applyFunc.ts`
   （以程式碼為準，本檔不複製內容）
-- `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −4 ～ +1 個月」的 active bookings
+- `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −10 ～ +2 個月」的 active bookings
+  （視窗常數在檔案頂端，同時餵給查詢與 `isOutOfWindow`）
 - 路徑別名 `@/` → `src/`；`cn()` 在 `src/lib/utils.ts`；互動元件要標 `'use client'`
 
 ## 環境注意（Windows，血淚教訓見 diagnosis.md）

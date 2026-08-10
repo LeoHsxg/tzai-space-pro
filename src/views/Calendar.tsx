@@ -17,6 +17,13 @@ import { PageEyebrow } from "@/Components/desktop/PageEyebrow";
 import { useApplyDialog } from "@/context/ApplyDialogContext";
 import "../styles/Calendar.css";
 
+// Firestore listener 的訂閱視窗。往後只需 2 個月——applyFunc.ts 限制預約最遠
+// 只能訂 31 天後開始（diffInDays > 31 就擋），+2 是留給跨月的邊界餘裕。
+// 往前 10 個月是為了讓歷史月份翻得回去；這個規模下多讀幾百筆的成本可忽略。
+// 兩個常數同時餵給查詢與 isOutOfWindow，避免兩處數字各改各的。
+const WINDOW_MONTHS_BACK = 10;
+const WINDOW_MONTHS_FORWARD = 2;
+
 const loadingSpinnerStyle: React.CSSProperties = {
   width: "32px",
   height: "32px",
@@ -59,10 +66,10 @@ const Calendar: React.FC = () => {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Subscribe to active bookings within ±4 months window
+  // Subscribe to active bookings within the -10 / +2 months window
   useEffect(() => {
-    const start = Timestamp.fromDate(dayjs().subtract(4, "month").startOf("month").toDate());
-    const end = Timestamp.fromDate(dayjs().add(1, "month").endOf("month").toDate());
+    const start = Timestamp.fromDate(dayjs().subtract(WINDOW_MONTHS_BACK, "month").startOf("month").toDate());
+    const end = Timestamp.fromDate(dayjs().add(WINDOW_MONTHS_FORWARD, "month").endOf("month").toDate());
     const q = query(collection(db, "bookings"), where("status", "==", "active"), where("startTime", ">=", start), where("startTime", "<=", end), orderBy("startTime"));
     const unsubscribe = onSnapshot(q, snap => {
       const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }) as Booking);
@@ -91,8 +98,8 @@ const Calendar: React.FC = () => {
     return map;
   }, [bookings]);
 
-  const windowStart = dayjs().subtract(4, "month").startOf("month");
-  const windowEnd = dayjs().add(1, "month").endOf("month");
+  const windowStart = dayjs().subtract(WINDOW_MONTHS_BACK, "month").startOf("month");
+  const windowEnd = dayjs().add(WINDOW_MONTHS_FORWARD, "month").endOf("month");
   const isOutOfWindow = value !== null && (value.isBefore(windowStart, "day") || value.isAfter(windowEnd, "day"));
 
   // Filter bookings for selected date
