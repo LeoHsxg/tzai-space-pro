@@ -43,7 +43,8 @@ firebase emulators:start   # Firestore:8080, Hosting:5000, Database:9000（見 f
   API Routes：`/api/bookings`、`/api/bookings/[id]`、`/api/announcements`、`/api/feedback`
 - 權限的唯一事實來源是 `firestore.rules`。Collections：`bookings`（主資料）、
   `regulations/current`、`announcements`、`admins/{email}`（doc 存在＝管理員，`src/lib/isAdmin.ts`）、
-  `feedback`（意見箱，client 禁讀寫，管理員於 console 讀；見 `docs/storeroom-plan.md`）
+  `feedback`（意見箱，client 禁讀寫，管理員於 console 讀；見 `docs/storeroom-plan.md`）、
+  `mail`（意見箱通知信佇列，`feedback` 寫入後由 API 補寫；Trigger Email 擴充功能監看後寄出，client 禁讀寫）
 - Booking 型別與五個房間名單：`src/types/booking.ts`；申請驗證規則：`src/func/applyFunc.ts`
   （以程式碼為準，本檔不複製內容）
 - `src/views/Calendar.tsx` 的 Firestore listener 訂閱「當月 −10 ～ +2 個月」的 active bookings
@@ -65,6 +66,8 @@ firebase emulators:start   # Firestore:8080, Hosting:5000, Database:9000（見 f
   （`src/firebase/admin.ts`；App Hosting 上改用 ADC，不需設定）
 - 本機已有 `.env.local`（含 Admin SDK 憑證，gitignored）——`npm run dev` 可完整跑 API Route；
   **永不**把其內容貼進對話或 commit；缺 key 時問使用者拿，不要自己造假值
+- 意見箱通知信收件人：`FEEDBACK_NOTIFY_EMAIL`（`src/app/api/feedback/route.ts`；未設定則不寄信，
+  需搭配已安裝的 Trigger Email 擴充功能，見 `docs/storeroom-plan.md`）
 
 ## 已知狀況（驗證於 2026-07-04）
 

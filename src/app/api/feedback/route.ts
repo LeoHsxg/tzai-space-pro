@@ -58,18 +58,49 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "姓名格式不正確" }, { status: 400 });
   }
 
+  const trimmedMessage = message.trim();
+  const cleanName = typeof name === "string" && name.trim() ? name.trim() : null;
+  const cleanJia = (jia as string | undefined) ?? null;
+
   try {
     await adminDb.collection("feedback").add({
       category,
-      message: message.trim(),
-      jia: jia ?? null,
-      name: typeof name === "string" && name.trim() ? name.trim() : null,
+      message: trimmedMessage,
+      jia: cleanJia,
+      name: cleanName,
       email, // UI 不揭露，僅供管理員在 console 端追蹤
       createdAt: FieldValue.serverTimestamp(),
     });
-    return NextResponse.json({ message: "已收到" }, { status: 200 });
   } catch (err) {
     console.error("POST /api/feedback 失敗:", err);
     return NextResponse.json({ message: "伺服器錯誤" }, { status: 500 });
   }
+
+  // 通知信：寫入 Trigger Email 擴充功能監看的 mail 佇列，擴充功能會非同步寄出。
+  // best-effort——回報本身已存檔，寄信這步失敗不該讓使用者看到錯誤。
+  // 收件人來自環境變數（不把私人信箱寫進 repo）；未設定就跳過。
+  const notifyTo = process.env.FEEDBACK_NOTIFY_EMAIL;
+  if (notifyTo) {
+    try {
+      const bodyLines = [
+        `類型：${category}`,
+        `載物：${cleanJia ?? "（未填）"}`,
+        `姓名：${cleanName ?? "（未填）"}`,
+        `來自：${email}`,
+        "",
+        trimmedMessage,
+      ];
+      await adminDb.collection("mail").add({
+        to: [notifyTo],
+        message: {
+          subject: `【載物意見箱】新回報 · ${category}`,
+          text: bodyLines.join("\n"),
+        },
+      });
+    } catch (mailErr) {
+      console.error("意見箱通知信 enqueue 失敗（回報已存檔）:", mailErr);
+    }
+  }
+
+  return NextResponse.json({ message: "已收到" }, { status: 200 });
 }

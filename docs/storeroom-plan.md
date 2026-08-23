@@ -50,7 +50,30 @@
 - `POST /api/feedback`（Admin SDK，寫法沿用 `/api/announcements` 的 verifyToken）
 - Firestore collection `feedback`：`{ category, message, jia|null, name|null, email, createdAt }`
 - **不需動 `firestore.rules`**：末尾 default-deny 已涵蓋 `feedback`（client 禁讀寫），
-  Admin SDK 繞過 rules；管理員先在 Firebase console 讀，本階段不做通知
+  Admin SDK 繞過 rules；管理員先在 Firebase console 讀
+
+### 通知信（2026-08-23 新增）
+
+目標：意見箱收到回報後，自動寄一封信通知管理員本人。做法選「Firebase Trigger Email
+擴充功能」（官方 `firebase/firestore-send-email`），理由：App 端零長駐程式碼、Firebase
+console 上看得懂、無新增 npm 依賴，符合「無聊、可維護」取捨。
+
+機制：
+- `POST /api/feedback` 寫入 `feedback` 成功後，**額外**寫一筆到 `mail` collection
+  （擴充功能監看的佇列），形狀 `{ to: [收件人], message: { subject, text } }`；
+  擴充功能非同步把它寄出並把 `delivery` 狀態寫回該 doc。
+- 這步是 **best-effort**：包在自己的 try/catch，寄信 enqueue 失敗只 log、不影響回報已存檔、
+  使用者仍看到「已收到」。收件人來自環境變數 `FEEDBACK_NOTIFY_EMAIL`（不把私人信箱寫進 repo），
+  未設定就整段跳過。
+- `mail` collection 一樣靠 rules 末尾 default-deny 擋掉 client 讀寫，不需改 `firestore.rules`。
+
+使用者需做的一次性設定（都在 Firebase console／CLI，不在本 repo）：
+1. 安裝擴充功能 `firebase/firestore-send-email`（需 Blaze，App Hosting 已是 Blaze）。
+   安裝時設定：SMTP 連線字串（如 Gmail：`smtps://帳號:應用程式密碼@smtp.gmail.com:465`）、
+   寄件人 FROM、監看的 collection 填 `mail`。
+2. 設定 `FEEDBACK_NOTIFY_EMAIL` 為要收通知的信箱：本機寫進 `.env.local`；App Hosting 端加到
+   `apphosting.yaml` 的 `env`（用 `secret:` 參照 Secret Manager，或用 `value:` 直填——
+   直填等於把信箱提交進 repo，自行斟酌）。
 
 ## 檔案清單
 
@@ -80,6 +103,8 @@
 - [x] 使用者本機目視確認與多輪微調（2026-08-06）：結果槽改回灰底、欄位順序改為
       類型在前、載物下拉改用 `ui/select`、textarea 隨內容長高、placeholder 統一
       `black/25`、CJK 視覺置中補償（欄位 1px、結果槽 2px）
+- [x] 意見箱通知信（2026-08-23）：`/api/feedback` 補寫 `mail` 佇列＋Trigger Email 擴充功能；
+      程式碼與文件已改，擴充功能安裝與 `FEEDBACK_NOTIFY_EMAIL` 由使用者一次性設定
 - [ ] 手機導覽 icon 由使用者自訂替換（現為 `info_h/info_s.svg` 佔位；
       建議 Material Symbols 的 `home_storage`，outline 存 `storeroom_h.svg`、
       filled 存 `storeroom_s.svg`，改 `NavLinks.tsx` 的路徑即可）
