@@ -1,153 +1,216 @@
 # tzai-space
 
-**[tzai-space](https://tzai-space.web.app/)** is a redesigned space reservation system for managing the dormitory social spaces at Tsinghua University. This project aims to address the shortcomings of the previous system, which suffered from outdated visual design, poor user experience, and a lack of effective management logic. For more background, please refer to the **[launch announcement](https://www.facebook.com/share/p/1ApKo2jPoq/)** and the **[redesign documentation](project-docs/仁齋空間借用系統%20Re-Design.pdf)**.
+> A production space-reservation platform for the shared social spaces of NTHU's Ren-Zhai (仁齋) dormitory — rebuilt from the ground up on Next.js 15 and a real-time Firestore backend.
 
-The redesign focuses on three main areas:
+[![CI](https://github.com/LeoHsxg/tzai-space-pro/actions/workflows/ci.yml/badge.svg)](https://github.com/LeoHsxg/tzai-space-pro/actions/workflows/ci.yml)
+![Next.js](https://img.shields.io/badge/Next.js-15-black?logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Firestore%20%7C%20Admin%20SDK-FFCA28?logo=firebase&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38B2AC?logo=tailwindcss&logoColor=white)
 
-- **Visuals**: Modernizing the interface to improve brand recognition and information hierarchy.
-- **Interaction**: Simplifying the user flow to make it more logical and intuitive, reducing the depth of information access.
-- **Management**: Implementing proper validation mechanisms for time, frequency, and quantity limits to ensure fair usage for all residents.
+**🔗 Live site:** _replace with the current App Hosting domain_ · **📄 Design docs:** [Re-Design deck](project-docs/仁齋空間借用系統%20Re-Design.pdf)
+
+tzai-space lets dormitory residents browse room availability on a shared calendar, reserve one of five social spaces under fair-use rules, and manage their own bookings — while giving administrators a console for announcements and moderation. It is a **live production system serving real residents**, and this repository is its second architecture generation: a full re-platforming of the original React/Vite + Google Calendar app onto server-rendered Next.js with Firestore as the single source of truth.
 
 <p align="center">
-  <br>
-    <img src="project-docs\Mockup.png" width="90%"/>
-  <br>
+  <img src="project-docs/Mockup.png" width="90%" alt="tzai-space UI mockup" />
 </p>
 
-## Technical Architecture
+## Table of Contents
 
-This project utilizes a modern tech stack to ensure performance, scalability, and ease of maintenance.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Project Structure](#project-structure)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [Scripts](#scripts)
+- [Testing](#testing)
+- [Deployment](#deployment)
+- [Background & Design](#background--design)
+- [License](#license)
 
-### Frontend
+## Features
 
-- **Framework**: React (Vite)
-- **UI Library**: Material UI (MUI)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
+### For residents
+- **Real-time booking calendar** — availability updates live via Firestore `onSnapshot`; new reservations appear instantly without a refresh, and colour-coded rooms make conflicts obvious at a glance.
+- **Guided application flow** — a consent-gated form with client- and server-side validation (phone/party-size format, a 31-day booking horizon, a 4-hour maximum, and start/end sanity checks) plus conflict detection to prevent double bookings.
+- **Personal booking management** — view upcoming and historical bookings and cancel your own reservations directly, no admin required.
+- **Announcements & notifications** — a server-rendered banner and a notification bell surface system announcements (Markdown-rendered), with a per-user "seen" state so nothing important is missed.
+- **Storeroom** (`/storeroom`) — a lightweight extras page with a lunch/dinner randomizer and a **suggestion box** that routes feedback straight to the team.
+- **Responsive by design** — a mobile-first experience plus a dedicated desktop layout (persistent sidebar, two-column month calendar, centered dialogs).
 
-### Backend & Server
+### For administrators
+- **Admin console** (`/console`) — publish announcements and moderate bookings.
+- **Role-based access** — administrators are defined by an allowlist in Firestore; privileged actions (e.g. cancelling any booking, publishing announcements) are enforced on the server.
 
-- **Serverless Functions**: Firebase Functions
-- **API**: RESTful API
-- **Integrations**: Google Calendar API
-- **Authentication**: JWT Auth
-- **Hosting**: Firebase Hosting + Google Cloud Platform (GCP)
+### Engineering highlights
+- **Server-authoritative writes** — all mutations go through Next.js Route Handlers backed by the Firebase Admin SDK; the client only ever reads, guarded by Firestore Security Rules.
+- **Security rules as the source of truth** — permissions live in `firestore.rules` and are covered by an integration test suite.
+- **Automated quality gate** — unit tests, Firestore-rules tests, lint, type-check, and build all run in CI on every push and pull request.
 
-### Analytics
+## Tech Stack
 
-- Google Analytics
-- Microsoft Clarity
+| Layer | Technology |
+| --- | --- |
+| Framework | **Next.js 15** (App Router, React Server Components + SSR) |
+| Language | **TypeScript** |
+| UI | **shadcn/ui** + Base UI/Radix primitives, **Tailwind CSS**, `lucide-react`, `sonner` (toasts) |
+| Calendar | `react-day-picker` (custom calendar) + `@mui/x-date-pickers` (time selection) |
+| Data | **Cloud Firestore** (real-time listeners) |
+| Server | Next.js Route Handlers + **Firebase Admin SDK** |
+| Auth | **Firebase Authentication** (ID-token verified server-side) |
+| Content | `marked` + `@tailwindcss/typography` (Markdown announcements & rules) |
+| Testing | **Vitest**, `@firebase/rules-unit-testing` |
+| CI/CD | **GitHub Actions** → **Firebase App Hosting** |
+| Analytics | Google Analytics, Microsoft Clarity |
 
-## Backend & Cloud Functions Details
+## Architecture
 
-The backend logic is powered by **Firebase Cloud Functions**, providing a serverless environment to manage reservations securely. It exposes RESTful API endpoints to handle frontend requests, ensuring data validation and conflict detection before interacting with the calendar.
+The core principle is a **strict read/write split**: browsers read Firestore directly (fast, real-time, and scoped by Security Rules), while every write is funnelled through server-side API routes that authenticate the caller, validate input, and use the Admin SDK to bypass rules deliberately and safely.
 
-Key technical implementations include:
+```mermaid
+flowchart LR
+    subgraph Client["Browser (Next.js RSC + Client)"]
+      Cal["Calendar / Views"]
+      Form["Apply / Console"]
+    end
 
-- **Service Account & JWT**: Uses a Google Cloud Service Account and JSON Web Tokens (JWT) to securely authenticate and authorize server-to-server communication with the Google Calendar API, independent of user credentials.
-- **Google Calendar Integration**: Stores reservation details directly in Google Calendar events, utilizing `extendedProperties` for custom data (e.g., contact info, crowd size) and implementing custom logic to prevent double bookings.
-- **RESTful API Endpoints**:
-  - `GET /getEventsForMonth`: Fetches events for a specific month.
-  - `GET /getAllEvents`: Lists all events.
-  - `POST /addEventToCalendar`: Validates and creates a new reservation.
-  - `POST /deleteEventFromCalendar`: Verifies ownership and deletes a reservation.
+    subgraph Server["Next.js Route Handlers"]
+      API["/api/bookings · /api/announcements · /api/feedback"]
+    end
 
-## Installation
+    FS[("Cloud Firestore")]
+    Rules{{"firestore.rules<br/>(source of truth)"}}
 
-To set up the project locally, follow these steps:
-
-1.  **Clone the repository**
-
-    ```bash
-    git clone https://github.com/LeoHsxg/tzai-space.git
-    cd tzai-space
-    ```
-
-2.  **Install Frontend Dependencies**
-
-    ```bash
-    npm install
-    ```
-
-3.  **Install Backend Functions Dependencies**
-
-    ```bash
-    cd functions
-    npm install
-    cd ..
-    ```
-
-4.  **Environment Setup**
-    - Ensure you have the Firebase CLI installed (`npm install -g firebase-tools`).
-    - Login to Firebase: `firebase login`.
-    - You may need to configure your local environment variables for Firebase and Google Cloud credentials.
-
-## Usage
-
-### Development
-
-To start the local development server:
-
-```bash
-npm run dev
+    Cal -- "read: onSnapshot" --> FS
+    Rules -. guards .- FS
+    Form -- "write: fetch + ID token" --> API
+    API -- "verify token + validate + Admin SDK" --> FS
 ```
 
-To run the Firebase functions emulator (optional, for backend testing):
+### Firestore collections
 
-```bash
-cd functions
-npm run serve
+| Collection | Purpose | Client access |
+| --- | --- | --- |
+| `bookings` | Reservation records — the source of truth | Read-only |
+| `regulations/current` | The current borrowing rules (Markdown) | Read-only |
+| `announcements` | System announcements | Read-only |
+| `admins/{email}` | Admin allowlist — a document's existence grants admin | Read-only |
+| `feedback` | Suggestion-box submissions | No direct read/write (server-only) |
+
+### API routes
+
+| Route | Method | Purpose |
+| --- | --- | --- |
+| `/api/bookings` | `POST` | Create a booking (validation + conflict detection) |
+| `/api/bookings/[id]` | `DELETE` | Cancel a booking (soft delete) |
+| `/api/announcements` | `GET` / `POST` | Read latest / publish (admin only) |
+| `/api/feedback` | `POST` | Submit feedback to the suggestion box |
+
+All mutating routes require an `Authorization: Bearer <Firebase ID token>` header, verified server-side with the Admin SDK before any Firestore access.
+
+## Project Structure
+
+```
+src/
+├── app/                  # Next.js App Router: routes + API route handlers
+│   ├── api/              # Server-authoritative endpoints (Firebase Admin SDK)
+│   │   ├── bookings/     #   POST /  + DELETE /[id]
+│   │   ├── announcements/#   GET / POST
+│   │   └── feedback/     #   POST
+│   ├── apply/  console/  profile/  rule/  storeroom/   # pages
+│   └── layout.tsx  page.tsx  robots.ts
+├── views/                # Page-level view components (Calendar, ApplyForm, ...)
+├── Components/           # Shared UI — desktop/ (responsive layout) + ui/ (shadcn primitives)
+├── context/              # React contexts: Auth, Bookings, UI, ApplyDialog
+├── firebase/             # Client SDK (firebase.ts) + Admin SDK (admin.ts)
+├── func/                 # Pure domain logic + colocated unit tests
+├── hooks/                # useAuth, useIsAdmin
+├── lib/                  # isAdmin, utils (cn)
+└── types/                # Booking, Announcement type definitions
+firestore.rules           # Security rules — single source of truth for permissions
+firestore.indexes.json    # Composite indexes
+tests/rules/              # Firestore Security Rules integration tests
 ```
 
-### Build
+## Getting Started
 
-To build the frontend for production:
+### Prerequisites
+- **Node.js 22+** and npm
+- **Java 21+** — only required to run the Firestore rules tests (`npm run test:rules`), which spin up the emulator
+- **Firebase CLI** (`npm install -g firebase-tools`) — for the emulators and deploys
 
-```bash
-npm run build
-```
-
-### Deployment
-
-To deploy the functions to Firebase:
+### Install
 
 ```bash
-firebase deploy --only functions
+git clone https://github.com/LeoHsxg/tzai-space-pro.git
+cd tzai-space-pro
+npm install
 ```
 
-## System Redesign Overview
+### Configure environment
 
-### Why Redesign?
+Create a `.env.local` in the project root (see [Environment Variables](#environment-variables)). At minimum you need `NEXT_PUBLIC_API_KEY`; to exercise the API routes locally you also need the three `FIREBASE_ADMIN_*` service-account values.
 
-The previous system had been unmanaged for a long time. It lacked visual appeal, making the rules unreadable and ignored. The interaction was dense and prone to errors, requiring users to navigate deep menus just to view details or contact an admin to delete events. Furthermore, there were no actual checks for reservation limits, making the rules practically non-existent.
+### Run
 
-### Revision Targets
+```bash
+npm run dev            # http://localhost:3000
+```
 
-- **Flatter Hierarchy**: Reduced the depth of information using tabs and component design.
-- **Better UI**: Designed an aesthetically pleasing interface to make information easier to digest.
-- **Intuitive Flow**: Redesigned the usage flow with clear prompts to manage the user's progress.
+Optionally, run the Firebase emulators (Firestore :8080, Hosting :5000, Database :9000):
 
-### Key Features & Decisions
+```bash
+firebase emulators:start
+```
 
-#### Calendar
+## Environment Variables
 
-- **Auto-loading & Feedback**: Events load automatically with waiting animations to avoid blank screens.
-- **Visual Clarity**: Distinct colors for the four different spaces. A clear separator for midnight helps users distinguish between "today" and "yesterday" during peak late-night usage.
-- **Simplified Management**: Reduced interaction depth to two layers (Select Date -> View Event). Users can delete their own events directly from the event detail card, eliminating the need to contact an admin.
+| Variable | Scope | Required | Description |
+| --- | --- | --- | --- |
+| `NEXT_PUBLIC_API_KEY` | Client | Yes | Firebase Web API key |
+| `FIREBASE_ADMIN_PROJECT_ID` | Server | Local only | Admin SDK project ID |
+| `FIREBASE_ADMIN_CLIENT_EMAIL` | Server | Local only | Service-account client email |
+| `FIREBASE_ADMIN_PRIVATE_KEY` | Server | Local only | Service-account private key |
 
-#### Apply Form
+> On **Firebase App Hosting**, the server uses Application Default Credentials (ADC), so the three `FIREBASE_ADMIN_*` variables are only needed for local development. Never commit `.env.local` or paste secrets into issues/PRs.
 
-- **Consent & Flow**: Includes a consent checkbox to ensure users agree to the rules.
-- **Component Library**: Uses MUI for consistent visual style and a smooth date-picking experience.
-- **Feedback System**: Global SnackBars and Dialogs handle various states (loading, success, errors, edge cases).
-- **Mobile Optimization**: Includes hints to avoid issues with in-app browsers (like Facebook or Line).
+## Scripts
 
-#### Rules Page
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server on `localhost:3000` |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint |
+| `npm test` | Vitest unit tests |
+| `npm run test:rules` | Firestore Security Rules tests (auto-starts the emulator; needs Java 21+) |
+| `npx tsc --noEmit` | Type-check |
 
-- **Card Layout**: Rules are displayed in cards for easy reading and scanning.
-- **Modular Design**: The code is modularized to allow for easy maintenance and updates to the rules.
+## Testing
 
-#### Responsive Web Design (RWD)
+- **Unit tests (Vitest)** cover the pure domain logic — booking validation (`func/applyFunc.ts`) and booking-status helpers (`func/bookingUtils.ts`).
+- **Firestore Security Rules tests** (`tests/rules/`) run against the emulator via `@firebase/rules-unit-testing` to assert that clients can only read what they should and can never write directly.
+- **CI** (`.github/workflows/ci.yml`) runs the full gate on every push/PR to `main`: `lint → typecheck → unit tests → rules tests → build`.
 
-- **Mobile-First Origin**: The project was initially designed exclusively for mobile, as most peers accessed the old system via phones. Google Analytics later confirmed this, showing **70.3% of users are on mobile devices**.
-- **Desktop Adaptation**: Since the UI system was already established, I decided to implement a responsive design for desktop users as well. As this is a direct adaptation of the mobile-first layout, the desktop UI might appear slightly unconventional or "mobile-like".
+```bash
+npm run lint && npx tsc --noEmit && npm test    # fast local check
+npm run test:rules                              # rules (requires Java 21+)
+```
+
+## Deployment
+
+Production runs on **Firebase App Hosting** (`apphosting.yaml`); server components and API routes execute in a managed Node environment using ADC for Admin SDK access. Deploys are driven from the `main` branch.
+
+> **Note:** the classic `hosting` block in `firebase.json` (`public: dist`) is a leftover from the Vite era and is **not** used by the App Hosting deployment. Treat `firebase deploy --only hosting` as unsupported for this project.
+
+## Background & Design
+
+tzai-space replaces a long-unmaintained legacy reservation tool that had poor readability, a deep and error-prone flow, and no real enforcement of usage limits. The redesign targets three areas — **visual clarity**, **intuitive interaction**, and **enforceable management rules** — and this repository takes that further with a complete re-architecture (Next.js SSR, Firestore real-time data, a server-side write layer, security rules, tests, and CI).
+
+Design and planning material lives in [`project-docs/`](project-docs/) and [`docs/`](docs/) (data-architecture review, desktop redesign spec, notification and storeroom plans, and more).
+
+## License
+
+No license has been assigned yet; all rights reserved. If you intend to reuse or contribute, please open an issue to discuss.
